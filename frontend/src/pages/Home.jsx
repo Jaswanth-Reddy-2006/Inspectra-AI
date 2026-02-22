@@ -12,13 +12,13 @@ import {
     BarChart3
 } from 'lucide-react';
 
-const Home = ({ onScanStart }) => {
+const Home = ({ onScanStart, isScanning }) => {
     const [url, setUrl] = useState('');
     const navigate = useNavigate();
 
     const handleScan = (e) => {
         e.preventDefault();
-        if (url) onScanStart(url);
+        if (url && !isScanning) onScanStart(url);
     };
 
     const navLinks = [
@@ -54,7 +54,6 @@ const Home = ({ onScanStart }) => {
                     </Link>
 
                     <div className="flex items-center gap-3 sm:gap-8">
-                        {/* Nav links — hidden on small mobile */}
                         <div className="hidden md:flex items-center gap-8">
                             {navLinks.map((item, idx) => (
                                 <Link
@@ -122,8 +121,9 @@ const Home = ({ onScanStart }) => {
                                     type="url"
                                     value={url}
                                     onChange={(e) => setUrl(e.target.value)}
+                                    disabled={isScanning}
                                     placeholder="https://app.your-startup.com"
-                                    className="w-full pl-11 sm:pl-12 pr-4 sm:pr-6 py-4 sm:py-5 bg-slate-50 border-2 border-slate-50 rounded-xl sm:rounded-2xl outline-none focus:bg-white focus:border-blue-600/20 transition-all font-bold text-slate-900 text-sm sm:text-base placeholder:text-slate-300 shadow-inner"
+                                    className="w-full pl-11 sm:pl-12 pr-4 sm:pr-6 py-4 sm:py-5 bg-slate-50 border-2 border-slate-50 rounded-xl sm:rounded-2xl outline-none focus:bg-white focus:border-blue-600/20 transition-all font-bold text-slate-900 text-sm sm:text-base placeholder:text-slate-300 shadow-inner disabled:opacity-50"
                                     required
                                 />
                             </div>
@@ -131,10 +131,20 @@ const Home = ({ onScanStart }) => {
 
                         <button
                             type="submit"
-                            className="w-full py-3.5 sm:py-4 bg-blue-600 text-white rounded-xl text-[11px] font-black uppercase tracking-[0.2em] shadow-2xl shadow-blue-200/50 hover:bg-blue-700 transition-all active:scale-[0.98] hover:scale-[1.01] flex items-center justify-center gap-2.5"
+                            disabled={isScanning}
+                            className={`w-full py-3.5 sm:py-4 bg-blue-600 text-white rounded-xl text-[11px] font-black uppercase tracking-[0.2em] shadow-2xl shadow-blue-200/50 transition-all flex items-center justify-center gap-2.5 ${isScanning ? 'opacity-70 cursor-not-allowed' : 'hover:bg-blue-700 active:scale-[0.98] hover:scale-[1.01]'}`}
                         >
-                            <Rocket size={16} className="fill-current" />
-                            Launch Autonomous Scan
+                            {isScanning ? (
+                                <>
+                                    <Activity size={16} className="animate-pulse" />
+                                    Agent Initializing...
+                                </>
+                            ) : (
+                                <>
+                                    <Rocket size={16} className="fill-current" />
+                                    Launch AutoQA Scan
+                                </>
+                            )}
                         </button>
                     </form>
 

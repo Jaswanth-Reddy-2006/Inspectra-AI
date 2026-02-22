@@ -1,167 +1,115 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CheckCircle2, Shield, Search } from 'lucide-react';
+import { Loader2, Shield, Search, Zap, CheckCircle2, Activity } from 'lucide-react';
 
-const STEPS = [
-    { id: 0, label: 'Scanning DOM structure & page hierarchy...' },
-    { id: 1, label: 'Mapping buttons, links & interactive elements...' },
-    { id: 2, label: 'Identifying authentication requirements...' },
-    { id: 3, label: 'Running accessibility & security checks...' },
-    { id: 4, label: 'Generating quality execution report...' },
-];
-
-const STEP_DURATION = 1600; // ms per step
-
-const LoadingSpinner = ({ scanUrl }) => {
-    const [completedSteps, setCompletedSteps] = useState([]);
-    const [activeStep, setActiveStep] = useState(0);
+const LoadingSpinner = ({ isProcessing, scanStartTime }) => {
+    const [elapsed, setElapsed] = useState(0);
 
     useEffect(() => {
-        let step = 0;
-        const advance = () => {
-            if (step < STEPS.length) {
-                setActiveStep(step);
-                setTimeout(() => {
-                    setCompletedSteps((prev) => [...prev, step]);
-                    step++;
-                    if (step < STEPS.length) {
-                        setTimeout(advance, 200);
-                    }
-                }, STEP_DURATION);
-            }
-        };
-        const t = setTimeout(advance, 400);
-        return () => clearTimeout(t);
-    }, []);
+        const interval = setInterval(() => {
+            setElapsed(Math.round((Date.now() - scanStartTime) / 1000));
+        }, 1000);
+        return () => clearInterval(interval);
+    }, [scanStartTime]);
 
-    const displayUrl = scanUrl || 'https://example.com';
+    const stages = [
+        { id: 1, label: 'Initializing Autonomous Agent', icon: <Activity size={18} />, time: 0 },
+        { id: 2, label: 'Crawling application paths', icon: <Search size={18} />, time: 10 },
+        { id: 3, label: 'Running deep accessibility audit', icon: <Shield size={18} />, time: 30 },
+        { id: 4, label: 'Analyzing performance bottlenecks', icon: <Zap size={18} />, time: 60 },
+        { id: 5, label: 'Generating quality insights', icon: <CheckCircle2 size={18} />, time: 120 }
+    ];
+
+    const currentStageIndex = stages.reduce((acc, stage, idx) => {
+        return elapsed >= stage.time ? idx : acc;
+    }, 0);
 
     return (
-        <div className="min-h-screen w-full bg-[#f0f2f8] flex items-center justify-center p-5">
+        <AnimatePresence>
             <motion.div
-                initial={{ opacity: 0, y: 24, scale: 0.97 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                className="bg-white rounded-[2rem] shadow-2xl shadow-slate-200/60 border border-slate-100 w-full max-w-[520px] px-8 sm:px-12 py-10 sm:py-12 flex flex-col items-center text-center"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 z-[100] bg-white/90 backdrop-blur-xl flex flex-col items-center justify-center p-6 text-center"
             >
-                {/* Spinning Ring + Search Icon */}
-                <div className="relative w-28 h-28 flex items-center justify-center mb-8">
-                    {/* Static outer track */}
-                    <div className="absolute inset-0 rounded-full border-[6px] border-blue-50" />
+                <div className="relative mb-12">
+                    {/* Animated Rings */}
+                    <div className="absolute inset-0 scale-150 opacity-20">
+                        <motion.div
+                            animate={{ rotate: 360 }}
+                            transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+                            className="w-full h-full border-4 border-dashed border-blue-600 rounded-full"
+                        />
+                    </div>
 
-                    {/* Spinning arc */}
-                    <motion.div
-                        animate={{ rotate: 360 }}
-                        transition={{ duration: 1.4, repeat: Infinity, ease: 'linear' }}
-                        className="absolute inset-0 rounded-full"
-                        style={{
-                            background: 'transparent',
-                            border: '6px solid transparent',
-                            borderTopColor: '#2563eb',
-                            borderRightColor: '#2563eb',
-                        }}
-                    />
-
-                    {/* Inner icon circle */}
-                    <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center z-10">
-                        <Search size={26} className="text-blue-600" strokeWidth={2} />
+                    <div className="w-24 h-24 sm:w-32 sm:h-32 bg-blue-600 rounded-3xl flex items-center justify-center shadow-2xl shadow-blue-200 relative overflow-hidden group">
+                        <motion.div
+                            animate={{
+                                y: [-40, 40],
+                                rotate: [0, 360]
+                            }}
+                            transition={{
+                                duration: 3,
+                                repeat: Infinity,
+                                ease: "easeInOut"
+                            }}
+                            className="absolute inset-0 bg-blue-500 opacity-50 blur-2xl"
+                        />
+                        <Loader2 className="text-white animate-spin relative z-10" size={48} />
                     </div>
                 </div>
 
-                {/* Title */}
-                <h2 className="text-[22px] sm:text-[26px] font-bold text-[#1a1d3b] tracking-tight mb-3">
-                    Initializing Autonomous Agent...
-                </h2>
+                <div className="max-w-md w-full space-y-8">
+                    <div className="space-y-2">
+                        <motion.h2
+                            key={stages[currentStageIndex].label}
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight"
+                        >
+                            {stages[currentStageIndex].label}
+                        </motion.h2>
+                        <p className="text-slate-400 font-medium text-sm sm:text-base">
+                            Agent is performing deep inspection. This may take up to 3 minutes.
+                        </p>
+                    </div>
 
-                {/* URL Display */}
-                <div className="flex items-center gap-2 text-sm font-medium text-slate-500 mb-8">
-                    <motion.div
-                        animate={{ scale: [1, 1.3, 1], backgroundColor: ['#22c55e', '#16a34a', '#22c55e'] }}
-                        transition={{ duration: 2, repeat: Infinity }}
-                        className="w-2 h-2 bg-green-500 rounded-full shrink-0"
-                    />
-                    <span>Analyzing application structure:&nbsp;</span>
-                    <a
-                        href={displayUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 font-semibold hover:underline truncate max-w-[180px] sm:max-w-[220px]"
-                    >
-                        {displayUrl}
-                    </a>
-                </div>
-
-                {/* Step List */}
-                <div className="w-full space-y-3.5 mb-10 text-left">
-                    {STEPS.map((step) => {
-                        const isComplete = completedSteps.includes(step.id);
-                        const isActive = activeStep === step.id && !isComplete;
-                        const isPending = !isComplete && !isActive;
-
-                        return (
-                            <motion.div
-                                key={step.id}
-                                initial={{ opacity: 0.3 }}
-                                animate={{ opacity: isPending ? 0.4 : 1 }}
-                                transition={{ duration: 0.3 }}
-                                className="flex items-center gap-3"
-                            >
-                                {/* Icon */}
-                                <div className="w-5 h-5 flex items-center justify-center shrink-0">
-                                    {isComplete ? (
-                                        <motion.div
-                                            initial={{ scale: 0 }}
-                                            animate={{ scale: 1 }}
-                                            transition={{ type: 'spring', damping: 12 }}
-                                        >
-                                            <CheckCircle2 size={18} className="text-green-500 fill-green-50" />
-                                        </motion.div>
-                                    ) : isActive ? (
-                                        <motion.div
-                                            animate={{ scale: [1, 1.4, 1] }}
-                                            transition={{ duration: 0.8, repeat: Infinity }}
-                                            className="w-2.5 h-2.5 bg-blue-600 rounded-full"
-                                        />
-                                    ) : (
-                                        <div className="w-2.5 h-2.5 bg-slate-200 rounded-full" />
-                                    )}
+                    {/* Stage Timeline */}
+                    <div className="bg-slate-50/50 rounded-3xl p-6 border border-slate-100 shadow-inner">
+                        <div className="space-y-4">
+                            {stages.map((stage, idx) => (
+                                <div key={stage.id} className="flex items-center gap-4">
+                                    <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-colors ${idx <= currentStageIndex ? 'bg-blue-600 text-white shadow-lg shadow-blue-100' : 'bg-slate-200 text-slate-400'}`}>
+                                        {idx < currentStageIndex ? <CheckCircle2 size={16} /> : stage.icon}
+                                    </div>
+                                    <span className={`text-xs sm:text-sm font-black uppercase tracking-widest ${idx === currentStageIndex ? 'text-blue-600' : idx < currentStageIndex ? 'text-slate-900 line-through opacity-50' : 'text-slate-300'}`}>
+                                        {stage.label}
+                                    </span>
                                 </div>
-
-                                {/* Label */}
-                                <span className={`text-sm font-medium transition-colors duration-300 ${isComplete
-                                        ? 'text-slate-600 line-through decoration-slate-300'
-                                        : isActive
-                                            ? 'text-[#1a1d3b] font-semibold'
-                                            : 'text-slate-400'
-                                    }`}>
-                                    {step.label}
-                                </span>
-                            </motion.div>
-                        );
-                    })}
-                </div>
-
-                {/* Progress bar */}
-                <div className="w-full h-1 bg-slate-100 rounded-full overflow-hidden mb-8">
-                    <motion.div
-                        animate={{ width: `${((completedSteps.length) / STEPS.length) * 100}%` }}
-                        transition={{ duration: 0.4, ease: 'easeOut' }}
-                        className="h-full bg-gradient-to-r from-blue-500 to-blue-600 rounded-full"
-                    />
-                </div>
-
-                {/* Powered by footer */}
-                <div className="flex flex-col items-center gap-2">
-                    <span className="text-[10px] font-black text-slate-300 uppercase tracking-[0.2em]">Powered by</span>
-                    <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 bg-blue-600 rounded-lg flex items-center justify-center">
-                            <Shield size={13} className="text-white" strokeWidth={2.5} />
+                            ))}
                         </div>
-                        <span className="font-black text-sm text-slate-600 tracking-tight">AutoQA Agent</span>
+                    </div>
+
+                    <div className="pt-4">
+                        <div className="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 rounded-full text-[10px] sm:text-[11px] font-black text-slate-500 uppercase tracking-widest border border-slate-200/50 shadow-sm">
+                            <Activity size={14} className="animate-pulse text-blue-600" />
+                            Elapsed: {Math.floor(elapsed / 60)}:{(elapsed % 60).toString().padStart(2, '0')} / 3:00
+                        </div>
+                    </div>
+                </div>
+
+                {/* Bottom Footer Info */}
+                <div className="absolute bottom-10 left-0 w-full px-6 flex justify-center">
+                    <div className="flex items-center gap-6 text-[10px] font-black text-slate-300 uppercase tracking-[0.2em]">
+                        <span>Secure Scan</span>
+                        <div className="w-1.5 h-1.5 rounded-full bg-slate-200" />
+                        <span>Playwright Engine</span>
+                        <div className="w-1.5 h-1.5 rounded-full bg-slate-200" />
+                        <span>v2.4.0</span>
                     </div>
                 </div>
             </motion.div>
-        </div>
+        </AnimatePresence>
     );
 };
 
