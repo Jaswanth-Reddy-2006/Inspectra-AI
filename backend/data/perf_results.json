@@ -1,0 +1,113 @@
+{
+  "https://dealdrop-lj35.onrender.com/": {
+    "url": "https://dealdrop-lj35.onrender.com/",
+    "title": "DealDrop - Premium E-commerce",
+    "scores": {
+      "overall": 58,
+      "performance": 100,
+      "accessibility": 0,
+      "bestPractices": 90
+    },
+    "vitals": {
+      "lcp": {
+        "value": 988,
+        "score": 100,
+        "label": "Good"
+      },
+      "cls": {
+        "value": 0,
+        "score": 100,
+        "label": "Good"
+      },
+      "fid": {
+        "value": 15,
+        "score": 100,
+        "label": "Good"
+      },
+      "tti": {
+        "value": 284,
+        "score": 100,
+        "label": "Good"
+      }
+    },
+    "slowResources": [],
+    "clsDetails": [],
+    "missingLabels": [],
+    "contrastFails": [
+      {
+        "element": "<p class=\"text-[#9CA3AF] text-xs\">Happy customers</p>",
+        "message": "Element has insufficient color contrast of 2.53 (foreground color: #9ca3af, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",
+        "impact": "serious"
+      },
+      {
+        "element": "<span class=\"text-xs font-bold uppercase tracking-[0.2em] text-[#F97316] mb-2 bl",
+        "message": "Element has insufficient color contrast of 2.67 (foreground color: #f97316, background color: #f8fafc, font size: 9.0pt (12px), font weight: bold). Expected contrast ratio of 4.5:1",
+        "impact": "serious"
+      },
+      {
+        "element": "<span class=\"text-[11px] font-semibold uppercase tracking-wider text-[#9CA3AF] m",
+        "message": "Element has insufficient color contrast of 2.53 (foreground color: #9ca3af, background color: #ffffff, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1",
+        "impact": "serious"
+      },
+      {
+        "element": "<span class=\"text-xs text-[#9CA3AF] font-medium\">(0)</span>",
+        "message": "Element has insufficient color contrast of 2.53 (foreground color: #9ca3af, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",
+        "impact": "serious"
+      },
+      {
+        "element": "<span class=\"text-lg font-bold text-[#16A34A]\" style=\"font-family: Poppins, sans",
+        "message": "Element has insufficient color contrast of 3.29 (foreground color: #16a34a, background color: #ffffff, font size: 13.5pt (18px), font weight: bold). Expected contrast ratio of 4.5:1",
+        "impact": "serious"
+      }
+    ],
+    "ariaViolations": [],
+    "tabViolations": [],
+    "consoleErrors": [],
+    "axeSummary": {
+      "violations": 3,
+      "passes": 29,
+      "incomplete": 1,
+      "byImpact": {
+        "critical": 1,
+        "serious": 2,
+        "moderate": 0,
+        "minor": 0
+      },
+      "allViolations": [
+        {
+          "id": "button-name",
+          "impact": "critical",
+          "count": 17,
+          "description": "Ensure buttons have discernible text",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/button-name?application=axeAPI"
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 44,
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=axeAPI"
+        },
+        {
+          "id": "link-name",
+          "impact": "serious",
+          "count": 5,
+          "description": "Ensure links have discernible text",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/link-name?application=axeAPI"
+        }
+      ]
+    },
+    "bestPracticesSignals": {
+      "hasMetaDesc": false,
+      "hasViewport": true,
+      "hasCharset": true,
+      "hasFavicon": true,
+      "hasLangAttr": true,
+      "imagesTotal": 12,
+      "imgWithoutAlt": 0,
+      "isHTTPS": true,
+      "consoleErrors": 0
+    },
+    "analyzedAt": "2026-02-23T15:10:46.410Z"
+  }
+}
