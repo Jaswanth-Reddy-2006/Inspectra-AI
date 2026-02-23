@@ -9,6 +9,26 @@ import Scans from './pages/Scans';
 import Documentation from './pages/Documentation';
 import Settings from './pages/Settings';
 import Profile from './pages/Profile';
+<<<<<<< HEAD
+=======
+
+// QA Agent Pages
+import DiscoveryAgent from './pages/DiscoveryAgent';
+import AuthAgent from './pages/AuthAgent';
+import PageClassifier from './pages/PageClassifier';
+import DOMAnalysis from './pages/DOMAnalysis';
+import NetworkMonitor from './pages/NetworkMonitor';
+import PerformanceAccessibility from './pages/PerfAccessibility';
+import FunctionalJudge from './pages/FunctionalJudge';
+import VisualJudge from './pages/VisualJudge';
+
+// Analysis Pages
+import DefectGraphs from './pages/DefectGraphs';
+import SeverityMatrix from './pages/SeverityMatrix';
+import HygieneScore from './pages/HygieneScore';
+import RiskAnalysis from './pages/RiskAnalysis';
+
+>>>>>>> localcode
 import Sidebar from './components/Sidebar';
 import TopBar from './components/TopBar';
 import LoadingSpinner from './components/LoadingSpinner';
@@ -83,6 +103,7 @@ function App() {
                     <Home onScanStart={handleScanStart} isScanning={isScanning} />
                 } />
 
+<<<<<<< HEAD
                 <Route path="/dashboard" element={
                     <AppLayout>
                         <Dashboard result={scanResult} />
@@ -111,6 +132,65 @@ function App() {
                     <AppLayout>
                         <Profile />
                     </AppLayout>
+=======
+                {/* ── Overview ──────────────────────────────── */}
+                <Route path="/dashboard" element={
+                    <AppLayout><Dashboard result={scanResult} /></AppLayout>
+                } />
+                <Route path="/projects" element={
+                    <AppLayout><Projects /></AppLayout>
+                } />
+                <Route path="/scans" element={
+                    <AppLayout><Scans /></AppLayout>
+                } />
+
+                {/* ── QA Agents ─────────────────────────────── */}
+                <Route path="/discovery" element={
+                    <AppLayout><DiscoveryAgent /></AppLayout>
+                } />
+                <Route path="/auth-agent" element={
+                    <AppLayout><AuthAgent /></AppLayout>
+                } />
+                <Route path="/classifier" element={
+                    <AppLayout><PageClassifier /></AppLayout>
+                } />
+                <Route path="/dom" element={
+                    <AppLayout><DOMAnalysis /></AppLayout>
+                } />
+                <Route path="/network" element={
+                    <AppLayout><NetworkMonitor /></AppLayout>
+                } />
+                <Route path="/performance" element={
+                    <AppLayout><PerformanceAccessibility /></AppLayout>
+                } />
+                <Route path="/functional" element={
+                    <AppLayout><FunctionalJudge /></AppLayout>
+                } />
+                <Route path="/visual" element={
+                    <AppLayout><VisualJudge /></AppLayout>
+                } />
+
+                {/* ── Analysis ──────────────────────────────── */}
+                <Route path="/defects" element={
+                    <AppLayout><DefectGraphs /></AppLayout>
+                } />
+                <Route path="/severity" element={
+                    <AppLayout><SeverityMatrix /></AppLayout>
+                } />
+                <Route path="/hygiene" element={
+                    <AppLayout><HygieneScore /></AppLayout>
+                } />
+                <Route path="/risk" element={
+                    <AppLayout><RiskAnalysis /></AppLayout>
+                } />
+
+                {/* ── Settings & Profile ─────────────────────── */}
+                <Route path="/settings" element={
+                    <AppLayout><Settings /></AppLayout>
+                } />
+                <Route path="/profile" element={
+                    <AppLayout><Profile /></AppLayout>
+>>>>>>> localcode
                 } />
 
                 <Route path="/docs" element={<Documentation />} />

@@ -1,0 +1,526 @@
+[
+  {
+    "url": "https://dealdrop-lj35.onrender.com/products",
+    "runAt": "2026-02-23T15:49:21.456Z",
+    "results": [
+      {
+        "flowId": "login",
+        "name": "User Login",
+        "goal": "Authenticate with valid credentials and verify successful session creation",
+        "icon": "🔐",
+        "color": "#6366f1",
+        "url": "https://dealdrop-lj35.onrender.com/products",
+        "verdict": "fail",
+        "confidence": 50,
+        "durationMs": 18505,
+        "steps": [
+          {
+            "label": "Navigate to page",
+            "action": "navigate",
+            "selector": null,
+            "value": null,
+            "verdict": "pass",
+            "durationMs": 1543,
+            "reason": null,
+            "detail": "Loaded: DealDrop - Premium E-commerce"
+          },
+          {
+            "label": "Detect login form",
+            "action": "detect",
+            "selector": "form, [data-testid*=login]",
+            "value": null,
+            "verdict": "pass",
+            "durationMs": 44,
+            "reason": null,
+            "detail": "Found 1 matching element(s)"
+          },
+          {
+            "label": "Fill email field",
+            "action": "fill",
+            "selector": "input[type=email], input[name*=email], input[id*=email], input[placeholder*=email i]",
+            "value": "tester@inspectra.ai",
+            "verdict": "pass",
+            "durationMs": 123,
+            "reason": null,
+            "detail": "Filled with: tester@inspectra.ai"
+          },
+          {
+            "label": "Fill password field",
+            "action": "fill",
+            "selector": "input[type=password]",
+            "value": "Test@secure123",
+            "verdict": "fail",
+            "durationMs": 8011,
+            "reason": {
+              "code": "TIMEOUT",
+              "title": "Element Wait Timeout",
+              "why": "The selector \"input[type=password]\" was not found within the timeout period. This usually means the element doesn't exist on this page, is inside a shadow DOM, or requires a logged-in state to appear.",
+              "suggestions": [
+                "Verify the page loads the element within 10s",
+                "Check if the element is inside an iframe or shadow DOM",
+                "Ensure the page does not require authentication to show this element"
+              ],
+              "category": "Not Found"
+            },
+            "detail": "locator.waitFor: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('input[type=password]').first() to be vi"
+          },
+          {
+            "label": "Click sign-in button",
+            "action": "click",
+            "selector": "button[type=submit], input[type=submit], button:has-text(\"Sign in\"), button:has-text(\"Login\"), button:has-text(\"Log in\")",
+            "value": null,
+            "verdict": "pass",
+            "durationMs": 122,
+            "reason": null,
+            "detail": "Clicked: button:has-text(\"Sign in\")"
+          },
+          {
+            "label": "Wait for navigation/session",
+            "action": "waitNav",
+            "selector": null,
+            "value": null,
+            "verdict": "pass",
+            "durationMs": 8626,
+            "reason": null,
+            "detail": "URL: https://dealdrop-lj35.onrender.com/login"
+          },
+          {
+            "label": "Verify session established",
+            "action": "verify",
+            "selector": "[data-testid*=avatar], [data-testid*=user], nav .user, .user-menu, .avatar, .profile-pic, [href*=logout], a:has-text(\"Logout\"), a:has-text(\"Sign out\")",
+            "value": null,
+            "verdict": "fail",
+            "durationMs": 36,
+            "reason": {
+              "code": "VERIFICATION_FAILED",
+              "title": "Expected Element Not Present After Action",
+              "why": "After completing the action, the expected success indicator (\"[data-testid*=avatar], [data-testid*=user], nav .user, .user-menu, .avatar, .pro\") was not found in the DOM. The operation may have failed silently, or the success state uses different markup than expected.",
+              "suggestions": [
+                "Check server response / network tab for error responses",
+                "Look for inline validation errors in the form",
+                "The success state may use a different CSS class or text than the selector expects"
+              ],
+              "category": "Verification"
+            },
+            "detail": "Expected element not found: [data-testid*=avatar], [data-testid*=user], nav .user, .user-menu, .avatar, .pro"
+          }
+        ],
+        "overallReason": {
+          "code": "TIMEOUT",
+          "title": "Element Wait Timeout",
+          "why": "The selector \"input[type=password]\" was not found within the timeout period. This usually means the element doesn't exist on this page, is inside a shadow DOM, or requires a logged-in state to appear.",
+          "suggestions": [
+            "Verify the page loads the element within 10s",
+            "Check if the element is inside an iframe or shadow DOM",
+            "Ensure the page does not require authentication to show this element"
+          ],
+          "category": "Not Found",
+          "step": "Fill password field",
+          "cascade": true
+        },
+        "passCount": 5,
+        "failCount": 2,
+        "totalSteps": 7,
+        "executedAt": "2026-02-23T15:48:31.918Z"
+      },
+      {
+        "flowId": "addToCart",
+        "name": "Add to Cart",
+        "goal": "Find a purchasable product and add it to the shopping cart",
+        "icon": "🛒",
+        "color": "#f59e0b",
+        "url": "https://dealdrop-lj35.onrender.com/products",
+        "verdict": "fail",
+        "confidence": 30,
+        "durationMs": 26730,
+        "steps": [
+          {
+            "label": "Navigate to page",
+            "action": "navigate",
+            "selector": null,
+            "value": null,
+            "verdict": "pass",
+            "durationMs": 2014,
+            "reason": null,
+            "detail": "Loaded: DealDrop - Premium E-commerce"
+          },
+          {
+            "label": "Detect product grid / list",
+            "action": "detect",
+            "selector": ".product, [class*=product], [class*=card], article, [data-product], [itemtype*=Product]",
+            "value": null,
+            "verdict": "fail",
+            "durationMs": 8009,
+            "reason": {
+              "code": "TIMEOUT",
+              "title": "Element Wait Timeout",
+              "why": "The selector \".product, [class*=product], [class*=card], article, [data-product], [itemtype*=P\" was not found within the timeout period. This usually means the element doesn't exist on this page, is inside a shadow DOM, or requires a logged-in state to appear.",
+              "suggestions": [
+                "Verify the page loads the element within 10s",
+                "Check if the element is inside an iframe or shadow DOM",
+                "Ensure the page does not require authentication to show this element"
+              ],
+              "category": "Not Found"
+            },
+            "detail": "locator.waitFor: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.product, [class*=product], [class*=car"
+          },
+          {
+            "label": "Open first product",
+            "action": "click",
+            "selector": ".product a, [class*=product] a, [class*=card] a, article a",
+            "value": null,
+            "verdict": "fail",
+            "durationMs": 9,
+            "reason": {
+              "code": "STEP_FAILED",
+              "title": "Step Execution Failed",
+              "why": "Playwright threw: \"No clickable element found for: .product a, [class*=product] a, [class*=card] a, article a\". The step could not complete as expected.",
+              "suggestions": [
+                "Open DevTools and manually verify the selector works",
+                "Check for JavaScript errors that may block interaction",
+                "Ensure the target page has not changed its structure"
+              ],
+              "category": "Runtime",
+              "cascade": true,
+              "cascadeFrom": "Detect product grid / list"
+            },
+            "detail": "No clickable element found for: .product a, [class*=product] a, [class*=card] a, article a"
+          },
+          {
+            "label": "Product detail page loaded",
+            "action": "waitNav",
+            "selector": null,
+            "value": null,
+            "verdict": "pass",
+            "durationMs": 8622,
+            "reason": null,
+            "detail": "URL: https://dealdrop-lj35.onrender.com/products"
+          },
+          {
+            "label": "Detect add-to-cart button",
+            "action": "detect",
+            "selector": "button:has-text(\"Add to cart\"), button:has-text(\"Add to Cart\"), button:has-text(\"Buy now\"), [data-testid*=cart], [id*=addtocart], .add-to-cart",
+            "value": null,
+            "verdict": "fail",
+            "durationMs": 8012,
+            "reason": {
+              "code": "TIMEOUT",
+              "title": "Element Wait Timeout",
+              "why": "The selector \"button:has-text(\"Add to cart\"), button:has-text(\"Add to Cart\"), button:has-text(\" was not found within the timeout period. This usually means the element doesn't exist on this page, is inside a shadow DOM, or requires a logged-in state to appear.",
+              "suggestions": [
+                "Verify the page loads the element within 10s",
+                "Check if the element is inside an iframe or shadow DOM",
+                "Ensure the page does not require authentication to show this element"
+              ],
+              "category": "Not Found"
+            },
+            "detail": "locator.waitFor: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"Add to cart\"), button:"
+          },
+          {
+            "label": "Click add-to-cart",
+            "action": "click",
+            "selector": "button:has-text(\"Add to cart\"), button:has-text(\"Add to Cart\"), button:has-text(\"Buy now\"), [data-testid*=cart], .add-to-cart",
+            "value": null,
+            "verdict": "fail",
+            "durationMs": 23,
+            "reason": {
+              "code": "STEP_FAILED",
+              "title": "Step Execution Failed",
+              "why": "Playwright threw: \"No clickable element found for: button:has-text(\"Add to cart\"), button:has-text(\"Add to Cart\"), button:has-text(\". The step could not complete as expected.",
+              "suggestions": [
+                "Open DevTools and manually verify the selector works",
+                "Check for JavaScript errors that may block interaction",
+                "Ensure the target page has not changed its structure"
+              ],
+              "category": "Runtime",
+              "cascade": true,
+              "cascadeFrom": "Detect add-to-cart button"
+            },
+            "detail": "No clickable element found for: button:has-text(\"Add to cart\"), button:has-text(\"Add to Cart\"), button:has-text("
+          },
+          {
+            "label": "Verify cart updated",
+            "action": "verify",
+            "selector": "[data-testid*=cart-count], .cart-count, [aria-label*=cart], .cart-badge, [class*=cart-item], .minicart, [href*=cart]",
+            "value": null,
+            "verdict": "pass",
+            "durationMs": 41,
+            "reason": null,
+            "detail": "Verified: 2 element(s) present"
+          }
+        ],
+        "overallReason": {
+          "code": "TIMEOUT",
+          "title": "Element Wait Timeout",
+          "why": "The selector \".product, [class*=product], [class*=card], article, [data-product], [itemtype*=P\" was not found within the timeout period. This usually means the element doesn't exist on this page, is inside a shadow DOM, or requires a logged-in state to appear.",
+          "suggestions": [
+            "Verify the page loads the element within 10s",
+            "Check if the element is inside an iframe or shadow DOM",
+            "Ensure the page does not require authentication to show this element"
+          ],
+          "category": "Not Found",
+          "step": "Detect product grid / list",
+          "cascade": true
+        },
+        "passCount": 3,
+        "failCount": 4,
+        "totalSteps": 7,
+        "executedAt": "2026-02-23T15:48:59.240Z"
+      },
+      {
+        "flowId": "submitForm",
+        "name": "Submit Contact Form",
+        "goal": "Fill and submit a contact/enquiry form and verify success confirmation",
+        "icon": "📋",
+        "color": "#10b981",
+        "url": "https://dealdrop-lj35.onrender.com/products",
+        "verdict": "fail",
+        "confidence": 30,
+        "durationMs": 1715,
+        "steps": [
+          {
+            "label": "Navigate to page",
+            "action": "navigate",
+            "selector": null,
+            "value": null,
+            "verdict": "pass",
+            "durationMs": 1538,
+            "reason": null,
+            "detail": "Loaded: DealDrop - Premium E-commerce"
+          },
+          {
+            "label": "Locate contact / enquiry form",
+            "action": "detect",
+            "selector": "form, [data-testid*=form], [id*=contact], [class*=contact-form]",
+            "value": null,
+            "verdict": "pass",
+            "durationMs": 38,
+            "reason": null,
+            "detail": "Found 1 matching element(s)"
+          },
+          {
+            "label": "Fill name field",
+            "action": "fillFirst",
+            "selector": "input[name*=name i], input[placeholder*=name i], input[id*=name i]",
+            "value": "Alex Morgan",
+            "verdict": "fail",
+            "durationMs": 7,
+            "reason": {
+              "code": "STEP_FAILED",
+              "title": "Step Execution Failed",
+              "why": "Playwright threw: \"No matching field found for selectors: input[name*=name i], input[placeholder*=name i], input[id*=name i]\". The step could not complete as expected.",
+              "suggestions": [
+                "Open DevTools and manually verify the selector works",
+                "Check for JavaScript errors that may block interaction",
+                "Ensure the target page has not changed its structure"
+              ],
+              "category": "Runtime"
+            },
+            "detail": "No matching field found for selectors: input[name*=name i], input[placeholder*=name i], input[id*=name i]"
+          },
+          {
+            "label": "Fill email field",
+            "action": "fillFirst",
+            "selector": "input[type=email], input[name*=email i], input[placeholder*=email i]",
+            "value": "tester@inspectra.ai",
+            "verdict": "pass",
+            "durationMs": 78,
+            "reason": null,
+            "detail": "Filled \"input[type=email]\" with: tester@inspectra.ai"
+          },
+          {
+            "label": "Fill message / textarea",
+            "action": "fillFirst",
+            "selector": "textarea, [name*=message i], [placeholder*=message i]",
+            "value": "Hi, I am testing the contact form as par…",
+            "verdict": "fail",
+            "durationMs": 12,
+            "reason": {
+              "code": "STEP_FAILED",
+              "title": "Step Execution Failed",
+              "why": "Playwright threw: \"No matching field found for selectors: textarea, [name*=message i], [placeholder*=message i]\". The step could not complete as expected.",
+              "suggestions": [
+                "Open DevTools and manually verify the selector works",
+                "Check for JavaScript errors that may block interaction",
+                "Ensure the target page has not changed its structure"
+              ],
+              "category": "Runtime"
+            },
+            "detail": "No matching field found for selectors: textarea, [name*=message i], [placeholder*=message i]"
+          },
+          {
+            "label": "Submit form",
+            "action": "click",
+            "selector": "button[type=submit], input[type=submit], button:has-text(\"Send\"), button:has-text(\"Submit\")",
+            "value": null,
+            "verdict": "fail",
+            "durationMs": 24,
+            "reason": {
+              "code": "STEP_FAILED",
+              "title": "Step Execution Failed",
+              "why": "Playwright threw: \"No clickable element found for: button[type=submit], input[type=submit], button:has-text(\"Send\"), button:has-tex\". The step could not complete as expected.",
+              "suggestions": [
+                "Open DevTools and manually verify the selector works",
+                "Check for JavaScript errors that may block interaction",
+                "Ensure the target page has not changed its structure"
+              ],
+              "category": "Runtime",
+              "cascade": true,
+              "cascadeFrom": "Fill message / textarea"
+            },
+            "detail": "No clickable element found for: button[type=submit], input[type=submit], button:has-text(\"Send\"), button:has-tex"
+          },
+          {
+            "label": "Verify success message shown",
+            "action": "verify",
+            "selector": "[class*=success], [class*=thank], [class*=confirmation], p:has-text(\"thank\"), p:has-text(\"success\"), div:has-text(\"Thank you\"), div:has-text(\"message received\")",
+            "value": null,
+            "verdict": "fail",
+            "durationMs": 18,
+            "reason": {
+              "code": "VERIFICATION_FAILED",
+              "title": "Expected Element Not Present After Action",
+              "why": "After completing the action, the expected success indicator (\"[class*=success], [class*=thank], [class*=confirmation], p:has-text(\"thank\"), p:\") was not found in the DOM. The operation may have failed silently, or the success state uses different markup than expected.",
+              "suggestions": [
+                "Check server response / network tab for error responses",
+                "Look for inline validation errors in the form",
+                "The success state may use a different CSS class or text than the selector expects"
+              ],
+              "category": "Verification",
+              "cascade": true,
+              "cascadeFrom": "Submit form"
+            },
+            "detail": "Expected element not found: [class*=success], [class*=thank], [class*=confirmation], p:has-text(\"thank\"), p:"
+          }
+        ],
+        "overallReason": {
+          "code": "STEP_FAILED",
+          "title": "Step Execution Failed",
+          "why": "Playwright threw: \"No matching field found for selectors: input[name*=name i], input[placeholder*=name i], input[id*=name i]\". The step could not complete as expected.",
+          "suggestions": [
+            "Open DevTools and manually verify the selector works",
+            "Check for JavaScript errors that may block interaction",
+            "Ensure the target page has not changed its structure"
+          ],
+          "category": "Runtime",
+          "step": "Fill name field",
+          "cascade": true
+        },
+        "passCount": 3,
+        "failCount": 4,
+        "totalSteps": 7,
+        "executedAt": "2026-02-23T15:49:01.672Z"
+      },
+      {
+        "flowId": "search",
+        "name": "Site Search",
+        "goal": "Locate the search feature, enter a query, and verify results are returned",
+        "icon": "🔍",
+        "color": "#0ea5e9",
+        "url": "https://dealdrop-lj35.onrender.com/products",
+        "verdict": "fail",
+        "confidence": 47,
+        "durationMs": 18183,
+        "steps": [
+          {
+            "label": "Navigate to page",
+            "action": "navigate",
+            "selector": null,
+            "value": null,
+            "verdict": "pass",
+            "durationMs": 1440,
+            "reason": null,
+            "detail": "Loaded: DealDrop - Premium E-commerce"
+          },
+          {
+            "label": "Detect search input",
+            "action": "detect",
+            "selector": "input[type=search], input[name=q], input[name=search], input[placeholder*=search i], [role=searchbox], [aria-label*=search i]",
+            "value": null,
+            "verdict": "pass",
+            "durationMs": 38,
+            "reason": null,
+            "detail": "Found 2 matching element(s)"
+          },
+          {
+            "label": "Enter search query",
+            "action": "fill",
+            "selector": "input[type=search], input[name=q], input[name=search], input[placeholder*=search i], [role=searchbox]",
+            "value": "product quality assurance",
+            "verdict": "pass",
+            "durationMs": 50,
+            "reason": null,
+            "detail": "Filled with: product quality assurance"
+          },
+          {
+            "label": "Submit search (Enter / btn)",
+            "action": "submit",
+            "selector": "input[type=search], [role=searchbox], input[name=q]",
+            "value": null,
+            "verdict": "fail",
+            "durationMs": 8012,
+            "reason": {
+              "code": "TIMEOUT",
+              "title": "Element Wait Timeout",
+              "why": "The selector \"input[type=search], [role=searchbox], input[name=q]\" was not found within the timeout period. This usually means the element doesn't exist on this page, is inside a shadow DOM, or requires a logged-in state to appear.",
+              "suggestions": [
+                "Verify the page loads the element within 10s",
+                "Check if the element is inside an iframe or shadow DOM",
+                "Ensure the page does not require authentication to show this element"
+              ],
+              "category": "Not Found"
+            },
+            "detail": "locator.waitFor: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('input[type=search], [role=searchbox], i"
+          },
+          {
+            "label": "Results page loaded",
+            "action": "waitNav",
+            "selector": null,
+            "value": null,
+            "verdict": "pass",
+            "durationMs": 8620,
+            "reason": null,
+            "detail": "URL: https://dealdrop-lj35.onrender.com/products"
+          },
+          {
+            "label": "Verify results rendered",
+            "action": "verify",
+            "selector": "[class*=result], [class*=search-result], article, .product, li[class*=item], [data-testid*=result]",
+            "value": null,
+            "verdict": "fail",
+            "durationMs": 23,
+            "reason": {
+              "code": "VERIFICATION_FAILED",
+              "title": "Expected Element Not Present After Action",
+              "why": "After completing the action, the expected success indicator (\"[class*=result], [class*=search-result], article, .product, li[class*=item], [da\") was not found in the DOM. The operation may have failed silently, or the success state uses different markup than expected.",
+              "suggestions": [
+                "Check server response / network tab for error responses",
+                "Look for inline validation errors in the form",
+                "The success state may use a different CSS class or text than the selector expects"
+              ],
+              "category": "Verification"
+            },
+            "detail": "No result items found after search"
+          }
+        ],
+        "overallReason": {
+          "code": "TIMEOUT",
+          "title": "Element Wait Timeout",
+          "why": "The selector \"input[type=search], [role=searchbox], input[name=q]\" was not found within the timeout period. This usually means the element doesn't exist on this page, is inside a shadow DOM, or requires a logged-in state to appear.",
+          "suggestions": [
+            "Verify the page loads the element within 10s",
+            "Check if the element is inside an iframe or shadow DOM",
+            "Ensure the page does not require authentication to show this element"
+          ],
+          "category": "Not Found",
+          "step": "Submit search (Enter / btn)",
+          "cascade": true
+        },
+        "passCount": 4,
+        "failCount": 2,
+        "totalSteps": 6,
+        "executedAt": "2026-02-23T15:49:21.454Z"
+      }
+    ]
+  }
+]
