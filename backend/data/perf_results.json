@@ -1,0 +1,644 @@
+{
+  "https://dealdrop-lj35.onrender.com/": {
+    "url": "https://dealdrop-lj35.onrender.com/",
+    "title": "Render - Application loading",
+    "scores": {
+      "overall": 76,
+      "performance": 71,
+      "accessibility": 79,
+      "bestPractices": 80
+    },
+    "vitals": {
+      "lcp": {
+        "value": 3752,
+        "score": 17,
+        "label": "Needs work"
+      },
+      "cls": {
+        "value": 0,
+        "score": 100,
+        "label": "Good"
+      },
+      "fid": {
+        "value": 7,
+        "score": 100,
+        "label": "Good"
+      },
+      "tti": {
+        "value": 3646,
+        "score": 100,
+        "label": "Good"
+      }
+    },
+    "slowResources": [],
+    "clsDetails": [],
+    "missingLabels": [],
+    "contrastFails": [],
+    "ariaViolations": [],
+    "tabViolations": [],
+    "consoleErrors": [
+      "Failed to load resource: the server responded with a status of 503 ()"
+    ],
+    "axeSummary": {
+      "violations": 1,
+      "passes": 14,
+      "incomplete": 2,
+      "byImpact": {
+        "critical": 0,
+        "serious": 0,
+        "moderate": 1,
+        "minor": 0
+      },
+      "allViolations": [
+        {
+          "id": "region",
+          "impact": "moderate",
+          "count": 3,
+          "description": "Ensure all page content is contained by landmarks",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/region?application=axeAPI"
+        }
+      ]
+    },
+    "bestPracticesSignals": {
+      "hasMetaDesc": false,
+      "hasViewport": true,
+      "hasCharset": true,
+      "hasFavicon": false,
+      "hasLangAttr": true,
+      "imagesTotal": 7,
+      "imgWithoutAlt": 0,
+      "isHTTPS": true,
+      "consoleErrors": 1
+    },
+    "analyzedAt": "2026-02-25T15:02:40.433Z"
+  },
+  "https://jaswanth-reddy-portfolio.vercel.app/": {
+    "url": "https://jaswanth-reddy-portfolio.vercel.app/",
+    "title": "Jaswanth Reddy | Portfolio",
+    "scores": {
+      "overall": 90,
+      "performance": 100,
+      "accessibility": 79,
+      "bestPractices": 90
+    },
+    "vitals": {
+      "lcp": {
+        "value": 620,
+        "score": 100,
+        "label": "Good"
+      },
+      "cls": {
+        "value": 0,
+        "score": 100,
+        "label": "Good"
+      },
+      "fid": {
+        "value": 0,
+        "score": 100,
+        "label": "Good"
+      },
+      "tti": {
+        "value": 170,
+        "score": 100,
+        "label": "Good"
+      }
+    },
+    "slowResources": [],
+    "clsDetails": [],
+    "missingLabels": [],
+    "contrastFails": [],
+    "ariaViolations": [],
+    "tabViolations": [],
+    "consoleErrors": [],
+    "axeSummary": {
+      "violations": 1,
+      "passes": 15,
+      "incomplete": 1,
+      "byImpact": {
+        "critical": 0,
+        "serious": 0,
+        "moderate": 1,
+        "minor": 0
+      },
+      "allViolations": [
+        {
+          "id": "region",
+          "impact": "moderate",
+          "count": 3,
+          "description": "Ensure all page content is contained by landmarks",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/region?application=axeAPI"
+        }
+      ]
+    },
+    "bestPracticesSignals": {
+      "hasMetaDesc": false,
+      "hasViewport": true,
+      "hasCharset": true,
+      "hasFavicon": true,
+      "hasLangAttr": true,
+      "imagesTotal": 0,
+      "imgWithoutAlt": 0,
+      "isHTTPS": true,
+      "consoleErrors": 0
+    },
+    "analyzedAt": "2026-02-24T14:56:06.430Z"
+  },
+  "https://algoscope.vercel.app/dashboard": {
+    "url": "https://algoscope.vercel.app/dashboard",
+    "title": "AlgoScope - Interactive DSA Visualizer",
+    "scores": {
+      "overall": 82,
+      "performance": 100,
+      "accessibility": 63,
+      "bestPractices": 85
+    },
+    "vitals": {
+      "lcp": {
+        "value": 1312,
+        "score": 100,
+        "label": "Good"
+      },
+      "cls": {
+        "value": 0,
+        "score": 100,
+        "label": "Good"
+      },
+      "fid": {
+        "value": 0,
+        "score": 100,
+        "label": "Good"
+      },
+      "tti": {
+        "value": 176,
+        "score": 100,
+        "label": "Good"
+      }
+    },
+    "slowResources": [
+      {
+        "url": "https://algoscope-ufu8.onrender.com/api/progress/guest_1772072218879",
+        "type": "API",
+        "duration": 10944,
+        "size": 0
+      },
+      {
+        "url": "https://algoscope-ufu8.onrender.com/api/problems",
+        "type": "API",
+        "duration": 1212,
+        "size": 0
+      }
+    ],
+    "clsDetails": [],
+    "missingLabels": [],
+    "contrastFails": [
+      {
+        "element": "<span class=\"text-[9px] text-[#EC4186] font-bold tracking-[0.2em] uppercase whit",
+        "message": "Element has insufficient color contrast of 4.18 (foreground color: #ec4186, background color: #38124a, font size: 6.8pt (9px), font weight: bold). Expected contrast ratio of 4.5:1",
+        "impact": "serious"
+      },
+      {
+        "element": "<span>Browse Library</span>",
+        "message": "Element has insufficient color contrast of 3.7 (foreground color: #ffffff, background color: #ec4186, font size: 12.0pt (16px), font weight: bold). Expected contrast ratio of 4.5:1",
+        "impact": "serious"
+      }
+    ],
+    "ariaViolations": [],
+    "tabViolations": [],
+    "consoleErrors": [
+      "Failed to load resource: the server responded with a status of 500 ()"
+    ],
+    "axeSummary": {
+      "violations": 2,
+      "passes": 18,
+      "incomplete": 1,
+      "byImpact": {
+        "critical": 0,
+        "serious": 1,
+        "moderate": 1,
+        "minor": 0
+      },
+      "allViolations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 2,
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=axeAPI"
+        },
+        {
+          "id": "heading-order",
+          "impact": "moderate",
+          "count": 1,
+          "description": "Ensure the order of headings is semantically correct",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/heading-order?application=axeAPI"
+        }
+      ]
+    },
+    "bestPracticesSignals": {
+      "hasMetaDesc": false,
+      "hasViewport": true,
+      "hasCharset": true,
+      "hasFavicon": true,
+      "hasLangAttr": true,
+      "imagesTotal": 0,
+      "imgWithoutAlt": 0,
+      "isHTTPS": true,
+      "consoleErrors": 1
+    },
+    "analyzedAt": "2026-02-26T02:17:14.345Z"
+  },
+  "https://www.google.com": {
+    "url": "https://www.google.com",
+    "title": "Google",
+    "scores": {
+      "overall": 81,
+      "performance": 100,
+      "accessibility": 76,
+      "bestPractices": 55
+    },
+    "vitals": {
+      "lcp": {
+        "value": 1712,
+        "score": 100,
+        "label": "Good"
+      },
+      "cls": {
+        "value": 0,
+        "score": 100,
+        "label": "Good"
+      },
+      "fid": {
+        "value": 47,
+        "score": 100,
+        "label": "Good"
+      },
+      "tti": {
+        "value": 1084,
+        "score": 100,
+        "label": "Good"
+      }
+    },
+    "slowResources": [
+      {
+        "url": "https://ogads-pa.clients6.google.com/$rpc/google.internal.onegoogle.asyncdata.v1.AsyncDataService/GetAsyncData",
+        "type": "Other",
+        "duration": 657,
+        "size": 0
+      }
+    ],
+    "clsDetails": [],
+    "missingLabels": [],
+    "contrastFails": [],
+    "ariaViolations": [
+      {
+        "rule": "aria-allowed-role",
+        "impact": "minor",
+        "count": 1,
+        "message": "Ensure role attribute has an appropriate value for the element"
+      }
+    ],
+    "tabViolations": [],
+    "consoleErrors": [],
+    "axeSummary": {
+      "violations": 4,
+      "passes": 29,
+      "incomplete": 2,
+      "byImpact": {
+        "critical": 0,
+        "serious": 0,
+        "moderate": 3,
+        "minor": 1
+      },
+      "allViolations": [
+        {
+          "id": "aria-allowed-role",
+          "impact": "minor",
+          "count": 1,
+          "description": "Ensure role attribute has an appropriate value for the element",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/aria-allowed-role?application=axeAPI"
+        },
+        {
+          "id": "landmark-one-main",
+          "impact": "moderate",
+          "count": 1,
+          "description": "Ensure the document has a main landmark",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/landmark-one-main?application=axeAPI"
+        },
+        {
+          "id": "page-has-heading-one",
+          "impact": "moderate",
+          "count": 1,
+          "description": "Ensure that the page, or at least one of its frames contains a level-one heading",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/page-has-heading-one?application=axeAPI"
+        },
+        {
+          "id": "region",
+          "impact": "moderate",
+          "count": 1,
+          "description": "Ensure all page content is contained by landmarks",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/region?application=axeAPI"
+        }
+      ]
+    },
+    "bestPracticesSignals": {
+      "hasMetaDesc": false,
+      "hasViewport": false,
+      "hasCharset": true,
+      "hasFavicon": true,
+      "hasLangAttr": true,
+      "imagesTotal": 9,
+      "imgWithoutAlt": 9,
+      "isHTTPS": true,
+      "consoleErrors": 0
+    },
+    "analyzedAt": "2026-02-25T08:56:09.966Z"
+  },
+  "https://algoscope.vercel.app/": {
+    "url": "https://algoscope.vercel.app/",
+    "title": "AlgoScope - Interactive DSA Visualizer",
+    "scores": {
+      "overall": 79,
+      "performance": 100,
+      "accessibility": 56,
+      "bestPractices": 85
+    },
+    "vitals": {
+      "lcp": {
+        "value": 624,
+        "score": 100,
+        "label": "Good"
+      },
+      "cls": {
+        "value": 0,
+        "score": 100,
+        "label": "Good"
+      },
+      "fid": {
+        "value": 49,
+        "score": 100,
+        "label": "Good"
+      },
+      "tti": {
+        "value": 178,
+        "score": 100,
+        "label": "Good"
+      }
+    },
+    "slowResources": [
+      {
+        "url": "https://algoscope-ufu8.onrender.com/api/progress/guest_1772107829646",
+        "type": "API",
+        "duration": 10924,
+        "size": 0
+      },
+      {
+        "url": "https://algoscope-ufu8.onrender.com/api/problems",
+        "type": "API",
+        "duration": 1220,
+        "size": 0
+      }
+    ],
+    "clsDetails": [],
+    "missingLabels": [],
+    "contrastFails": [
+      {
+        "element": "<a class=\"px-6 py-2.5 bg-[#EC4186] hover:bg-[#d63a78] text-white text-sm font-bo",
+        "message": "Element has insufficient color contrast of 3.7 (foreground color: #ffffff, background color: #ec4186, font size: 10.5pt (14px), font weight: bold). Expected contrast ratio of 4.5:1",
+        "impact": "serious"
+      },
+      {
+        "element": "<div class=\"text-[#EC4186] text-[11px] font-bold uppercase tracking-[0.2em] mb-4",
+        "message": "Element has insufficient color contrast of 3.7 (foreground color: #ec4186, background color: #4a1750, font size: 8.3pt (11px), font weight: bold). Expected contrast ratio of 4.5:1",
+        "impact": "serious"
+      }
+    ],
+    "ariaViolations": [],
+    "tabViolations": [],
+    "consoleErrors": [
+      "Failed to load resource: the server responded with a status of 500 ()"
+    ],
+    "axeSummary": {
+      "violations": 2,
+      "passes": 21,
+      "incomplete": 1,
+      "byImpact": {
+        "critical": 0,
+        "serious": 1,
+        "moderate": 1,
+        "minor": 0
+      },
+      "allViolations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 2,
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=axeAPI"
+        },
+        {
+          "id": "heading-order",
+          "impact": "moderate",
+          "count": 2,
+          "description": "Ensure the order of headings is semantically correct",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/heading-order?application=axeAPI"
+        }
+      ]
+    },
+    "bestPracticesSignals": {
+      "hasMetaDesc": false,
+      "hasViewport": true,
+      "hasCharset": true,
+      "hasFavicon": true,
+      "hasLangAttr": true,
+      "imagesTotal": 0,
+      "imgWithoutAlt": 0,
+      "isHTTPS": true,
+      "consoleErrors": 1
+    },
+    "analyzedAt": "2026-02-26T12:10:44.835Z"
+  },
+  "https://vjit.instacks.co/": {
+    "url": "https://vjit.instacks.co/",
+    "title": "Welcome",
+    "scores": {
+      "overall": 22,
+      "performance": 30,
+      "accessibility": 0,
+      "bestPractices": 51
+    },
+    "vitals": {
+      "lcp": {
+        "value": 15764,
+        "score": 0,
+        "label": "Poor"
+      },
+      "cls": {
+        "value": 0,
+        "score": 100,
+        "label": "Good"
+      },
+      "fid": {
+        "value": 1258,
+        "score": 0,
+        "label": "Poor"
+      },
+      "tti": {
+        "value": 8686,
+        "score": 0,
+        "label": "Poor"
+      }
+    },
+    "slowResources": [
+      {
+        "url": "https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js",
+        "type": "Script",
+        "duration": 7838,
+        "size": 595697
+      },
+      {
+        "url": "https://vjit.instacks.co/styles-es2015.ac297693ffbbae7b0f6c.js",
+        "type": "Script",
+        "duration": 5534,
+        "size": 239920
+      },
+      {
+        "url": "https://vjit.instacks.co/assets/js/src-noconflict/ace.js",
+        "type": "Script",
+        "duration": 4123,
+        "size": 146238
+      },
+      {
+        "url": "https://vjit.instacks.co/scripts.a72f3e5601aba20789ee.js",
+        "type": "Script",
+        "duration": 3858,
+        "size": 561332
+      },
+      {
+        "url": "https://www.googletagmanager.com/gtag/js?id=G-DVZLSXBZJ4",
+        "type": "Other",
+        "duration": 2642,
+        "size": 0
+      },
+      {
+        "url": "https://www.googletagmanager.com/gtag/js?id=UA-108059749-2",
+        "type": "Other",
+        "duration": 2586,
+        "size": 0
+      },
+      {
+        "url": "https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015",
+        "type": "Other",
+        "duration": 2339,
+        "size": 0
+      },
+      {
+        "url": "https://vjit.instacks.co/assets/css/plyr.css",
+        "type": "Style",
+        "duration": 2150,
+        "size": 4532
+      },
+      {
+        "url": "https://vjit.instacks.co/assets/user_assets/css/materialdesignicons.min.css",
+        "type": "Style",
+        "duration": 2150,
+        "size": 40238
+      },
+      {
+        "url": "https://instacks1w.proctoring.app/sdk/supervisor.js",
+        "type": "Script",
+        "duration": 2113,
+        "size": 0
+      }
+    ],
+    "clsDetails": [],
+    "missingLabels": [],
+    "contrastFails": [
+      {
+        "element": "<h6 _ngcontent-bkq-c141=\"\" class=\"text-primary\">- Jay</h6>",
+        "message": "Element has insufficient color contrast of 3.97 (foreground color: #007bff, background color: #ffffff, font size: 12.0pt (16px), font weight: normal). Expected contrast ratio of 4.5:1",
+        "impact": "serious"
+      }
+    ],
+    "ariaViolations": [],
+    "tabViolations": [],
+    "consoleErrors": [
+      "ERROR TypeError: Cannot read properties of undefined (reading 'tag_array')\n    at template (https://vjit.instacks.co/18-es2015.13ec4bc8f339eb3ab58e.js:1:150186)\n    at as (https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1240433)\n    at rs (https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1239008)\n    at Os (https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1246790)\n    at https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1239938\n    at rs (https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1239949)\n    at https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1239435\n    at rs (https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1239460)\n    at https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1239435\n    at rs (https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1239460)",
+      "ERROR TypeError: Cannot read properties of undefined (reading 'tag_array')\n    at template (https://vjit.instacks.co/18-es2015.13ec4bc8f339eb3ab58e.js:1:150186)\n    at as (https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1240433)\n    at rs (https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1239008)\n    at Os (https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1246790)\n    at https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1239938\n    at rs (https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1239949)\n    at https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1239435\n    at rs (https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1239460)\n    at https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1239435\n    at rs (https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1239460)",
+      "Failed to load resource: the server responded with a status of 401 ()",
+      "ERROR TypeError: Cannot read properties of undefined (reading 'tag_array')\n    at template (https://vjit.instacks.co/18-es2015.13ec4bc8f339eb3ab58e.js:1:150186)\n    at as (https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1240433)\n    at rs (https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1239008)\n    at Os (https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1246790)\n    at https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1239938\n    at rs (https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1239949)\n    at https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1239435\n    at rs (https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1239460)\n    at https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1239435\n    at rs (https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1239460)",
+      "ERROR TypeError: Cannot read properties of undefined (reading 'tag_array')\n    at template (https://vjit.instacks.co/18-es2015.13ec4bc8f339eb3ab58e.js:1:150186)\n    at as (https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1240433)\n    at rs (https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1239008)\n    at Os (https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1246790)\n    at https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1239938\n    at rs (https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1239949)\n    at https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1239435\n    at rs (https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1239460)\n    at https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1239435\n    at rs (https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1239460)",
+      "ERROR TypeError: Cannot read properties of undefined (reading 'tag_array')\n    at template (https://vjit.instacks.co/18-es2015.13ec4bc8f339eb3ab58e.js:1:150186)\n    at as (https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1240433)\n    at rs (https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1239008)\n    at Os (https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1246790)\n    at https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1239938\n    at rs (https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1239949)\n    at https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1239435\n    at rs (https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1239460)\n    at https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1239435\n    at rs (https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1239460)",
+      "ERROR TypeError: Cannot read properties of undefined (reading 'tag_array')\n    at template (https://vjit.instacks.co/18-es2015.13ec4bc8f339eb3ab58e.js:1:150186)\n    at as (https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1240433)\n    at rs (https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1239008)\n    at Os (https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1246790)\n    at https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1239938\n    at rs (https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1239949)\n    at https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1239435\n    at rs (https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1239460)\n    at https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1239435\n    at rs (https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1239460)",
+      "ERROR TypeError: Cannot read properties of undefined (reading 'tag_array')\n    at template (https://vjit.instacks.co/18-es2015.13ec4bc8f339eb3ab58e.js:1:150186)\n    at as (https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1240433)\n    at rs (https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1239008)\n    at Os (https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1246790)\n    at https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1239938\n    at rs (https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1239949)\n    at https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1239435\n    at rs (https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1239460)\n    at https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1239435\n    at rs (https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1239460)",
+      "ERROR S",
+      "ERROR TypeError: Cannot read properties of undefined (reading 'tag_array')\n    at template (https://vjit.instacks.co/18-es2015.13ec4bc8f339eb3ab58e.js:1:150186)\n    at as (https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1240433)\n    at rs (https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1239008)\n    at Os (https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1246790)\n    at https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1239938\n    at rs (https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1239949)\n    at https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1239435\n    at rs (https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1239460)\n    at https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1239435\n    at rs (https://vjit.instacks.co/main-es2015.642fd7f08bf43ad85d3c.js:1:1239460)"
+    ],
+    "axeSummary": {
+      "violations": 6,
+      "passes": 26,
+      "incomplete": 0,
+      "byImpact": {
+        "critical": 0,
+        "serious": 3,
+        "moderate": 3,
+        "minor": 0
+      },
+      "allViolations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 1,
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=axeAPI"
+        },
+        {
+          "id": "heading-order",
+          "impact": "moderate",
+          "count": 9,
+          "description": "Ensure the order of headings is semantically correct",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/heading-order?application=axeAPI"
+        },
+        {
+          "id": "landmark-one-main",
+          "impact": "moderate",
+          "count": 1,
+          "description": "Ensure the document has a main landmark",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/landmark-one-main?application=axeAPI"
+        },
+        {
+          "id": "link-in-text-block",
+          "impact": "serious",
+          "count": 1,
+          "description": "Ensure links are distinguished from surrounding text in a way that does not rely on color",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/link-in-text-block?application=axeAPI"
+        },
+        {
+          "id": "link-name",
+          "impact": "serious",
+          "count": 5,
+          "description": "Ensure links have discernible text",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/link-name?application=axeAPI"
+        },
+        {
+          "id": "region",
+          "impact": "moderate",
+          "count": 14,
+          "description": "Ensure all page content is contained by landmarks",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/region?application=axeAPI"
+        }
+      ]
+    },
+    "bestPracticesSignals": {
+      "hasMetaDesc": true,
+      "hasViewport": true,
+      "hasCharset": true,
+      "hasFavicon": true,
+      "hasLangAttr": true,
+      "imagesTotal": 55,
+      "imgWithoutAlt": 53,
+      "isHTTPS": true,
+      "consoleErrors": 24
+    },
+    "analyzedAt": "2026-02-25T18:09:54.968Z"
+  }
+}
