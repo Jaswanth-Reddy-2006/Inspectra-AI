@@ -18,7 +18,10 @@ async function runMobileAudit(url, parentBrowser = null) {
 
     if (!browser) {
         keepBrowserAlive = false;
-        browser = await chromium.launch({ headless: true });
+        browser = await chromium.launch({
+            headless: true,
+            args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
+        });
     }
 
     const report = {

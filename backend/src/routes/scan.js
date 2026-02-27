@@ -87,7 +87,10 @@ async function performScan(scanId, url) {
         console.log(`[Scan ${scanId}] Crawl complete. Found ${session.crawlResults.length} pages. Starting Deep Inspection...`);
 
         // 2. Deep Inspection (A11y + Hygiene + Runtime)
-        const browser = await chromium.launch({ headless: true });
+        const browser = await chromium.launch({
+            headless: true,
+            args: ['--no-sandbox', '--disable-setuid-sandbox']
+        });
         session.browsers.push(browser);
 
         session.agents.runtime.status = 'running';

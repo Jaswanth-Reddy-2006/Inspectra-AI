@@ -57,7 +57,10 @@ class CrawlSession {
 
 async function runIntelligentCrawl(startUrl, maxPages = 50, onProgress) {
     const session = new CrawlSession(startUrl, { maxPages });
-    const browser = await chromium.launch({ headless: true });
+    const browser = await chromium.launch({
+        headless: true,
+        args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
+    });
     const context = await browser.newContext({
         userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Inspectra-Enterprise-Agent/2.0'
     });
