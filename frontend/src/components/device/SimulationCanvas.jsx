@@ -16,7 +16,9 @@ const SimulationCanvas = ({ telemetry, targetUrl, activeView }) => {
 
     // 3. Analytics & Telemetry Caching
     const [analysisCache, setAnalysisCache] = useState({});
-    const [currentMetrics, setCurrentMetrics] = useState(activeView || telemetry.integrityMatrix[0]);
+    const [currentMetrics, setCurrentMetrics] = useState(
+        activeView || (telemetry?.integrityMatrix && telemetry.integrityMatrix[0]) || {}
+    );
 
     // 4. Compare & Overlays
     const [compareMode, setCompareMode] = useState(false);
@@ -145,8 +147,8 @@ const SimulationCanvas = ({ telemetry, targetUrl, activeView }) => {
                             {dim.width}x{dim.height}
                         </span>
                         <span className={`text-[9px] font-bold tracking-widest uppercase px-2 py-0.5 border rounded ${currentMetrics?.stability === 'Weak' ? 'bg-red-500/10 text-red-400 border-red-500/20' :
-                                currentMetrics?.stability === 'Moderate' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' :
-                                    'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+                            currentMetrics?.stability === 'Moderate' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' :
+                                'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
                             }`}>
                             {currentMetrics?.stability || 'Strong'}
                         </span>

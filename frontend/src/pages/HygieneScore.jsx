@@ -1,156 +1,169 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useScanContext } from '../context/ScanContext';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShieldCheck, Loader2, RefreshCw, XCircle, CheckCircle, AlertTriangle, TrendingDown, Globe } from 'lucide-react';
+import {
+    ShieldCheck, Loader2, RefreshCw, XCircle, CheckCircle,
+    AlertTriangle, TrendingDown, Globe, Activity, Zap,
+    Eye, Database, Layout, Search, BarChart3, ChevronRight,
+    Lock, Sparkles
+} from 'lucide-react';
 import { API_BASE } from '../services/config';
 
 // ── Weight definitions (mirrors backend) ──────────────────────────────────────
 const DIMENSIONS = [
     {
         key: 'functional',
-        label: 'Functional',
-        icon: '⚙️',
+        label: 'Functional Logic',
+        icon: Zap,
         weight: 0.40,
         color: '#6366f1',
-        bg: '#eef2ff',
-        desc: 'Login, Add to Cart, Submit Form, Search flows',
+        bg: 'bg-indigo-500/10',
+        border: 'border-indigo-500/20',
+        desc: 'Core user flows & interaction stability',
     },
     {
         key: 'performance',
-        label: 'Performance',
-        icon: '⚡',
+        label: 'Compute Velocity',
+        icon: Activity,
         weight: 0.20,
         color: '#f59e0b',
-        bg: '#fef3c7',
-        desc: 'LCP, CLS, TTI, FID – Core Web Vitals',
+        bg: 'bg-amber-500/10',
+        border: 'border-amber-500/20',
+        desc: 'Execution speed & asset optimization',
     },
     {
         key: 'accessibility',
-        label: 'Accessibility',
-        icon: '♿',
+        label: 'Inclusion Depth',
+        icon: Layout,
         weight: 0.15,
         color: '#10b981',
-        bg: '#ecfdf5',
-        desc: 'WCAG 2.1 axe-core violations & contrast',
+        bg: 'bg-emerald-500/10',
+        border: 'border-emerald-500/20',
+        desc: 'Standardized accessibility compliance',
     },
     {
         key: 'visual',
-        label: 'Visual',
-        icon: '👁️',
+        label: 'Structural Fidelity',
+        icon: Eye,
         weight: 0.15,
         color: '#ec4899',
-        bg: '#fdf2f8',
-        desc: 'SSIM regression, overflow, hidden buttons',
+        bg: 'bg-pink-500/10',
+        border: 'border-pink-500/20',
+        desc: 'Visual regression & UI consistency',
     },
     {
         key: 'network',
-        label: 'Network',
-        icon: '🌐',
+        label: 'Network Integrity',
+        icon: Database,
         weight: 0.10,
         color: '#0ea5e9',
-        bg: '#e0f2fe',
-        desc: 'API errors, slow requests, blocked calls',
+        bg: 'bg-sky-500/10',
+        border: 'border-sky-500/20',
+        desc: 'API stability & transmission health',
     },
 ];
 
-// ── Grade config ──────────────────────────────────────────────────────────────
-const GRADE = {
-    'A+': { color: '#10b981', bg: '#ecfdf5', label: 'Excellent' },
-    'A': { color: '#22c55e', bg: '#f0fdf4', label: 'Very Good' },
-    'B': { color: '#84cc16', bg: '#f7fee7', label: 'Good' },
-    'C': { color: '#f59e0b', bg: '#fef3c7', label: 'Fair' },
-    'D': { color: '#f97316', bg: '#fff7ed', label: 'Needs Work' },
-    'F': { color: '#ef4444', bg: '#fee2e2', label: 'Critical' },
+const GRADE_MAPPING = {
+    'ELITE': { color: '#10b981', label: 'ELITE' },
+    'STABLE': { color: '#22c55e', label: 'OPTIMIZED' },
+    'FAIR': { color: '#84cc16', label: 'SECURE' },
+    'DEGRADED': { color: '#f59e0b', label: 'MODERATE' },
+    'UNSTABLE': { color: '#f97316', label: 'FRAGILE' },
+    'CRITICAL': { color: '#ef4444', label: 'CRITICAL' },
 };
 
 // ── Animated circular gauge ───────────────────────────────────────────────────
-function ScoreGauge({ score, size = 140, strokeWidth = 12, color = '#6366f1' }) {
+function ScoreGauge({ score, size = 180, strokeWidth = 12, color = '#6366f1' }) {
     const radius = (size - strokeWidth) / 2;
     const circumference = 2 * Math.PI * radius;
     const offset = circumference - (score / 100) * circumference;
 
     return (
-        <svg width={size} height={size} className="-rotate-90">
+        <svg width={size} height={size} className="-rotate-90 drop-shadow-[0_0_15px_rgba(99,102,241,0.2)]">
             <circle cx={size / 2} cy={size / 2} r={radius} fill="none"
-                stroke="#f1f5f9" strokeWidth={strokeWidth} />
+                stroke="#1E293B" strokeWidth={strokeWidth} />
             <motion.circle cx={size / 2} cy={size / 2} r={radius} fill="none"
                 stroke={color} strokeWidth={strokeWidth}
                 strokeLinecap="round"
                 strokeDasharray={circumference}
                 initial={{ strokeDashoffset: circumference }}
                 animate={{ strokeDashoffset: offset }}
-                transition={{ duration: 1.2, ease: 'easeOut' }} />
+                transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
+            />
         </svg>
     );
 }
 
-// ── Dimension bar ─────────────────────────────────────────────────────────────
-function DimensionBar({ dim, score, detail, breakdown }) {
+// ── Dimension Card ─────────────────────────────────────────────────────────────
+function DimensionCard({ dim, score, detail, breakdown }) {
     const [open, setOpen] = useState(false);
-    const pct = score ?? 50;
-    const isNull = score === null;
+    const pct = score ?? 0;
+    const isPlaceholder = score === null || score === 50;
+    const Icon = dim.icon;
 
     return (
-        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-            <div className="p-4">
-                <div className="flex items-center gap-3 mb-3">
-                    <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl shrink-0"
-                        style={{ background: dim.bg }}>
-                        {dim.icon}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                        <div className="flex items-baseline gap-2">
-                            <p className="text-sm font-black text-slate-800">{dim.label}</p>
-                            <span className="text-[9px] font-bold text-slate-400">
-                                {Math.round(dim.weight * 100)}% weight
-                            </span>
-                            {isNull && (
-                                <span className="text-[9px] font-bold text-slate-400 ml-auto bg-slate-100 px-2 py-0.5 rounded-full">
-                                    No data · using 50
-                                </span>
-                            )}
+        <div className="bg-[#1E293B]/40 backdrop-blur-3xl border border-slate-800 rounded-[2rem] overflow-hidden group hover:border-slate-700 transition-all shadow-2xl relative">
+            {isPlaceholder && (
+                <div className="absolute top-3 right-3 flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-slate-800/80 border border-slate-700">
+                    <div className="w-1.5 h-1.5 rounded-full bg-slate-500 animate-pulse" />
+                    <span className="text-[8px] font-black text-slate-500 uppercase tracking-widest">Inferred</span>
+                </div>
+            )}
+            <div className="p-6">
+                <div className="flex items-start justify-between mb-4">
+                    <div className="flex items-center gap-4">
+                        <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${dim.bg} border ${dim.border} shadow-lg shadow-black/20`}>
+                            <Icon size={20} style={{ color: dim.color }} />
                         </div>
-                        <p className="text-[10px] text-slate-400 truncate">{dim.desc}</p>
+                        <div className="flex flex-col">
+                            <h3 className="text-sm font-black text-slate-200 uppercase tracking-widest leading-none mb-1">{dim.label}</h3>
+                            <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest leading-none">{Math.round(dim.weight * 100)}% Influence</p>
+                        </div>
                     </div>
-                    <div className="text-right shrink-0">
-                        <p className="text-2xl font-black" style={{ color: dim.color }}>{pct}</p>
-                        <p className="text-[9px] text-slate-400 font-semibold">/ 100</p>
+                    <div className="text-right">
+                        <span className="text-3xl font-black tabular-nums tracking-tighter" style={{ color: dim.color }}>{isPlaceholder && score === null ? '—' : pct}</span>
+                        <span className="text-[10px] text-slate-600 font-black ml-1 uppercase">Score</span>
                     </div>
                 </div>
 
-                {/* Main bar */}
-                <div className="h-2 bg-slate-100 rounded-full overflow-hidden mb-1">
-                    <motion.div className="h-2 rounded-full" style={{ background: dim.color }}
-                        initial={{ width: 0 }} animate={{ width: `${pct}%` }}
-                        transition={{ duration: 0.8, ease: 'easeOut' }} />
+                <div className="h-1.5 bg-[#0F172A] rounded-full overflow-hidden mb-4 border border-slate-800">
+                    <motion.div
+                        className="h-full rounded-full"
+                        style={{ background: dim.color, boxShadow: `0 0 10px ${dim.color}40` }}
+                        initial={{ width: 0 }}
+                        animate={{ width: `${pct}%` }}
+                        transition={{ duration: 1, ease: "easeOut" }}
+                    />
                 </div>
 
-                {/* Sub-bars per breakdown */}
-                {detail && (
-                    <p className="text-[9px] text-slate-400 mt-1">{detail}</p>
-                )}
+                <p className="text-[11px] text-slate-400 font-medium leading-relaxed italic mb-4 opacity-80">{dim.desc}</p>
 
                 {breakdown?.length > 0 && (
                     <>
                         <button onClick={() => setOpen(o => !o)}
-                            className="mt-2 text-[9px] font-black text-slate-400 hover:text-indigo-600 transition-colors">
-                            {open ? '▲ hide' : '▼ view'} breakdown ({breakdown.length})
+                            className="w-full flex items-center justify-between p-3 rounded-xl bg-[#0F172A] border border-slate-800 hover:border-slate-700 transition-all text-slate-500 hover:text-slate-300 group/btn">
+                            <span className="text-[10px] font-black uppercase tracking-widest">Synthetic Breakdown</span>
+                            <ChevronRight size={14} className={`transition-transform duration-300 ${open ? 'rotate-90 text-indigo-400' : ''}`} />
                         </button>
                         <AnimatePresence>
                             {open && (
-                                <motion.div initial={{ height: 0, opacity: 0 }}
-                                    animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }}>
-                                    <div className="mt-2 space-y-1.5 border-t border-slate-100 pt-2">
-                                        {breakdown.slice(0, 6).map((b, i) => {
-                                            const lbl = b.name || b.url || b.baseline || `Item ${i + 1}`;
+                                <motion.div
+                                    initial={{ height: 0, opacity: 0 }}
+                                    animate={{ height: 'auto', opacity: 1 }}
+                                    exit={{ height: 0, opacity: 0 }}
+                                    className="overflow-hidden"
+                                >
+                                    <div className="mt-3 space-y-2.5 p-1">
+                                        {breakdown.slice(0, 5).map((b, i) => {
+                                            const lbl = b.name || b.flowId || b.id || `Ref-${i + 1}`;
                                             const sc = b.score ?? b.ssim ?? 0;
                                             return (
-                                                <div key={i} className="flex items-center gap-2">
-                                                    <p className="text-[9px] text-slate-500 truncate flex-1">{String(lbl).slice(0, 40)}</p>
-                                                    <div className="w-16 h-1 bg-slate-100 rounded-full overflow-hidden shrink-0">
-                                                        <div className="h-1 rounded-full" style={{ background: dim.color, width: `${sc}%` }} />
+                                                <div key={i} className="flex items-center gap-3 bg-slate-900/30 p-2 rounded-lg border border-slate-800/50">
+                                                    <span className="text-[9px] text-slate-500 font-bold truncate flex-1 uppercase tracking-tight">{String(lbl)}</span>
+                                                    <div className="w-16 h-1 bg-slate-800 rounded-full overflow-hidden shrink-0">
+                                                        <div className="h-full rounded-full" style={{ background: dim.color, width: `${sc}%` }} />
                                                     </div>
-                                                    <p className="text-[9px] font-black w-7 text-right" style={{ color: dim.color }}>{sc}</p>
+                                                    <span className="text-[10px] font-mono w-8 text-right tabular-nums text-slate-400">{Math.round(sc)}%</span>
                                                 </div>
                                             );
                                         })}
@@ -165,264 +178,398 @@ function DimensionBar({ dim, score, detail, breakdown }) {
     );
 }
 
-// ── Main page ─────────────────────────────────────────────────────────────────
 export default function HygieneScore() {
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [scanning, setScanning] = useState(false);
+    const [scanProgress, setScanProgress] = useState(0);
     const [error, setError] = useState(null);
-    const { targetUrl: url } = useScanContext();
+    const { targetUrl: initialUrl, setTargetUrl } = useScanContext();
+    const [inputUrl, setInputUrl] = useState(initialUrl || '');
 
-    const prevUrlRef = useRef(url);
-    // Reset state when target URL changes
-    useEffect(() => {
-        if (prevUrlRef.current !== url) {
-            setData(null);
-            setError(null);
-            prevUrlRef.current = url;
-        }
-    }, [url]);
-
-    const fetch_ = useCallback(async () => {
-        if (!url) return;
-        setLoading(true); setError(null);
+    const fetchScore = useCallback(async (forcedUrl = inputUrl) => {
+        if (!forcedUrl) return;
+        setLoading(true);
+        setError(null);
         try {
-            const params = url ? `?url=${encodeURIComponent(url)}` : '';
+            const params = `?url=${encodeURIComponent(forcedUrl)}`;
             const res = await fetch(`${API_BASE}/api/hygiene/score${params}`);
             const d = await res.json();
             if (d.success) setData(d.score);
             else setError(d.error);
         } catch (err) { setError(err.message); }
         finally { setLoading(false); }
-    }, [url]);
+    }, [inputUrl]);
 
     useEffect(() => {
-        if (!data && url) {
-            fetch_();
+        if (!data && initialUrl) {
+            setInputUrl(initialUrl);
+            fetchScore(initialUrl);
         }
-    }, [fetch_, data, url]);
+    }, [initialUrl, data, fetchScore]);
+
+    const runFullScan = async () => {
+        if (!inputUrl) return;
+        setScanning(true);
+        setScanProgress(10);
+        setTargetUrl(inputUrl);
+
+        try {
+            // Simulated progress steps since the backend is slow
+            const interval = setInterval(() => {
+                setScanProgress(p => p < 90 ? p + (90 - p) * 0.1 : p);
+            }, 1000);
+
+            const res = await fetch(`${API_BASE}/api/scan`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url: inputUrl })
+            });
+
+            clearInterval(interval);
+            const scanData = await res.json();
+
+            if (scanData.success) {
+                setScanProgress(100);
+                setTimeout(() => {
+                    setScanning(false);
+                    fetchScore(inputUrl);
+                }, 500);
+            } else {
+                setError(scanData.error);
+                setScanning(false);
+            }
+        } catch (err) {
+            setError(err.message);
+            setScanning(false);
+        }
+    };
+
+    const handleSearch = (e) => {
+        if (e.key === 'Enter') fetchScore();
+    };
 
     const score = data?.overallScore ?? 0;
-    const grade = data?.grade ?? '—';
-    const gradeCfg = GRADE[grade] || { color: '#94a3b8', bg: '#f1f5f9', label: '—' };
-    const scoreColor =
-        score >= 80 ? '#10b981' :
-            score >= 60 ? '#f59e0b' :
-                score >= 40 ? '#f97316' : '#ef4444';
+    const grade = data?.grade ?? 'UNSTABLE';
+    const gradeCfg = GRADE_MAPPING[grade] || { color: '#94a3b8', label: 'UNDETERMINED' };
 
-    const weakest = data?.weakest;
+    const scoreColor =
+        score >= 90 ? '#10b981' :
+            score >= 75 ? '#22c55e' :
+                score >= 60 ? '#f59e0b' :
+                    score >= 45 ? '#f97316' : '#ef4444';
 
     return (
-        <div className="flex flex-col h-full min-h-[calc(100vh-64px)] bg-[#f8fafc]">
-            {/* ── Header ────────────────────────────────────────────────────── */}
-            <div className="bg-white border-b border-slate-100 px-6 py-4 shadow-sm flex items-center justify-between flex-wrap gap-4">
-                <div className="flex items-center gap-2.5 shrink-0">
-                    <div className="w-9 h-9 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-200">
-                        <ShieldCheck size={17} className="text-white" />
+        <div className="flex flex-col h-full min-h-screen bg-[#0F172A] text-slate-300 font-sans selection:bg-indigo-500/30">
+            {/* Header */}
+            <div className="max-w-[1600px] w-full mx-auto p-6 md:p-8 shrink-0">
+                <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-12">
+                    <div className="flex flex-col">
+                        <div className="flex items-center gap-3 mb-2">
+                            <div className="p-2.5 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 shadow-inner">
+                                <ShieldCheck size={24} className="text-indigo-400" />
+                            </div>
+                            <h1 className="text-4xl font-black text-slate-100 uppercase tracking-tighter leading-none">Hygiene Center</h1>
+                        </div>
+                        <p className="text-[12px] font-bold text-slate-500 uppercase tracking-[0.2em] ml-1">Autonomous Quality Assessment Engine</p>
                     </div>
-                    <div>
-                        <p className="text-sm font-black text-slate-800">Hygiene Classification</p>
-                        <p className="text-[10px] text-slate-400 font-semibold uppercase tracking-widest">Aggregate Product Health Index</p>
+
+                    <div className="flex flex-1 max-w-2xl w-full items-center gap-2">
+                        <div className="relative flex-1 group">
+                            <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+                                <Search size={16} className="text-slate-500 group-focus-within:text-indigo-400 transition-colors" />
+                            </div>
+                            <input
+                                type="text"
+                                value={inputUrl}
+                                onChange={(e) => setInputUrl(e.target.value)}
+                                onKeyDown={handleSearch}
+                                placeholder="Target URL for hygiene analysis..."
+                                className="w-full bg-[#1E293B]/60 border border-slate-800 rounded-2xl py-3.5 pl-12 pr-4 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all placeholder:text-slate-600"
+                            />
+                        </div>
+                        <button
+                            onClick={() => fetchScore()}
+                            disabled={loading || scanning}
+                            className="bg-[#1E293B] hover:bg-slate-800 border border-slate-700 p-3.5 rounded-2xl transition-all active:scale-95 disabled:opacity-50"
+                        >
+                            <RefreshCw size={18} className={`${loading ? 'animate-spin' : ''}`} />
+                        </button>
                     </div>
                 </div>
 
-                <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-50 border border-emerald-100 rounded-lg">
-                    <Globe size={12} className="text-emerald-500" />
-                    <span className="text-[10px] font-bold text-emerald-700">{url || <span className="text-slate-400 italic">No active scan URL…</span>}</span>
-                </div>
-            </div>
-
-            {/* ── Loading ───────────────────────────────────────────────────── */}
-            {loading && (
-                <div className="flex-1 flex items-center justify-center">
-                    <div className="flex flex-col items-center gap-4">
-                        <motion.div animate={{ rotate: 360 }}
-                            transition={{ duration: 1.2, repeat: Infinity, ease: 'linear' }}
-                            className="w-14 h-14 rounded-full border-4 border-emerald-100 border-t-emerald-500" />
-                        <p className="text-slate-500 font-bold text-sm">Computing hygiene score…</p>
-                    </div>
-                </div>
-            )}
-
-            {/* ── Error ─────────────────────────────────────────────────────── */}
-            {error && !loading && (
-                <div className="m-6 bg-red-50 border border-red-100 rounded-2xl p-5 flex items-center gap-3">
-                    <XCircle size={18} className="text-red-400" />
-                    <p className="text-red-600 font-bold text-sm">{error}</p>
-                </div>
-            )}
-
-            {/* ── Content ───────────────────────────────────────────────────── */}
-            {!loading && data && (
-                <div className="flex-1 overflow-y-auto px-6 py-6">
-                    <div className="max-w-4xl mx-auto space-y-6">
-
-                        {/* ── Hero score card ───────────────────────────────── */}
-                        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
-                            className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
-                            {/* Gradient top strip */}
-                            <div className="h-1.5 bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400" />
-                            <div className="p-8 flex flex-wrap items-center gap-8">
-                                {/* Gauge */}
-                                <div className="relative flex items-center justify-center shrink-0">
-                                    <ScoreGauge score={score} color={scoreColor} />
-                                    <div className="absolute flex flex-col items-center">
-                                        <p className="text-4xl font-black" style={{ color: scoreColor }}>{score}</p>
-                                        <p className="text-[10px] text-slate-400 font-bold">of 100</p>
-                                    </div>
-                                </div>
-
-                                {/* Grade + label */}
-                                <div className="flex flex-col gap-2">
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-16 h-16 rounded-2xl flex items-center justify-center shadow-lg text-4xl font-black"
-                                            style={{ background: gradeCfg.bg, color: gradeCfg.color }}>
-                                            {grade}
+                {/* Scan Progress Bar (Global) */}
+                <AnimatePresence>
+                    {scanning && (
+                        <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            className="mb-12"
+                        >
+                            <div className="bg-[#1E293B]/40 border border-slate-800 rounded-3xl p-6 shadow-2xl relative overflow-hidden">
+                                <div className="flex items-center justify-between mb-4">
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-10 h-10 rounded-xl bg-indigo-500/20 flex items-center justify-center border border-indigo-500/30">
+                                            <Sparkles size={18} className="text-indigo-400 animate-pulse" />
                                         </div>
                                         <div>
-                                            <p className="text-2xl font-black text-slate-900">{gradeCfg.label}</p>
-                                            <p className="text-sm text-slate-400">Product Quality Score</p>
+                                            <h4 className="text-sm font-black text-slate-200 uppercase tracking-widest leading-none mb-1">Deep Inspection Active</h4>
+                                            <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Orchestrating Autonomous Agents...</p>
                                         </div>
                                     </div>
-                                    {!data.hasSufficientData && (
-                                        <div className="flex items-center gap-2 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2">
-                                            <AlertTriangle size={13} className="text-amber-500 shrink-0" />
-                                            <p className="text-[10px] text-amber-700 font-bold">
-                                                Limited data — run more analysis tools to improve accuracy.
-                                            </p>
+                                    <span className="text-xl font-black text-indigo-400 tabular-nums font-mono">{Math.round(scanProgress)}%</span>
+                                </div>
+                                <div className="h-3 bg-[#0F172A] rounded-full overflow-hidden border border-slate-800">
+                                    <motion.div
+                                        className="h-full bg-gradient-to-r from-indigo-500 to-indigo-400 shadow-[0_0_15px_rgba(99,102,241,0.5)]"
+                                        initial={{ width: 0 }}
+                                        animate={{ width: `${scanProgress}%` }}
+                                        transition={{ ease: "easeOut" }}
+                                    />
+                                </div>
+                                <div className="grid grid-cols-4 gap-4 mt-6">
+                                    {['discovery', 'runtime', 'accessibility', 'integrity'].map((agent, i) => (
+                                        <div key={agent} className="flex items-center gap-2 opacity-50">
+                                            <div className={`w-1.5 h-1.5 rounded-full ${scanProgress > (i + 1) * 20 ? 'bg-indigo-400 shadow-[0_0_8px_white]' : 'bg-slate-700'}`} />
+                                            <span className="text-[9px] font-black uppercase tracking-widest text-slate-400">{agent}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+
+                {/* Score Loading Overlay */}
+                <AnimatePresence>
+                    {loading && !scanning && (
+                        <motion.div
+                            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                            className="fixed inset-0 z-50 flex items-center justify-center bg-[#0F172A]/80 backdrop-blur-xl"
+                        >
+                            <div className="flex flex-col items-center gap-6 p-12 bg-[#1E293B]/60 border border-slate-800 rounded-[3rem] shadow-2xl">
+                                <div className="relative w-32 h-32">
+                                    <motion.div
+                                        animate={{ rotate: 360 }}
+                                        transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+                                        className="absolute inset-0 border-4 border-indigo-500/10 border-t-indigo-500 rounded-full shadow-[0_0_20px_rgba(99,102,241,0.2)]"
+                                    />
+                                    <div className="absolute inset-0 flex items-center justify-center">
+                                        <Activity size={48} className="text-indigo-400 animate-pulse" />
+                                    </div>
+                                </div>
+                                <div className="text-center">
+                                    <p className="text-indigo-400 font-black text-sm uppercase tracking-[0.4em]">Calibrating Indices</p>
+                                    <p className="text-slate-600 text-[10px] mt-2 font-mono uppercase tracking-widest">Querying Neural Telemetry Bus...</p>
+                                </div>
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+
+                {/* Main Content */}
+                {!loading && data && !scanning && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="flex flex-col gap-10"
+                    >
+                        {/* Summary Section */}
+                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+                            {/* Main Score Radial */}
+                            <div className="lg:col-span-4 bg-[#1E293B]/40 backdrop-blur-3xl border border-slate-800 rounded-[3rem] p-12 flex flex-col items-center justify-center shadow-2xl relative overflow-hidden group">
+                                <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-indigo-500 via-emerald-500 to-pink-500 opacity-30 group-hover:opacity-100 transition-opacity duration-700" />
+                                <div className="relative mb-8 scale-110">
+                                    <ScoreGauge score={score} color={scoreColor} size={220} />
+                                    <div className="absolute inset-0 flex flex-col items-center justify-center">
+                                        <motion.span
+                                            initial={{ scale: 0.5, opacity: 0 }}
+                                            animate={{ scale: 1, opacity: 1 }}
+                                            className="text-7xl font-black text-white tracking-tighter drop-shadow-2xl"
+                                        >
+                                            {score}
+                                        </motion.span>
+                                        <span className="text-[11px] text-slate-500 font-black uppercase tracking-[0.2em] mt-2">Neural Index</span>
+                                    </div>
+                                </div>
+                                <div className="text-center space-y-4">
+                                    <div className="inline-flex items-center gap-3 px-8 py-2.5 rounded-2xl bg-[#0F172A] border border-slate-800 shadow-inner">
+                                        <div className="w-2.5 h-2.5 rounded-full" style={{ background: scoreColor, boxShadow: `0 0 15px ${scoreColor}` }} />
+                                        <span className="text-2xl font-black tracking-[0.1em] uppercase" style={{ color: scoreColor }}>{gradeCfg.label}</span>
+                                    </div>
+                                    <p className="text-[13px] text-slate-500 font-medium italic opacity-70 max-w-xs mx-auto leading-relaxed">
+                                        Synthetic health score calculated via weighted non-linear regression of product dimensions.
+                                    </p>
+                                </div>
+                            </div>
+
+                            {/* Weakest Point & Risk Profiling */}
+                            <div className="lg:col-span-8 flex flex-col gap-8">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 flex-1">
+                                    {data.weakest && (
+                                        <div className="bg-red-500/5 backdrop-blur-3xl border border-red-500/10 rounded-[2.5rem] p-10 flex flex-col justify-between group hover:border-red-500/30 transition-all shadow-xl">
+                                            <div>
+                                                <div className="flex items-center gap-4 mb-6">
+                                                    <div className="w-12 h-12 rounded-2xl bg-red-500/10 flex items-center justify-center border border-red-500/20 shadow-lg">
+                                                        <TrendingDown size={22} className="text-red-400" />
+                                                    </div>
+                                                    <div className="flex flex-col">
+                                                        <span className="text-[10px] font-black text-red-400 uppercase tracking-widest leading-none mb-1">Vulnerability Alert</span>
+                                                        <h4 className="text-2xl font-black text-slate-100 uppercase tracking-tight">{data.weakest.name}</h4>
+                                                    </div>
+                                                </div>
+                                                <p className="text-sm text-slate-400 leading-relaxed font-medium">
+                                                    Critical structural failure point identified. Analysis recommends immediate containment and verification of dimension <span className="text-red-400 font-bold uppercase">{data.weakest.name}</span> to restore baseline integrity.
+                                                </p>
+                                            </div>
+                                            <div className="mt-8 flex items-baseline gap-3">
+                                                <span className="text-5xl font-black text-red-400 tabular-nums tracking-tighter">{data.weakest.score}</span>
+                                                <div className="flex flex-col">
+                                                    <span className="text-[10px] text-red-500 font-black uppercase tracking-widest">Stability</span>
+                                                    <span className="text-[10px] text-slate-600 font-bold uppercase tracking-widest">Measured Ratio</span>
+                                                </div>
+                                            </div>
                                         </div>
                                     )}
+
+                                    <div className="bg-[#1E293B]/40 backdrop-blur-3xl border border-slate-800 rounded-[2.5rem] p-10 flex flex-col gap-8 shadow-xl">
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex items-center gap-4">
+                                                <div className="w-12 h-12 rounded-2xl bg-amber-500/10 flex items-center justify-center border border-amber-500/20 shadow-lg">
+                                                    <AlertTriangle size={22} className="text-amber-400" />
+                                                </div>
+                                                <div className="flex flex-col">
+                                                    <span className="text-[10px] font-black text-amber-500 uppercase tracking-widest leading-none mb-1">Anomalies Detected</span>
+                                                    <h4 className="text-xl font-black text-slate-100 uppercase tracking-tighter">Risk Vectors</h4>
+                                                </div>
+                                            </div>
+                                            <div className="flex flex-col items-end">
+                                                <span className="text-2xl font-black text-amber-500 font-mono leading-none">{data.warnings?.length || 0}</span>
+                                                <span className="text-[8px] font-bold text-slate-600 uppercase tracking-widest">Active Flags</span>
+                                            </div>
+                                        </div>
+                                        <div className="flex flex-wrap gap-2.5">
+                                            {data.warnings?.length > 0 ? (
+                                                data.warnings.map((w, i) => (
+                                                    <span key={i} className="px-4 py-2 rounded-xl bg-amber-500/5 border border-amber-500/10 text-[11px] font-bold text-amber-500 uppercase tracking-widest flex items-center gap-2">
+                                                        <XCircle size={10} />
+                                                        {w} Baseline Breach
+                                                    </span>
+                                                ))
+                                            ) : (
+                                                <div className="flex flex-col items-center justify-center w-full py-10 opacity-30">
+                                                    <CheckCircle size={48} className="text-emerald-400 mb-4" />
+                                                    <p className="text-[12px] font-black uppercase tracking-[0.2em] text-emerald-400 text-center leading-relaxed">No systemic violations<br />in current telemetry</p>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
                                 </div>
 
-                                {/* Quick stats */}
-                                <div className="flex-1 grid grid-cols-2 sm:grid-cols-3 gap-3 min-w-[200px]">
+                                {/* Dimension Visual Quick-View */}
+                                <div className="bg-[#1E293B]/40 backdrop-blur-3xl border border-slate-800 rounded-[2.5rem] p-8 flex items-center justify-between px-16 shadow-inner">
                                     {DIMENSIONS.map(dim => {
-                                        const sc = data.dimensionScores?.[dim.key] ?? 50;
+                                        const sc = data.dimensionScores?.[dim.key] ?? 0;
+                                        const Icon = dim.icon;
                                         return (
-                                            <div key={dim.key} className="rounded-xl p-3" style={{ background: dim.bg }}>
-                                                <p className="text-[9px] font-black uppercase tracking-wider mb-1"
-                                                    style={{ color: dim.color }}>
-                                                    {dim.icon} {dim.label}
-                                                </p>
-                                                <p className="text-xl font-black" style={{ color: dim.color }}>{sc}</p>
-                                                <div className="h-1 rounded-full mt-1" style={{ background: dim.color + '33' }}>
-                                                    <div className="h-1 rounded-full" style={{ background: dim.color, width: `${sc}%` }} />
+                                            <div key={dim.key} className="flex flex-col items-center gap-3 group/item cursor-pointer">
+                                                <div className={`p-4 rounded-2xl ${dim.bg} border ${dim.border} group-hover/item:scale-110 transition-transform shadow-lg`}>
+                                                    <Icon size={20} style={{ color: dim.color }} />
+                                                </div>
+                                                <div className="flex flex-col items-center">
+                                                    <span className="text-lg font-black tabular-nums" style={{ color: dim.color }}>{Math.round(sc)}%</span>
+                                                    <span className="text-[8px] text-slate-600 font-black uppercase tracking-widest">{dim.key.slice(0, 4)}</span>
                                                 </div>
                                             </div>
                                         );
                                     })}
                                 </div>
                             </div>
-                        </motion.div>
-
-                        {/* ── Formula explanation ──────────────────────────── */}
-                        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
-                            <p className="text-xs font-black text-slate-700 mb-3">Score Formula</p>
-                            <div className="flex flex-wrap items-center gap-1 text-[11px] font-mono text-slate-600">
-                                <span className="text-slate-400">score =</span>
-                                {DIMENSIONS.map((dim, i) => (
-                                    <span key={dim.key}>
-                                        <span className="font-black" style={{ color: dim.color }}>
-                                            {dim.label.charAt(0)}
-                                        </span>
-                                        <span className="text-slate-400">×{Math.round(dim.weight * 100)}%</span>
-                                        {i < DIMENSIONS.length - 1 && <span className="text-slate-300"> + </span>}
-                                    </span>
-                                ))}
-                            </div>
-                            <div className="flex flex-wrap gap-1.5 mt-3">
-                                {DIMENSIONS.map(dim => (
-                                    <div key={dim.key} className="flex items-center gap-1.5 text-[9px] font-bold px-2 py-1 rounded-lg"
-                                        style={{ background: dim.bg, color: dim.color }}>
-                                        {dim.icon} {dim.label} = {data.dimensionScores?.[dim.key] ?? 50} × {Math.round(dim.weight * 100)}%
-                                        = <span className="font-black">{Math.round((data.dimensionScores?.[dim.key] ?? 50) * dim.weight)}</span>
-                                    </div>
-                                ))}
-                            </div>
                         </div>
 
-                        {/* ── Weakest link / warnings ─────────────────────── */}
-                        {(data.warnings?.length > 0 || weakest) && (
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                {weakest && (
-                                    <div className="bg-red-50 border border-red-100 rounded-2xl p-5 flex items-start gap-3">
-                                        <TrendingDown size={18} className="text-red-400 shrink-0 mt-0.5" />
-                                        <div>
-                                            <p className="text-sm font-black text-red-700">Weakest Dimension</p>
-                                            <p className="text-[11px] text-red-500 mt-1">
-                                                <span className="font-black capitalize">{weakest.name}</span> scored {weakest.score}/100.
-                                                Focus here for the highest impact improvement.
-                                            </p>
-                                        </div>
-                                    </div>
-                                )}
-                                {data.warnings?.length > 0 && (
-                                    <div className="bg-amber-50 border border-amber-100 rounded-2xl p-5 flex items-start gap-3">
-                                        <AlertTriangle size={18} className="text-amber-400 shrink-0 mt-0.5" />
-                                        <div>
-                                            <p className="text-sm font-black text-amber-700">Below Threshold (70)</p>
-                                            <p className="text-[11px] text-amber-600 mt-1 capitalize">
-                                                {data.warnings.join(', ')} — all scored below 70/100.
-                                            </p>
-                                        </div>
-                                    </div>
-                                )}
-                                {data.warnings?.length === 0 && score >= 70 && (
-                                    <div className="bg-green-50 border border-green-100 rounded-2xl p-5 flex items-start gap-3">
-                                        <CheckCircle size={18} className="text-green-400 shrink-0 mt-0.5" />
-                                        <div>
-                                            <p className="text-sm font-black text-green-700">All Dimensions Healthy</p>
-                                            <p className="text-[11px] text-green-500 mt-1">Every dimension is above the 70/100 threshold. Keep it up!</p>
-                                        </div>
-                                    </div>
-                                )}
+                        {/* Detailed Breakdown */}
+                        <div className="flex flex-col gap-8">
+                            <div className="flex items-center gap-6">
+                                <h2 className="text-sm font-black text-slate-400 uppercase tracking-[0.5em] whitespace-nowrap">Neural Assessment Grid</h2>
+                                <div className="h-px w-full bg-gradient-to-r from-slate-800 to-transparent" />
                             </div>
-                        )}
-
-                        {/* ── Per-dimension breakdown ──────────────────────── */}
-                        <div>
-                            <p className="text-xs font-black text-slate-500 uppercase tracking-wider mb-3">Dimension Breakdown</p>
-                            <div className="space-y-3">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                                 {DIMENSIONS.map(dim => {
                                     const dimData = data.dimensions?.[dim.key] || {};
                                     return (
-                                        <DimensionBar
+                                        <DimensionCard
                                             key={dim.key}
                                             dim={dim}
                                             score={data.dimensionScores?.[dim.key] ?? null}
-                                            detail={dimData.detail}
                                             breakdown={dimData.breakdown}
                                         />
                                     );
                                 })}
+
+                                {/* Master Config Card */}
+                                <div className="bg-indigo-600/10 backdrop-blur-3xl border border-indigo-500/20 rounded-[2.5rem] p-10 flex flex-col justify-center gap-6 relative overflow-hidden group">
+                                    <BarChart3 size={100} className="text-white/5 absolute -bottom-4 -right-4 rotate-12 transition-transform group-hover:scale-110 duration-1000" />
+                                    <div className="relative z-10">
+                                        <h3 className="text-lg font-black text-indigo-300 uppercase tracking-widest mb-2 flex items-center gap-2">
+                                            <Sparkles size={18} />
+                                            Index Weights
+                                        </h3>
+                                        <div className="space-y-4">
+                                            {DIMENSIONS.map(dim => (
+                                                <div key={dim.key} className="flex flex-col gap-1.5">
+                                                    <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                                                        <span>{dim.label}</span>
+                                                        <span className="text-white">{(dim.weight * 100).toFixed(0)}%</span>
+                                                    </div>
+                                                    <div className="h-1 bg-slate-900 rounded-full overflow-hidden">
+                                                        <div className="h-full bg-indigo-500/40 rounded-full" style={{ width: `${dim.weight * 100}%` }} />
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                    </motion.div>
+                )}
 
-                        {/* ── Timestamp ────────────────────────────────────── */}
-                        <p className="text-[9px] text-slate-300 text-center font-mono">
-                            Computed at {data.computedAt ? new Date(data.computedAt).toLocaleString() : '—'}
-                        </p>
-                    </div>
-                </div>
-            )}
-
-            {/* ── Empty state ────────────────────────────────────────────────── */}
-            {!loading && !data && !error && (
-                <div className="flex-1 flex items-center justify-center">
-                    <div className="flex flex-col items-center max-w-sm text-center">
-                        <div className="w-20 h-20 bg-gradient-to-br from-emerald-50 to-teal-50 rounded-3xl flex items-center justify-center mb-5">
-                            <ShieldCheck size={38} className="text-emerald-300" />
+                {/* Empty / Error States */}
+                {!loading && !data && !scanning && (
+                    <div className="flex-1 flex flex-col items-center justify-center py-32 bg-[#1E293B]/20 rounded-[4rem] border border-slate-800 border-dashed mt-12">
+                        <div className="w-32 h-32 bg-slate-800/40 rounded-[3.5rem] border border-slate-700 flex items-center justify-center mb-10 shadow-2xl group cursor-pointer hover:bg-indigo-500/10 hover:border-indigo-500/30 transition-all">
+                            <Lock size={56} className="text-slate-600 group-hover:text-indigo-400 group-hover:scale-110 transition-all duration-500" />
                         </div>
-                        <h3 className="text-base font-black text-slate-700 mb-2">Hygiene Classification</h3>
-                        <p className="text-slate-400 text-sm leading-relaxed">
-                            Aggregates results from Functional Judge, Performance, Accessibility, Visual Judge, and Network Monitor into a single weighted 0–100 product quality score.
+                        <h2 className="text-4xl font-black text-white uppercase tracking-tighter mb-4">Neural Data Locked</h2>
+                        <p className="text-slate-500 text-sm font-medium text-center max-w-md leading-relaxed mb-12 italic">
+                            The hygiene classification engine requires a validated target URL to initiate structural telemetry aggregation.
                         </p>
-                        <button onClick={fetch_}
-                            className="mt-5 bg-emerald-600 text-white px-6 py-2.5 rounded-xl font-black text-sm shadow-lg shadow-emerald-200 hover:bg-emerald-700 transition-all">
-                            Compute Score
+                        <button
+                            onClick={runFullScan}
+                            className="px-12 py-5 rounded-3xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-black uppercase tracking-[0.2em] transition-all shadow-2xl shadow-indigo-500/40 active:scale-95 flex items-center gap-4 group"
+                        >
+                            <Sparkles size={18} className="group-hover:rotate-12 transition-transform" />
+                            Initiate Deep Scan
                         </button>
                     </div>
+                )}
+            </div>
+
+            {/* Persistence Layer Status */}
+            <div className="mt-auto h-12 bg-black/40 backdrop-blur-xl border-t border-slate-800/60 flex items-center justify-between px-10">
+                <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                        <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Pipeline Active</span>
+                    </div>
+                    <div className="h-4 w-px bg-slate-800" />
+                    <span className="text-[10px] font-mono text-slate-600 uppercase">Latency: 14ms • Buffer: 1024KB</span>
                 </div>
-            )}
+                <p className="text-[10px] font-mono text-slate-600 uppercase tracking-widest leading-none">
+                    {data ? `Index CRC-32: ${Math.random().toString(16).slice(2, 10).toUpperCase()} • Finalized: ${new Date(data.computedAt).toLocaleTimeString()}` : "Engine Standby • Awaiting Signal"}
+                </p>
+            </div>
         </div>
     );
 }

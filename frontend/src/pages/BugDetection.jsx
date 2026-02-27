@@ -342,7 +342,8 @@ const BugDetection = () => {
             </div>
 
             {/* Main Layout */}
-            <div className="max-w-[1600px] w-full mx-auto p-6 md:p-8 flex-1 flex flex-col gap-6 min-h-0 overflow-hidden">
+            <div className="max-w-[1600px] w-full mx-auto p-6 md:p-8 flex-1 flex flex-col gap-8 min-h-0 overflow-hidden">
+
 
                 {/* Page Identity */}
                 <div className="flex flex-col mb-2 shrink-0 text-left">

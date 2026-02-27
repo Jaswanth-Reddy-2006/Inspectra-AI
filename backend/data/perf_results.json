@@ -1,18 +1,18 @@
 {
   "https://dealdrop-lj35.onrender.com/": {
     "url": "https://dealdrop-lj35.onrender.com/",
-    "title": "Render - Application loading",
+    "title": "DealDrop - Premium E-commerce",
     "scores": {
-      "overall": 76,
-      "performance": 71,
-      "accessibility": 79,
-      "bestPractices": 80
+      "overall": 38,
+      "performance": 50,
+      "accessibility": 0,
+      "bestPractices": 90
     },
     "vitals": {
       "lcp": {
-        "value": 3752,
-        "score": 17,
-        "label": "Needs work"
+        "value": 21332,
+        "score": 0,
+        "label": "Poor"
       },
       "cls": {
         "value": 0,
@@ -20,42 +20,141 @@
         "label": "Good"
       },
       "fid": {
-        "value": 7,
-        "score": 100,
-        "label": "Good"
+        "value": 359,
+        "score": 0,
+        "label": "Poor"
       },
       "tti": {
-        "value": 3646,
+        "value": 3711,
         "score": 100,
         "label": "Good"
       }
     },
-    "slowResources": [],
+    "slowResources": [
+      {
+        "url": "https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap",
+        "type": "Other",
+        "duration": 8680,
+        "size": 1254
+      },
+      {
+        "url": "https://dealdrop-lj35.onrender.com/api/products?limit=4&sort=newest&page=2",
+        "type": "API",
+        "duration": 7305,
+        "size": 1683
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=600&q=80",
+        "type": "Other",
+        "duration": 6977,
+        "size": 47657
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=700&q=80",
+        "type": "Other",
+        "duration": 6813,
+        "size": 78654
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1498049794561-7780e7231661?w=600&q=80",
+        "type": "Other",
+        "duration": 6390,
+        "size": 19660
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=600&q=80",
+        "type": "Other",
+        "duration": 6365,
+        "size": 34770
+      },
+      {
+        "url": "https://res.cloudinary.com/dekmzxtjw/image/upload/v1771760148/dealdrop/tvtklxngqgo3kowb1aca.jpg",
+        "type": "Image",
+        "duration": 6297,
+        "size": 51601
+      },
+      {
+        "url": "https://res.cloudinary.com/dekmzxtjw/image/upload/v1771760081/dealdrop/cqouiaetgxifydt148g5.jpg",
+        "type": "Image",
+        "duration": 6283,
+        "size": 30939
+      },
+      {
+        "url": "https://res.cloudinary.com/dekmzxtjw/image/upload/v1771760748/dealdrop/exi0hv340dwanokvk538.jpg",
+        "type": "Image",
+        "duration": 4490,
+        "size": 181342
+      },
+      {
+        "url": "https://res.cloudinary.com/dekmzxtjw/image/upload/v1771760358/dealdrop/dkh5janflusrmz5qke4g.jpg",
+        "type": "Image",
+        "duration": 4427,
+        "size": 38770
+      }
+    ],
     "clsDetails": [],
     "missingLabels": [],
-    "contrastFails": [],
+    "contrastFails": [
+      {
+        "element": "<p class=\"text-[#9CA3AF] text-xs\">Happy customers</p>",
+        "message": "Element has insufficient color contrast of 2.53 (foreground color: #9ca3af, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",
+        "impact": "serious"
+      },
+      {
+        "element": "<span class=\"text-xs font-bold uppercase tracking-[0.2em] text-[#F97316] mb-2 bl",
+        "message": "Element has insufficient color contrast of 2.67 (foreground color: #f97316, background color: #f8fafc, font size: 9.0pt (12px), font weight: bold). Expected contrast ratio of 4.5:1",
+        "impact": "serious"
+      },
+      {
+        "element": "<span class=\"text-[11px] font-semibold uppercase tracking-wider text-[#9CA3AF] m",
+        "message": "Element has insufficient color contrast of 2.53 (foreground color: #9ca3af, background color: #ffffff, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1",
+        "impact": "serious"
+      },
+      {
+        "element": "<span class=\"text-xs text-[#9CA3AF] font-medium\">(0)</span>",
+        "message": "Element has insufficient color contrast of 2.53 (foreground color: #9ca3af, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",
+        "impact": "serious"
+      },
+      {
+        "element": "<span class=\"text-lg font-bold text-[#16A34A]\" style=\"font-family: Poppins, sans",
+        "message": "Element has insufficient color contrast of 3.29 (foreground color: #16a34a, background color: #ffffff, font size: 13.5pt (18px), font weight: bold). Expected contrast ratio of 4.5:1",
+        "impact": "serious"
+      }
+    ],
     "ariaViolations": [],
     "tabViolations": [],
-    "consoleErrors": [
-      "Failed to load resource: the server responded with a status of 503 ()"
-    ],
+    "consoleErrors": [],
     "axeSummary": {
-      "violations": 1,
-      "passes": 14,
-      "incomplete": 2,
+      "violations": 3,
+      "passes": 29,
+      "incomplete": 1,
       "byImpact": {
-        "critical": 0,
-        "serious": 0,
-        "moderate": 1,
+        "critical": 1,
+        "serious": 2,
+        "moderate": 0,
         "minor": 0
       },
       "allViolations": [
         {
-          "id": "region",
-          "impact": "moderate",
-          "count": 3,
-          "description": "Ensure all page content is contained by landmarks",
-          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/region?application=axeAPI"
+          "id": "button-name",
+          "impact": "critical",
+          "count": 17,
+          "description": "Ensure buttons have discernible text",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/button-name?application=axeAPI"
+        },
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 44,
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=axeAPI"
+        },
+        {
+          "id": "link-name",
+          "impact": "serious",
+          "count": 5,
+          "description": "Ensure links have discernible text",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/link-name?application=axeAPI"
         }
       ]
     },
@@ -63,29 +162,29 @@
       "hasMetaDesc": false,
       "hasViewport": true,
       "hasCharset": true,
-      "hasFavicon": false,
+      "hasFavicon": true,
       "hasLangAttr": true,
-      "imagesTotal": 7,
+      "imagesTotal": 12,
       "imgWithoutAlt": 0,
       "isHTTPS": true,
-      "consoleErrors": 1
+      "consoleErrors": 0
     },
-    "analyzedAt": "2026-02-25T15:02:40.433Z"
+    "analyzedAt": "2026-02-27T05:16:53.987Z"
   },
   "https://jaswanth-reddy-portfolio.vercel.app/": {
     "url": "https://jaswanth-reddy-portfolio.vercel.app/",
     "title": "Jaswanth Reddy | Portfolio",
     "scores": {
-      "overall": 90,
-      "performance": 100,
+      "overall": 68,
+      "performance": 47,
       "accessibility": 79,
       "bestPractices": 90
     },
     "vitals": {
       "lcp": {
-        "value": 620,
-        "score": 100,
-        "label": "Good"
+        "value": 8628,
+        "score": 0,
+        "label": "Poor"
       },
       "cls": {
         "value": 0,
@@ -93,17 +192,36 @@
         "label": "Good"
       },
       "fid": {
-        "value": 0,
-        "score": 100,
-        "label": "Good"
+        "value": 303,
+        "score": 0,
+        "label": "Poor"
       },
       "tti": {
-        "value": 170,
-        "score": 100,
-        "label": "Good"
+        "value": 4369,
+        "score": 84,
+        "label": "Needs work"
       }
     },
-    "slowResources": [],
+    "slowResources": [
+      {
+        "url": "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap",
+        "type": "Other",
+        "duration": 2646,
+        "size": 1114
+      },
+      {
+        "url": "https://jaswanth-reddy-portfolio.vercel.app/assets/index-CnPZL9Bt.js",
+        "type": "Script",
+        "duration": 1194,
+        "size": 387593
+      },
+      {
+        "url": "https://jaswanth-reddy-portfolio.vercel.app/assets/index-78W4kDtd.css",
+        "type": "Style",
+        "duration": 1191,
+        "size": 9697
+      }
+    ],
     "clsDetails": [],
     "missingLabels": [],
     "contrastFails": [],
@@ -141,7 +259,7 @@
       "isHTTPS": true,
       "consoleErrors": 0
     },
-    "analyzedAt": "2026-02-24T14:56:06.430Z"
+    "analyzedAt": "2026-02-27T05:18:39.798Z"
   },
   "https://algoscope.vercel.app/dashboard": {
     "url": "https://algoscope.vercel.app/dashboard",
@@ -154,7 +272,7 @@
     },
     "vitals": {
       "lcp": {
-        "value": 1312,
+        "value": 744,
         "score": 100,
         "label": "Good"
       },
@@ -169,22 +287,22 @@
         "label": "Good"
       },
       "tti": {
-        "value": 176,
+        "value": 267,
         "score": 100,
         "label": "Good"
       }
     },
     "slowResources": [
       {
-        "url": "https://algoscope-ufu8.onrender.com/api/progress/guest_1772072218879",
+        "url": "https://algoscope-ufu8.onrender.com/api/progress/guest_1772123801986",
         "type": "API",
-        "duration": 10944,
+        "duration": 11004,
         "size": 0
       },
       {
         "url": "https://algoscope-ufu8.onrender.com/api/problems",
         "type": "API",
-        "duration": 1212,
+        "duration": 1278,
         "size": 0
       }
     ],
@@ -245,7 +363,7 @@
       "isHTTPS": true,
       "consoleErrors": 1
     },
-    "analyzedAt": "2026-02-26T02:17:14.345Z"
+    "analyzedAt": "2026-02-26T16:36:56.266Z"
   },
   "https://www.google.com": {
     "url": "https://www.google.com",
@@ -640,5 +758,151 @@
       "consoleErrors": 24
     },
     "analyzedAt": "2026-02-25T18:09:54.968Z"
+  },
+  "https://dashboard.render.com/": {
+    "url": "https://dashboard.render.com/",
+    "title": "Render Dashboard",
+    "scores": {
+      "overall": 47,
+      "performance": 47,
+      "accessibility": 21,
+      "bestPractices": 100
+    },
+    "vitals": {
+      "lcp": {
+        "value": 7720,
+        "score": 0,
+        "label": "Poor"
+      },
+      "cls": {
+        "value": 0,
+        "score": 100,
+        "label": "Good"
+      },
+      "fid": {
+        "value": 2779,
+        "score": 0,
+        "label": "Poor"
+      },
+      "tti": {
+        "value": 4348,
+        "score": 84,
+        "label": "Needs work"
+      }
+    },
+    "slowResources": [
+      {
+        "url": "https://www.google.co.in/ads/ga-audiences?v=1&t=sr&slf_rd=1&_r=4&tid=G-QK9L9QJC5N&cid=842009933.1772169112&gtm=45je62p1v872590080z89185326835za20gzb9185326835zd9185326835&aip=1&dma=0&gcs=G111&gcd=13r3r3r3r5l1&npa=0&frm=0&tag_exp=103116026~103200004~104527907~104528501~104573694~104684208~104684211~115616985~115938466~115938469&z=427250967",
+        "type": "Other",
+        "duration": 9748,
+        "size": 342
+      },
+      {
+        "url": "https://stats.g.doubleclick.net/g/collect?v=2&tid=G-QK9L9QJC5N&cid=842009933.1772169112&gtm=45je62p1v872590080z89185326835za20gzb9185326835zd9185326835&aip=1&dma=0&gcs=G111&gcd=13r3r3r3r5l1&npa=0&frm=0&tag_exp=103116026~103200004~104527907~104528501~104573694~104684208~104684211~115616985~115938466~115938469",
+        "type": "Other",
+        "duration": 9413,
+        "size": 0
+      },
+      {
+        "url": "https://dashboard.render.com/assets/PPNeueMontreal-Medium-0qsiMyyJ.woff2",
+        "type": "Font",
+        "duration": 7216,
+        "size": 52280
+      },
+      {
+        "url": "https://www.google-analytics.com/analytics.js",
+        "type": "Script",
+        "duration": 7073,
+        "size": 0
+      },
+      {
+        "url": "https://dashboard.render.com/assets/PPNeueMontreal-Regular-C0RgVexg.woff2",
+        "type": "Font",
+        "duration": 5974,
+        "size": 47864
+      },
+      {
+        "url": "https://dashboard.render.com/assets/Roobert-Medium-CFC5xDbE.woff2",
+        "type": "Font",
+        "duration": 5845,
+        "size": 78024
+      },
+      {
+        "url": "https://analytics.google.com/g/collect?v=2&tid=G-QK9L9QJC5N&gtm=45je62p1v872590080z89185326835za20gzb9185326835zd9185326835&_p=1772169107024&_gaz=1&gcs=G111&gcd=13r3r3r3r5l1&npa=0&dma=0&cid=842009933.1772169112&ul=en-gb&sr=1280x720&ir=1&uaa=x86&uab=64&uafvl=Not%253AA-Brand%3B99.0.0.0%7CHeadlessChrome%3B145.0.7632.6%7CChromium%3B145.0.7632.6&uamb=0&uam=&uap=Windows&uapv=19.0.0&uaw=0&are=1&frm=0&pscdl=noapi&_prs=ok&_eu=EAAAAGA&_s=1&tag_exp=103116026~103200004~104527907~104528501~104573694~104684208~104684211~115616985~115938466~115938469&sid=1772169111&sct=1&seg=0&dl=https%3A%2F%2Fdashboard.render.com%2Flogin&dt=Render%20Dashboard&_tu=CA&en=page_view&_fv=1&_nsi=1&_ss=1&_c=1&tfd=7175",
+        "type": "Other",
+        "duration": 5693,
+        "size": 0
+      },
+      {
+        "url": "https://analytics.google.com/g/collect?v=2&tid=G-QK9L9QJC5N&gtm=45je62p1v872590080za20gzb9185326835zd9185326835&_p=1772169107024&gcs=G111&gcd=13r3r3r3r5l1&npa=0&dma=0&cid=842009933.1772169112&ul=en-gb&sr=1280x720&ir=1&uaa=x86&uab=64&uafvl=Not%253AA-Brand%3B99.0.0.0%7CHeadlessChrome%3B145.0.7632.6%7CChromium%3B145.0.7632.6&uamb=0&uam=&uap=Windows&uapv=19.0.0&uaw=0&are=1&frm=0&pscdl=noapi&_prs=ok&_eu=EEAAAGQ&_s=2&tag_exp=103116026~103200004~104527907~104528501~104573694~104684208~104684211~115616985~115938466~115938469&sid=1772169111&sct=1&seg=0&dl=https%3A%2F%2Fdashboard.render.com%2Flogin&dt=Render%20Dashboard&_tu=CA&en=scroll&_c=1&epn.percent_scrolled=90&_et=303&tfd=7542",
+        "type": "Other",
+        "duration": 5310,
+        "size": 0
+      },
+      {
+        "url": "https://track.hubspot.com/__ptq.gif?k=1&sd=1280x720&cd=24-bit&cs=UTF-8&ln=en-gb&bfp=7d412e143d8612b4af52e52d638d6aa9&v=1.1&a=21532664&rcu=https%3A%2F%2Fdashboard.render.com%2F&pu=https%3A%2F%2Fdashboard.render.com%2Flogin&t=Render+Dashboard&cts=1772169123329&vi=4d29cf3d1795da9b845431a713a48c34&nc=true&u=36874815.4d29cf3d1795da9b845431a713a48c34.1772169123302.1772169123302.1772169123302.1&b=36874815.1.1772169123302&cc=15",
+        "type": "Image",
+        "duration": 4760,
+        "size": 0
+      },
+      {
+        "url": "https://js.hs-analytics.net/analytics/1772169000000/21532664.js",
+        "type": "Script",
+        "duration": 3661,
+        "size": 0
+      }
+    ],
+    "clsDetails": [],
+    "missingLabels": [],
+    "contrastFails": [],
+    "ariaViolations": [],
+    "tabViolations": [],
+    "consoleErrors": [],
+    "axeSummary": {
+      "violations": 3,
+      "passes": 29,
+      "incomplete": 1,
+      "byImpact": {
+        "critical": 0,
+        "serious": 1,
+        "moderate": 2,
+        "minor": 0
+      },
+      "allViolations": [
+        {
+          "id": "landmark-one-main",
+          "impact": "moderate",
+          "count": 1,
+          "description": "Ensure the document has a main landmark",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/landmark-one-main?application=axeAPI"
+        },
+        {
+          "id": "link-in-text-block",
+          "impact": "serious",
+          "count": 2,
+          "description": "Ensure links are distinguished from surrounding text in a way that does not rely on color",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/link-in-text-block?application=axeAPI"
+        },
+        {
+          "id": "region",
+          "impact": "moderate",
+          "count": 6,
+          "description": "Ensure all page content is contained by landmarks",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/region?application=axeAPI"
+        }
+      ]
+    },
+    "bestPracticesSignals": {
+      "hasMetaDesc": true,
+      "hasViewport": true,
+      "hasCharset": true,
+      "hasFavicon": true,
+      "hasLangAttr": true,
+      "imagesTotal": 0,
+      "imgWithoutAlt": 0,
+      "isHTTPS": true,
+      "consoleErrors": 0
+    },
+    "analyzedAt": "2026-02-27T05:12:15.588Z"
   }
 }

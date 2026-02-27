@@ -18,9 +18,9 @@ function generateAIReasoning(intelligence, readinessReport) {
 
     // 2. Root Cause Classification
     const rootCauses = [];
-    if (intelligence.security.score < 80) rootCauses.push({ type: 'Security Misconfiguration', detail: 'Missing or weak CORS/CSP/HSTS headers.' });
-    if (intelligence.codeQuality.score < 80) rootCauses.push({ type: 'Architecture Weakness', detail: 'High DOM complexity suggesting potential SPA hydration issues.' });
-    if (intelligence.reliability.score < 80) rootCauses.push({ type: 'Configuration Flaw', detail: 'Inconsistent 404 handling and concurrency failures.' });
+    if (intelligence?.security && intelligence.security.score < 80) rootCauses.push({ type: 'Security Misconfiguration', detail: 'Missing or weak CORS/CSP/HSTS headers.' });
+    if (intelligence?.codeQuality && intelligence.codeQuality.score < 80) rootCauses.push({ type: 'Architecture Weakness', detail: 'High DOM complexity suggesting potential SPA hydration issues.' });
+    if (intelligence?.reliability && intelligence.reliability.score < 80) rootCauses.push({ type: 'Configuration Flaw', detail: 'Inconsistent 404 handling and concurrency failures.' });
 
     // 3. Top 5 Remediation Priorities
     const allSignals = Object.values(intelligence).flatMap(d => d.signals);

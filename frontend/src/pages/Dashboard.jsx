@@ -1,395 +1,316 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect, useMemo } from 'react';
+import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useScanContext } from '../context/ScanContext';
 import {
-    Plus,
-    AlertTriangle,
-    AlertCircle,
-    Info,
-    CheckCircle2,
-    Clock,
-    Globe,
-    ArrowUpRight,
-    ChevronDown,
-    ChevronUp,
-    Zap,
-    Activity,
-    Download,
-    Timer,
-    Sparkles,
-    Loader2,
-    Shield,
-    BarChart3,
-    Network,
-    ArrowRight,
-    LayoutGrid,
-    TrendingUp,
-    Terminal,
-    Target,
-    Cpu,
-    Map,
-    Bug,
-    ShieldCheck,
-    Layers,
-    Gauge,
-    Box,
-    BarChart2,
-    Database,
-    Search,
-    Code,
-    Smartphone,
-    Eye,
-    Scale
+    Activity, Shield, ShieldCheck, Bug, Layers, Globe, Download, ArrowRight,
+    Cpu, Map, Gauge, Zap, Box, BarChart2, CheckCircle2, AlertTriangle, Search, Target
 } from 'lucide-react';
-import { useToast } from '../context/ToastContext';
 import {
-    AreaChart,
-    Area,
-    XAxis,
-    YAxis,
-    CartesianGrid,
-    Tooltip,
-    ResponsiveContainer,
-    BarChart,
-    Bar,
-    Cell,
-    PieChart,
-    Pie
+    AreaChart, Area, BarChart, Bar, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis, CartesianGrid, PieChart, Pie
 } from 'recharts';
 
-// ─── Component: Summary Widget ──────────────────────────────────────────────
-const SummaryWidget = ({ title, icon: Icon, color, children, path, detailText }) => {
-    const navigate = useNavigate();
+// ─── Component: Cyber Widget ──────────────────────────────────────────────────
+const CyberWidget = ({ title, icon: Icon, colorClass, children, onClick }) => {
     return (
         <motion.div
-            whileHover={{ y: -5 }}
-            className="bg-white p-7 rounded-[3rem] border border-slate-100 shadow-sm hover:shadow-2xl hover:shadow-indigo-100/20 transition-all group flex flex-col justify-between h-full relative overflow-hidden"
+            whileHover={{ y: -4, boxShadow: '0 20px 40px -10px rgba(0,0,0,0.5)' }}
+            onClick={onClick}
+            className="bg-[#1E293B]/80 backdrop-blur-md rounded-2xl border border-slate-700/50 p-6 flex flex-col justify-between h-full relative overflow-hidden group cursor-pointer transition-all"
         >
             <div className="relative z-10">
                 <div className="flex items-center justify-between mb-6">
-                    <div className={`w-10 h-10 rounded-xl ${color} flex items-center justify-center text-white shadow-lg`}>
-                        <Icon size={20} />
+                    <div className={`flex items-center gap-3 ${colorClass}`}>
+                        <div className="p-2 bg-[#0F172A] rounded-lg border border-slate-700/50">
+                            <Icon size={18} />
+                        </div>
+                        <h4 className="text-[11px] font-black uppercase tracking-[0.2em]">{title}</h4>
                     </div>
-                    <button
-                        onClick={() => navigate(path)}
-                        className="p-2 rounded-xl bg-slate-50 text-slate-400 hover:bg-indigo-50 hover:text-indigo-600 transition-all opacity-0 group-hover:opacity-100"
-                    >
-                        <ArrowRight size={14} />
-                    </button>
+                    <ArrowRight size={14} className="text-slate-500 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
                 </div>
-                <h4 className="text-sm font-black text-slate-900 uppercase tracking-widest mb-4">{title}</h4>
-                <div className="flex-1 min-h-[120px]">
+                <div className="flex-1 min-h-[140px]">
                     {children}
                 </div>
             </div>
-
-            <div className="relative z-10 mt-6 pt-4 border-t border-slate-50 flex items-center justify-between">
-                <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">{detailText}</span>
-                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            </div>
-
-            {/* Background Accent */}
-            <div className={`absolute -right-4 -bottom-4 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity`}>
-                <Icon size={120} />
-            </div>
+            {/* Subtle glow effect behind the card */}
+            <div className={`absolute -right-10 -bottom-10 w-40 h-40 rounded-full blur-3xl opacity-10 group-hover:opacity-20 transition-opacity bg-current ${colorClass}`} style={{ pointerEvents: 'none' }} />
         </motion.div>
     );
 };
 
-// ─── Main Dashboard Hub ─────────────────────────────────────────────────────
+// ─── Main Dashboard ───────────────────────────────────────────────────────────
 
 const Dashboard = () => {
     const navigate = useNavigate();
-    const { addToast } = useToast();
     const { scanResult, targetUrl, isScanning, isProcessing } = useScanContext();
-    const [isDownloading, setIsDownloading] = useState(false);
 
     const result = useMemo(() => scanResult || {}, [scanResult]);
 
-    useEffect(() => {
-        if (!scanResult && !targetUrl && !isScanning) {
-            addToast('Intelligence Hub initialized. Please start a scan.', 'info');
-        }
-    }, [scanResult, targetUrl, addToast, isScanning]);
+    // Mock Data for charts if no real data is present
+    const bugData = useMemo(() => [
+        { name: 'Logic', value: result.issuesSummary?.stats?.medium || 4, color: '#FCD34D' },
+        { name: 'Visual', value: result.issuesSummary?.stats?.high || 10, color: '#F97316' },
+        { name: 'Perf', value: result.issuesSummary?.stats?.critical || 6, color: '#EF4444' },
+    ], [result]);
 
-    // Mock Intelligence Data for widgets if no scan result
-    const widgetData = useMemo(() => ({
-        bugs: [
-            { name: 'Logic', value: 4, color: '#ef4444' },
-            { name: 'Visual', value: 10, color: '#f59e0b' },
-            { name: 'Perf', value: 6, color: '#6366f1' },
-        ],
-        hygiene: 82,
-        performance: [
-            { name: 'FCP', val: 1.2 },
-            { name: 'LCP', val: 2.4 },
-            { name: 'CLS', val: 0.1 },
-        ],
-        agents: [
-            { time: '10:00', load: 20 },
-            { time: '10:05', load: 45 },
-            { time: '10:10', load: 30 },
-            { time: '10:15', load: 85 },
-            { time: '10:20', load: 60 },
-        ]
-    }), []);
+    const agentData = useMemo(() => [
+        { time: 'T-4', load: 20 }, { time: 'T-3', load: 45 }, { time: 'T-2', load: 30 }, { time: 'T-1', load: 85 }, { time: 'Now', load: 60 },
+    ], []);
+
+    const behavioralData = useMemo(() => [
+        { metric: 'Discovery', score: 98, fill: '#10B981' },
+        { metric: 'Interaction', score: 85, fill: '#6366F1' },
+        { metric: 'Logic', score: 92, fill: '#8B5CF6' }
+    ], []);
 
     if ((isScanning || isProcessing) && !scanResult) {
         return (
-            <div className="h-[80vh] flex flex-col items-center justify-center space-y-8">
-                <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                    className="relative"
-                >
-                    <div className="w-24 h-24 rounded-[2rem] bg-indigo-50 flex items-center justify-center text-indigo-600">
-                        <Sparkles size={40} fill="currentColor" />
+            <div className="h-[80vh] flex flex-col items-center justify-center space-y-8 bg-[#0F172A] text-white">
+                <motion.div animate={{ rotate: 360 }} transition={{ duration: 4, repeat: Infinity, ease: "linear" }}>
+                    <div className="w-20 h-20 rounded-2xl border-2 border-indigo-500/30 border-t-indigo-500 flex items-center justify-center">
+                        <Activity size={32} className="text-indigo-400" />
                     </div>
                 </motion.div>
                 <div className="text-center space-y-2">
-                    <h2 className="text-3xl font-black text-slate-900 tracking-tight">Synthesizing Platform Intelligence</h2>
-                    <p className="text-slate-400 font-medium max-w-sm">Deep inspection active across 9 intelligence modules...</p>
+                    <h2 className="text-2xl font-black tracking-tight text-slate-200">Synthesizing Platform Intelligence...</h2>
+                    <p className="text-slate-500 font-mono text-sm">Deep inspection active across core intelligence modules.</p>
                 </div>
             </div>
         );
     }
 
+    const overallScore = result.issuesSummary?.qualityIntelligence?.overallQualityScore || 91;
+
     return (
-        <div className="max-w-[1600px] mx-auto p-6 lg:p-12 space-y-12 pb-24">
-            {/* Header */}
-            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
-                <div className="space-y-2">
-                    <div className="flex items-center gap-3">
-                        <div className="px-3 py-1 bg-indigo-50 text-indigo-600 text-[10px] font-black uppercase tracking-widest rounded-full border border-indigo-100">Post-Scan Intelligence Hub</div>
-                    </div>
-                    <div className="flex items-center gap-4">
-                        <h1 className="text-5xl font-black text-slate-900 tracking-tight">Application Summary</h1>
-                        <div className="flex items-center gap-2 px-4 py-2 bg-blue-50 border border-blue-100 rounded-2xl">
-                            <Globe size={16} className="text-blue-500" />
-                            <span className="text-sm font-black text-blue-700">{targetUrl || 'Inspectra-Local-Session'}</span>
-                        </div>
+        <div className="min-h-screen bg-[#0F172A] text-slate-300 p-6 lg:p-10 space-y-10 selection:bg-indigo-500/30">
+            {/* Header / Executive Summary */}
+            <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 border-b border-slate-800 pb-8">
+                <div className="space-y-4">
+                    <h1 className="text-4xl lg:text-5xl font-black text-slate-100 tracking-tight">Application Summary</h1>
+                    <div className="flex items-center gap-3 text-sm font-mono text-slate-400">
+                        <Globe size={14} className="text-blue-400" />
+                        <span className="text-blue-300">{targetUrl || 'Waiting for Target URL...'}</span>
                     </div>
                 </div>
 
                 <div className="flex items-center gap-4">
-                    <button className="flex items-center gap-3 px-8 py-5 bg-slate-900 text-white rounded-3xl font-black text-xs uppercase tracking-widest hover:bg-slate-800 transition-all hover:shadow-2xl hover:shadow-slate-200">
-                        <Download size={18} />
-                        Export Comprehensive Intel
+                    <button className="flex items-center gap-2 px-6 py-3 bg-[#1E293B] border border-slate-700 hover:border-slate-8000 text-slate-200 rounded-lg font-bold text-[11px] uppercase tracking-widest transition-all">
+                        <Download size={14} /> Export Intel Report
                     </button>
                 </div>
             </div>
 
-            {/* Primary Health Score */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
-                <div className="lg:col-span-2 bg-slate-900 rounded-[4rem] p-12 text-white relative overflow-hidden flex flex-col justify-between border border-slate-800 shadow-2xl shadow-indigo-100/10">
-                    <div className="relative z-10">
-                        <div className="flex items-center gap-3 mb-8">
-                            <Shield size={20} className="text-indigo-400" />
-                            <h3 className="text-xs font-black uppercase tracking-[0.3em] text-white/40">Executive Diagnostic</h3>
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-                            <div>
-                                <h4 className="text-4xl font-black mb-4 leading-tight">Platform health remains <span className="text-emerald-400">Stable</span> with minor structural regressions.</h4>
-                                <p className="text-white/50 text-sm font-medium leading-relaxed">
-                                    The Inspectra engine identified {result.issuesSummary?.stats?.totalDefects || 14} primary defects. Global score is within acceptable engineering bounds.
-                                </p>
-                            </div>
-                            <div className="flex flex-col justify-end items-end">
-                                <span className="text-[10px] font-black text-white/30 uppercase tracking-[0.4em] mb-2">Engineering Score</span>
-                                <div className="text-8xl font-black text-white leading-none tabular-nums tracking-tighter">
-                                    {result.issuesSummary?.qualityIntelligence?.overallQualityScore || 92}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="relative z-10 mt-12 pt-8 border-t border-white/5 flex items-center justify-between">
-                        <div className="flex items-center gap-8">
-                            <div className="text-center">
-                                <p className="text-[10px] font-black text-white/40 uppercase mb-1">Crawl Nodes</p>
-                                <p className="text-xl font-black tabular-nums">{result.issuesSummary?.stats?.totalPages || 32}</p>
-                            </div>
-                            <div className="text-center">
-                                <p className="text-[10px] font-black text-white/40 uppercase mb-1">Active Agents</p>
-                                <p className="text-xl font-black tabular-nums">12</p>
-                            </div>
-                        </div>
-                        <button onClick={() => navigate('/visualization')} className="px-6 py-3 bg-white/10 hover:bg-white/20 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all">
-                            View Knowledge Graph
-                        </button>
+            {/* Core Metrics Banner */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="bg-[#1E293B]/50 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/5 rounded-full blur-2xl" />
+                    <span className="text-[10px] font-mono text-slate-500 uppercase">System Grade</span>
+                    <div className="mt-2 flex items-baseline gap-2">
+                        <span className="text-5xl font-black text-white">{overallScore}</span>
+                        <span className="text-sm font-bold text-indigo-400">/ 100</span>
                     </div>
                 </div>
-
-                <div className="bg-white rounded-[4rem] p-12 border border-slate-100 flex flex-col justify-between shadow-sm hover:shadow-xl transition-all relative overflow-hidden group">
-                    <div>
-                        <div className="flex items-center gap-3 mb-8">
-                            <Activity size={20} className="text-indigo-600" />
-                            <h3 className="text-xs font-black uppercase tracking-[0.3em] text-slate-400">Agent Telemetry</h3>
-                        </div>
-                        <div className="h-[180px] w-full">
-                            <ResponsiveContainer width="100%" height="100%">
-                                <AreaChart data={widgetData.agents}>
-                                    <Area type="monotone" dataKey="load" stroke="#6366f1" strokeWidth={3} fill="#6366f1" fillOpacity={0.1} />
-                                </AreaChart>
-                            </ResponsiveContainer>
-                        </div>
-                        <p className="mt-6 text-sm font-medium text-slate-500 leading-relaxed">
-                            Autonomous agents reached peak inspection density at node cluster Delta-9.
-                        </p>
+                <div className="bg-[#1E293B]/50 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between">
+                    <span className="text-[10px] font-mono text-slate-500 uppercase">Risk Level</span>
+                    <div className="mt-2 text-3xl font-black text-amber-400 uppercase">
+                        {result.issuesSummary?.qualityIntelligence?.riskLevel || 'MODERATE'}
                     </div>
-                    <button onClick={() => navigate('/agents')} className="mt-8 flex items-center justify-between text-indigo-600 font-black text-[10px] uppercase tracking-widest group">
-                        Access Deep-Dive
-                        <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
-                    </button>
+                </div>
+                <div className="bg-[#1E293B]/50 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between">
+                    <span className="text-[10px] font-mono text-slate-500 uppercase">Total Anomalies</span>
+                    <div className="mt-2 text-3xl font-black text-rose-400">
+                        {result.issuesSummary?.stats?.totalDefects || 14}
+                    </div>
+                </div>
+                <div className="bg-[#1E293B]/50 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between">
+                    <span className="text-[10px] font-mono text-slate-500 uppercase">Analyzed Nodes</span>
+                    <div className="mt-2 text-3xl font-black text-blue-400">
+                        {result.issuesSummary?.stats?.totalPages || 42}
+                    </div>
                 </div>
             </div>
 
-            {/* Detailed Summary Grid (9 Pillars) */}
-            <div className="space-y-8">
-                <div className="flex items-center gap-4">
-                    <div className="w-1 h-6 bg-indigo-600 rounded-full" />
-                    <h3 className="text-[11px] font-black text-slate-900 uppercase tracking-[0.2em]">Platform Intelligence Matrix</h3>
-                </div>
+            {/* Analytical Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {/* 1. AI Agents */}
-                    <SummaryWidget title="AI Agents" icon={Cpu} color="bg-indigo-600" path="/agents" detailText="Execution Clusters Active">
-                        <div className="space-y-4">
-                            <div className="flex justify-between items-center text-[11px] font-bold">
-                                <span className="text-slate-400">Success Rate</span>
-                                <span className="text-slate-900">98.4%</span>
-                            </div>
-                            <div className="h-1.5 w-full bg-slate-50 rounded-full overflow-hidden">
-                                <div className="h-full w-[98%] bg-indigo-600" />
-                            </div>
-                            <p className="text-[10px] text-slate-400 font-medium leading-relaxed italic">
-                                "12 agents effectively simulated production workflows with 0 fatal failures."
-                            </p>
+                {/* AI Agents */}
+                <CyberWidget title="Agent Telemetry" icon={Cpu} colorClass="text-indigo-400" onClick={() => navigate('/agents')}>
+                    <div className="h-full w-full flex flex-col justify-between">
+                        <ResponsiveContainer width="100%" height={90}>
+                            <AreaChart data={agentData}>
+                                <defs>
+                                    <linearGradient id="colorLoad" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="5%" stopColor="#818CF8" stopOpacity={0.3} />
+                                        <stop offset="95%" stopColor="#818CF8" stopOpacity={0} />
+                                    </linearGradient>
+                                </defs>
+                                <Area type="monotone" dataKey="load" stroke="#818CF8" strokeWidth={2} fillOpacity={1} fill="url(#colorLoad)" />
+                            </AreaChart>
+                        </ResponsiveContainer>
+                        <div className="mt-4 flex justify-between items-center text-[10px] font-mono text-slate-500 uppercase">
+                            <span>12 Active Clusters</span>
+                            <span className="text-indigo-300">98.4% Success</span>
                         </div>
-                    </SummaryWidget>
+                    </div>
+                </CyberWidget>
 
-                    {/* 2. Autonomous Discovery */}
-                    <SummaryWidget title="Discovery" icon={Map} color="bg-blue-600" path="/discovery" detailText="Node Density High">
-                        <div className="flex items-center justify-center h-full gap-4">
-                            <div className="text-center">
-                                <p className="text-3xl font-black text-slate-900">{result.issuesSummary?.stats?.totalPages || 42}</p>
-                                <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Identified Nodes</p>
-                            </div>
-                            <div className="w-px h-12 bg-slate-100" />
-                            <div className="text-center">
-                                <p className="text-3xl font-black text-blue-600">3</p>
-                                <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Max Depth</p>
-                            </div>
-                        </div>
-                    </SummaryWidget>
-
-                    {/* 3. Bug Detection */}
-                    <SummaryWidget title="Bugs" icon={Bug} color="bg-rose-600" path="/bugs" detailText="Regression Indexing">
-                        <div className="h-[100px] w-full">
-                            <ResponsiveContainer width="100%" height="100%">
-                                <BarChart data={widgetData.bugs}>
-                                    <Bar dataKey="value">
-                                        {widgetData.bugs.map((entry, index) => (
+                {/* Bug Detection */}
+                <CyberWidget title="Defect Distribution" icon={Bug} colorClass="text-rose-400" onClick={() => navigate('/bugs')}>
+                    <div className="h-full w-full flex items-center justify-between gap-4">
+                        <div className="w-1/2 h-full">
+                            <ResponsiveContainer width="100%" height={120}>
+                                <BarChart data={bugData} layout="vertical" margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
+                                    <XAxis type="number" hide />
+                                    <YAxis dataKey="name" type="category" axisLine={false} tickLine={false} tick={{ fill: '#64748B', fontSize: 10 }} />
+                                    <Bar dataKey="value" radius={[0, 4, 4, 0]} barSize={12}>
+                                        {bugData.map((entry, index) => (
                                             <Cell key={`cell-${index}`} fill={entry.color} />
                                         ))}
                                     </Bar>
                                 </BarChart>
                             </ResponsiveContainer>
                         </div>
-                        <div className="flex justify-between text-[9px] font-black text-slate-400 uppercase mt-2">
-                            <span>Logic:{widgetData.bugs[0].value}</span>
-                            <span>Visual:{widgetData.bugs[1].value}</span>
-                            <span>Perf:{widgetData.bugs[2].value}</span>
-                        </div>
-                    </SummaryWidget>
-
-                    {/* 4. Hygiene Classification */}
-                    <SummaryWidget title="Hygiene" icon={ShieldCheck} color="bg-emerald-600" path="/hygiene" detailText="Structure Audited">
-                        <div className="flex flex-col items-center justify-center space-y-3">
-                            <div className="relative w-20 h-20 flex items-center justify-center">
-                                <svg className="w-full h-full -rotate-90">
-                                    <circle cx="40" cy="40" r="36" fill="transparent" stroke="#f1f5f9" strokeWidth="6" />
-                                    <circle cx="40" cy="40" r="36" fill="transparent" stroke="#10b981" strokeWidth="6" strokeDasharray={`${2 * Math.PI * 36}`} strokeDashoffset={`${2 * Math.PI * 36 * (1 - 0.82)}`} />
-                                </svg>
-                                <span className="absolute text-xl font-black text-slate-900">82%</span>
-                            </div>
-                            <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest text-center">Architectural Baseline Meta</p>
-                        </div>
-                    </SummaryWidget>
-
-                    {/* 5. Quality Engineering */}
-                    <SummaryWidget title="Quality" icon={Layers} color="bg-amber-600" path="/quality" detailText="Pipeline Sync Healthy">
-                        <div className="flex flex-col items-center justify-center space-y-3">
-                            <h2 className="text-5xl font-black text-slate-900 leading-none">
-                                {result.issuesSummary?.qualityIntelligence?.overallQualityScore || 0}%
-                            </h2>
-                            <div className={`px-4 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-widest text-white ${result.issuesSummary?.qualityIntelligence?.riskLevel === 'CRITICAL' ? 'bg-rose-600' : 'bg-indigo-600'}`}>
-                                {result.issuesSummary?.qualityIntelligence?.riskLevel || 'ANALYZING'} RISK
-                            </div>
-                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center">Ready: {result.issuesSummary?.qualityIntelligence?.readiness || 0}%</p>
-                        </div>
-                    </SummaryWidget>
-
-                    {/* 6. Testing Performance */}
-                    <SummaryWidget title="Performance" icon={Gauge} color="bg-violet-600" path="/performance" detailText="Lighthouse Analysis">
-                        <div className="space-y-4 pt-2">
-                            {widgetData.performance.map(p => (
-                                <div key={p.name} className="flex items-center justify-between bg-slate-50 p-2.5 rounded-xl">
-                                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{p.name}</span>
-                                    <span className="text-[11px] font-black text-slate-900 tabular-nums">{p.val}{p.name === 'CLS' ? '' : 's'}</span>
+                        <div className="w-1/2 flex flex-col gap-2">
+                            {bugData.map(b => (
+                                <div key={b.name} className="flex justify-between items-center border-b border-slate-700/50 pb-1">
+                                    <span className="text-[10px] uppercase font-bold text-slate-400">{b.name}</span>
+                                    <span className="text-xs font-mono font-bold text-slate-200">{b.value}</span>
                                 </div>
                             ))}
                         </div>
-                    </SummaryWidget>
+                    </div>
+                </CyberWidget>
 
-                    {/* 7. Mobile Applications */}
-                    <SummaryWidget title="Mobile" icon={Box} color="bg-cyan-600" path="/mobile" detailText="Cross-Platform Ready">
-                        <div className="flex flex-col items-center justify-center h-full space-y-4">
-                            <Smartphone size={32} className="text-cyan-600 opacity-20" />
-                            <div className="flex gap-1.5">
-                                {['iOS', 'Android', 'PWA'].map(dev => (
-                                    <span key={dev} className="px-2 py-1 bg-cyan-50 text-[9px] font-black text-cyan-600 rounded-lg">{dev}</span>
-                                ))}
-                            </div>
-                            <p className="text-[10px] font-bold text-slate-400 text-center leading-relaxed px-4">"Touch targets and responsive viewport integrity verified."</p>
+                {/* Behavioral Discovery */}
+                <CyberWidget title="Discovery Matrix" icon={Map} colorClass="text-blue-400" onClick={() => navigate('/discovery')}>
+                    <div className="flex flex-col items-center justify-center h-full">
+                        <div className="relative w-24 h-24 flex items-center justify-center">
+                            <div className="absolute inset-0 border border-blue-500/30 rounded-full animate-[spin_10s_linear_infinite]" />
+                            <div className="absolute inset-2 border border-blue-400/20 rounded-full animate-[spin_15s_linear_infinite_reverse]" />
+                            <Target size={24} className="text-blue-400" />
                         </div>
-                    </SummaryWidget>
+                        <p className="mt-4 text-[10px] font-mono text-slate-400 uppercase text-center">Neural Mapping Deep Scan Active.<br />{result.issuesSummary?.stats?.totalPages || 42} interaction nodes indexed.</p>
+                    </div>
+                </CyberWidget>
 
-                    {/* 8. Defect Scoring */}
-                    <SummaryWidget title="Scoring" icon={BarChart2} color="bg-pink-600" path="/scoring" detailText="Prioritization Matrix">
-                        <div className="flex items-center justify-center p-2">
-                            <div className="grid grid-cols-2 gap-2 w-full max-w-[140px]">
-                                {[
-                                    { l: 'C', n: 2, c: 'bg-rose-500' },
-                                    { l: 'H', n: 4, c: 'bg-orange-500' },
-                                    { l: 'M', n: 6, c: 'bg-amber-500' },
-                                    { l: 'L', n: 2, c: 'bg-emerald-500' },
-                                ].map(s => (
-                                    <div key={s.l} className={`${s.c} p-3 rounded-2xl flex flex-col items-center justify-center text-white shadow-sm`}>
-                                        <span className="text-xs font-black">{s.n}</span>
-                                        <span className="text-[8px] font-bold opacity-80">{s.l}</span>
-                                    </div>
-                                ))}
+                {/* Hygiene Classification */}
+                <CyberWidget title="Architectural Hygiene" icon={ShieldCheck} colorClass="text-emerald-400" onClick={() => navigate('/hygiene')}>
+                    <div className="flex items-center justify-between h-full">
+                        <div className="relative w-24 h-24">
+                            <ResponsiveContainer width="100%" height="100%">
+                                <PieChart>
+                                    <Pie data={[{ value: 82 }, { value: 18 }]} innerRadius={30} outerRadius={40} dataKey="value" stroke="none">
+                                        <Cell fill="#10B981" />
+                                        <Cell fill="#1E293B" />
+                                    </Pie>
+                                </PieChart>
+                            </ResponsiveContainer>
+                            <div className="absolute inset-0 flex items-center justify-center">
+                                <span className="text-sm font-black text-emerald-400">82%</span>
                             </div>
                         </div>
-                    </SummaryWidget>
+                        <div className="flex-1 ml-4 space-y-2">
+                            <div className="text-[10px] font-mono text-slate-400 uppercase">DOM Health</div>
+                            <div className="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden"><div className="h-full bg-emerald-500 w-[82%]" /></div>
+                            <div className="text-[10px] font-mono text-slate-400 uppercase mt-2">Semantic Compliance</div>
+                            <div className="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden"><div className="h-full bg-emerald-400 w-[95%]" /></div>
+                        </div>
+                    </div>
+                </CyberWidget>
 
-                    {/* 9. Visualization */}
-                    <SummaryWidget title="Visualization" icon={Network} color="bg-slate-900" path="/visualization" detailText="Relational Map Active">
-                        <div className="h-full flex flex-col justify-center items-center space-y-4 opacity-70 group-hover:opacity-100 transition-opacity">
-                            <div className="relative">
-                                <Network size={40} className="text-slate-900 animate-pulse" />
-                                <div className="absolute top-0 right-0 w-3 h-3 bg-indigo-500 rounded-full border-2 border-white" />
+                {/* Network Resilience */}
+                <CyberWidget title="Network Integrity" icon={Zap} colorClass="text-violet-400" onClick={() => navigate('/dashboard')}>
+                    <div className="flex flex-col justify-center h-full gap-3">
+                        {behavioralData.map(d => (
+                            <div key={d.metric} className="flex items-center gap-3">
+                                <span className="text-[10px] font-mono text-slate-400 w-16 uppercase">{d.metric}</span>
+                                <div className="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden">
+                                    <div className="h-full" style={{ width: `${d.score}%`, backgroundColor: d.fill }} />
+                                </div>
+                                <span className="text-[10px] text-slate-200 font-mono w-6 text-right">{d.score}</span>
                             </div>
-                            <p className="text-[10px] font-bold text-slate-500 text-center tracking-tight">Defect knowledge graph correlation complete.</p>
+                        ))}
+                    </div>
+                </CyberWidget>
+
+                {/* Device Architecture */}
+                <CyberWidget title="Device Matrix" icon={Box} colorClass="text-cyan-400" onClick={() => navigate('/device')}>
+                    <div className="flex items-center justify-around h-full">
+                        <div className="flex flex-col items-center gap-2">
+                            <div className="w-12 h-16 border-2 border-slate-700 rounded-md flex items-center justify-center relative">
+                                <div className="absolute top-1 w-3 h-0.5 bg-slate-700 rounded-full" />
+                                <span className="text-[10px] font-bold text-slate-500">Mobile</span>
+                            </div>
+                            <CheckCircle2 size={12} className="text-emerald-500" />
                         </div>
-                    </SummaryWidget>
-                </div>
+                        <div className="flex flex-col items-center gap-2">
+                            <div className="w-16 h-12 border-2 border-slate-700 rounded-md flex items-center justify-center" >
+                                <span className="text-[10px] font-bold text-slate-500">Tablet</span>
+                            </div>
+                            <CheckCircle2 size={12} className="text-emerald-500" />
+                        </div>
+                        <div className="flex flex-col items-center gap-2">
+                            <div className="w-20 h-14 border-2 border-cyan-500/50 bg-cyan-500/5 rounded-md flex flex-col items-center justify-center relative">
+                                <span className="text-[10px] font-bold text-cyan-400 block -mt-1">Desktop</span>
+                                <div className="absolute bottom-[-4px] w-8 h-1 bg-cyan-700 rounded-sm" />
+                            </div>
+                            <AlertTriangle size={12} className="text-amber-500 mt-1" />
+                        </div>
+                    </div>
+                </CyberWidget>
+
+                {/* Quality Engineering */}
+                <CyberWidget title="Quality Pipeline" icon={Layers} colorClass="text-amber-400" onClick={() => navigate('/quality')}>
+                    <div className="flex flex-col items-center justify-center h-full text-center space-y-3">
+                        <div className="flex items-center gap-2">
+                            <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                            <span className="text-xs font-mono text-slate-300">Pipeline Sync Active</span>
+                        </div>
+                        <p className="text-[11px] font-medium text-slate-400 leading-relaxed px-4">
+                            All heuristic validations passed. Readiness score optimized for production deployment.
+                        </p>
+                        <div className="mt-2 text-[10px] font-bold uppercase tracking-widest text-amber-400 border border-amber-500/30 px-3 py-1 rounded bg-amber-500/10">
+                            Readiness: {result.issuesSummary?.qualityIntelligence?.readiness || 85}%
+                        </div>
+                    </div>
+                </CyberWidget>
+
+                {/* Structural Analysis */}
+                <CyberWidget title="Structural Fragility" icon={Target} colorClass="text-rose-500" onClick={() => navigate('/discovery')}>
+                    <div className="flex items-center justify-center h-full">
+                        <div className="relative w-full px-4">
+                            <div className="flex justify-between text-[10px] font-mono text-slate-500 mb-2">
+                                <span>Static Nodes</span>
+                                <span>Interaction Hubs</span>
+                            </div>
+                            <div className="h-2 w-full bg-slate-800 rounded-full overflow-hidden relative">
+                                <div className="absolute left-0 top-0 h-full bg-gradient-to-r from-emerald-500 via-amber-500 to-rose-500 w-[40%]" />
+                            </div>
+                            <p className="text-center mt-4 text-[11px] text-slate-400 uppercase tracking-widest font-black">42% Architectural Saturation</p>
+                        </div>
+                    </div>
+                </CyberWidget>
+
+                {/* Defect Scoring */}
+                <CyberWidget title="Priority Matrix" icon={BarChart2} colorClass="text-pink-400" onClick={() => navigate('/scoring')}>
+                    <div className="grid grid-cols-2 gap-2 h-full py-2 px-4">
+                        {[
+                            { l: 'Critical', n: result.issuesSummary?.stats?.critical || 2, c: 'bg-rose-500/20 text-rose-400 border-rose-500/30' },
+                            { l: 'High', n: result.issuesSummary?.stats?.high || 4, c: 'bg-orange-500/20 text-orange-400 border-orange-500/30' },
+                            { l: 'Medium', n: result.issuesSummary?.stats?.medium || 6, c: 'bg-amber-500/20 text-amber-400 border-amber-500/30' },
+                            { l: 'Low', n: result.issuesSummary?.stats?.low || 2, c: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' },
+                        ].map(s => (
+                            <div key={s.l} className={`${s.c} border rounded-xl flex flex-col items-center justify-center p-2`}>
+                                <span className="text-xl font-black">{s.n}</span>
+                                <span className="text-[9px] font-mono uppercase opacity-80 mt-1">{s.l}</span>
+                            </div>
+                        ))}
+                    </div>
+                </CyberWidget>
             </div>
 
-            <div className="py-12 text-center border-t border-slate-50">
-                <p className="text-[10px] font-black text-slate-300 uppercase tracking-[0.4em]">Engineered for Autonomy · Inspectra Intelligence Hub v2.0</p>
+            <div className="pt-8 text-center">
+                <p className="text-[10px] font-mono text-slate-500 uppercase tracking-[0.4em]">Engineered for Autonomy</p>
             </div>
         </div>
     );

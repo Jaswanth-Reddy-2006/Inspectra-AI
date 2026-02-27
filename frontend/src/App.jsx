@@ -16,13 +16,9 @@ import DiscoveryAgent from './pages/DiscoveryAgent';
 import BugDetection from './pages/BugDetection';
 import HygieneScore from './pages/HygieneScore';
 import QualityEngineering from './pages/QualityEngineering';
-import PerformanceAccessibility from './pages/PerfAccessibility';
 import DeviceArchitecture from './pages/DeviceArchitecture';
-import MobileApplications from './pages/MobileApplications';
 import SeverityMatrix from './pages/SeverityMatrix';
-import Visualization from './pages/Visualization';
 import AgentResult from './pages/AgentResult';
-import PerformanceLab from './pages/PerformanceLab';
 
 import Sidebar from './components/Sidebar';
 import TopBar from './components/TopBar';
@@ -39,8 +35,7 @@ const AppLayout = ({ children, sidebarOpen, setSidebarOpen }) => (
         <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
         <div className="flex-1 flex flex-col min-h-screen min-w-0 overflow-hidden">
-            <TopBar onMenuClick={() => setSidebarOpen(true)} />
-            <main className="flex-1 overflow-y-auto w-full">
+            <main className="flex-1 w-full bg-[#f8fafc]">
                 {children}
             </main>
         </div>
@@ -94,16 +89,12 @@ function App() {
 
                 {/* ── 9 Core AI Pillars ──────────────────────── */}
                 <Route path="/agents" element={<AppLayout sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}><AIAgents /></AppLayout>} />
-                <Route path="/discovery" element={<AppLayout sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}><DiscoveryAgent /></AppLayout>} />
+                <Route path="/discovery" element={<FullscreenAppLayout sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}><DiscoveryAgent /></FullscreenAppLayout>} />
                 <Route path="/bugs" element={<FullscreenAppLayout sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}><BugDetection /></FullscreenAppLayout>} />
-                <Route path="/hygiene" element={<AppLayout sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}><HygieneScore /></AppLayout>} />
+                <Route path="/hygiene" element={<FullscreenAppLayout sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}><HygieneScore /></FullscreenAppLayout>} />
                 <Route path="/quality" element={<FullscreenAppLayout sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}><QualityEngineering /></FullscreenAppLayout>} />
-                <Route path="/performance" element={<AppLayout sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}><PerformanceLab /></AppLayout>} />
-                <Route path="/accessibility" element={<AppLayout sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}><PerformanceAccessibility /></AppLayout>} />
                 <Route path="/device" element={<AppLayout sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}><DeviceArchitecture /></AppLayout>} />
-                <Route path="/mobile" element={<AppLayout sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}><MobileApplications /></AppLayout>} />
                 <Route path="/scoring" element={<AppLayout sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}><SeverityMatrix /></AppLayout>} />
-                <Route path="/visualization" element={<AppLayout sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}><Visualization /></AppLayout>} />
                 <Route path="/agents/detail/:agentId" element={<AppLayout sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}><AgentResult /></AppLayout>} />
 
                 {/* ── Settings & Profile ─────────────────────── */}

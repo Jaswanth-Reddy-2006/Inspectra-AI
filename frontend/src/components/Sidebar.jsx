@@ -5,7 +5,7 @@ import {
     LayoutGrid, Folder, CheckSquare, Settings, Shield, X,
     Map, Lock, Layers, GitBranch, Network, Zap, Cpu, Eye,
     Bug, BarChart2, ShieldCheck, AlertTriangle, ChevronDown, ChevronRight,
-    Box, Activity, Gauge
+    Box, Activity, Gauge, Plus
 } from 'lucide-react';
 
 const NAV_SECTIONS = [
@@ -20,16 +20,12 @@ const NAV_SECTIONS = [
         section: 'Core Pillars',
         items: [
             { path: '/agents', icon: Cpu, label: 'AI Agents' },
-            { path: '/discovery', icon: Map, label: 'Autonomous Discovery' },
+            { path: '/discovery', icon: Map, label: 'Behavioral Discovery' },
             { path: '/bugs', icon: Bug, label: 'Bug Detection' },
             { path: '/hygiene', icon: ShieldCheck, label: 'Hygiene Classification' },
             { path: '/quality', icon: Layers, label: 'Quality Engineering' },
-            { path: '/performance', icon: Gauge, label: 'Behavioral Discovery' },
-            { path: '/accessibility', icon: Zap, label: 'Performance & Accessibility' },
             { path: '/device', icon: Box, label: 'Device Architecture' },
-            { path: '/mobile', icon: Activity, label: 'Mobile Applications' },
             { path: '/scoring', icon: BarChart2, label: 'Defect Scoring' },
-            { path: '/visualization', icon: Network, label: 'Visualization' },
         ],
     },
     {
@@ -68,6 +64,15 @@ const Sidebar = ({ isOpen, onClose }) => {
             </div>
 
             {/* Nav */}
+            <div className="px-3 mb-4 mt-2">
+                <button
+                    onClick={() => { onClose(); window.location.href = '/home'; }}
+                    className="w-full bg-[#2563eb] text-white py-2.5 rounded-xl text-[11px] font-black uppercase tracking-wider flex items-center justify-center gap-2 hover:bg-blue-700 transition-all shadow-lg hover:shadow-xl active:scale-95"
+                >
+                    <Plus size={14} strokeWidth={3} />
+                    New Scan
+                </button>
+            </div>
             <nav className="flex-1 overflow-y-auto px-3 pb-3 space-y-1 scrollbar-thin scrollbar-thumb-slate-200">
                 {NAV_SECTIONS.map((sec) => {
                     const isCollapsed = collapsed[sec.section];

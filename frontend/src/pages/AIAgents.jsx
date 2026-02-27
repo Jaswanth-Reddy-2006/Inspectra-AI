@@ -197,7 +197,7 @@ const AgentCard = React.memo(({ agent, onClick, isHighAlert }) => {
             whileHover={{ y: -5, boxShadow: '0 20px 50px -12px rgba(99, 102, 241, 0.15)' }}
             transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
             onClick={() => onClick(agent)}
-            className="group relative bg-white/70 backdrop-blur-xl p-8 rounded-[3rem] border border-white shadow-sm cursor-pointer flex flex-col justify-between h-full overflow-hidden transition-all"
+            className="group relative bg-[#1E293B]/80 backdrop-blur-xl p-8 rounded-[3rem] border border-slate-800 shadow-sm cursor-pointer flex flex-col justify-between h-full overflow-hidden transition-all"
         >
             {/* Ambient Background Glow */}
             <div className={`absolute -top-24 -right-24 w-48 h-48 rounded-full blur-[80px] opacity-10 transition-colors duration-1000 ${agent.error ? 'bg-rose-500' : agent.color === 'emerald' ? 'bg-emerald-500' : 'bg-indigo-500'
@@ -218,7 +218,7 @@ const AgentCard = React.memo(({ agent, onClick, isHighAlert }) => {
                 </div>
 
                 <div className="mb-6">
-                    <h3 className="text-xl font-black text-slate-900 tracking-tight leading-none mb-2 group-hover:text-indigo-600 transition-colors">{agent.name}</h3>
+                    <h3 className="text-xl font-black text-slate-300 tracking-tight leading-none mb-2 group-hover:text-indigo-600 transition-colors">{agent.name}</h3>
                     <p className="text-[12px] font-medium text-slate-400 leading-relaxed">{agent.desc}</p>
                 </div>
 
@@ -228,7 +228,7 @@ const AgentCard = React.memo(({ agent, onClick, isHighAlert }) => {
                         <div className="flex items-center justify-between">
                             <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Observable Trace</span>
                         </div>
-                        <p className="text-[13px] font-bold text-slate-700 italic leading-snug line-clamp-2 min-h-[36px] bg-slate-50/50 p-3 rounded-2xl border border-slate-50">
+                        <p className="text-[13px] font-bold text-slate-400 italic leading-snug line-clamp-2 min-h-[36px] bg-[#1E293B]/50 p-3 rounded-2xl border border-slate-50">
                             "{LOG_EXPLANATIONS[agent.task]?.exp || agent.task}"
                         </p>
                     </div>
@@ -236,9 +236,9 @@ const AgentCard = React.memo(({ agent, onClick, isHighAlert }) => {
                     <div className="space-y-2">
                         <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-slate-400">
                             <span>Processing Load</span>
-                            <span className="text-slate-900">{agent.cpu}%</span>
+                            <span className="text-slate-300">{agent.cpu}%</span>
                         </div>
-                        <div className="h-2 w-full bg-slate-100/50 rounded-full overflow-hidden p-[2px]">
+                        <div className="h-2 w-full bg-[#1E293B]/50 rounded-full overflow-hidden p-[2px]">
                             <motion.div
                                 animate={{ width: `${agent.cpu}%` }}
                                 className={`h-full rounded-full shadow-sm ${agent.cpu > 80 ? 'bg-rose-500' :
@@ -258,11 +258,11 @@ const AgentCard = React.memo(({ agent, onClick, isHighAlert }) => {
                         <CheckCircle2 size={16} className="text-emerald-500" />
                     </div>
                     <div className="flex flex-col">
-                        <span className="text-[11px] font-black text-slate-900 leading-none">{agent.completed}</span>
+                        <span className="text-[11px] font-black text-slate-300 leading-none">{agent.completed}</span>
                         <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">Decisions</span>
                     </div>
                 </div>
-                <button className="w-10 h-10 rounded-xl bg-slate-50 hover:bg-slate-900 hover:text-white transition-all flex items-center justify-center group/btn">
+                <button className="w-10 h-10 rounded-xl bg-[#1E293B] hover:bg-slate-900 hover:text-white transition-all flex items-center justify-center group/btn">
                     <ArrowUpRight size={18} className="transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
                 </button>
             </div>
@@ -532,125 +532,157 @@ const AIAgents = () => {
     }, [scanResult, addLog]);
 
     return (
-        <div className={`max-w-[1600px] mx-auto p-6 lg:p-12 mt-2 space-y-12 relative transition-all duration-1000 ${isHighAlert ? 'bg-indigo-950/5' : ''}`}>
-            {/* Ambient Animated Grid */}
-            <div className="fixed inset-0 pointer-events-none opacity-[0.03] z-0 overflow-hidden">
-                <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
-                            <path d="M 60 0 L 0 0 0 60" fill="none" stroke="currentColor" strokeWidth="1" />
-                        </pattern>
-                    </defs>
-                    <rect width="100%" height="100%" fill="url(#grid)" />
-                </svg>
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/50 to-white" />
+        <div className="min-h-screen bg-[#0F172A] text-slate-300 font-sans selection:bg-blue-500/30 flex flex-col">
+            {/* Top Trace Strip */}
+            <div className="h-10 bg-[#1E293B] border-b border-slate-800 flex items-center justify-between px-6 text-[11px] font-mono text-slate-500 uppercase tracking-widest shrink-0">
+                <div className="flex items-center gap-4">
+                    <span>Path: /intelligence-hub/ai-swarm</span>
+                </div>
+                <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-indigo-500 shadow-[0_0_10px_rgba(99,102,241,0.5)]"></span>
+                    <span className="text-indigo-400">SWARM SYNCHRONIZED</span>
+                </div>
             </div>
 
-            {/* Neural Signal Interface (Visual Overlays) */}
-            <div className="fixed inset-0 pointer-events-none z-30">
-                <AnimatePresence>
-                    {signals.map(s => (
-                        <motion.div
-                            key={s.id}
-                            initial={{ scale: 0, opacity: 0 }}
-                            animate={{ scale: [1, 2], opacity: [0.5, 0] }}
-                            exit={{ opacity: 0 }}
-                            className="absolute bg-indigo-500/20 rounded-full blur-xl w-32 h-32"
-                            style={{
-                                left: `${30 + Math.random() * 40}%`,
-                                top: `${30 + Math.random() * 40}%`
-                            }}
+            <div className="max-w-[1600px] w-full mx-auto p-6 md:p-8 flex-1 flex flex-col gap-8 min-h-0 overflow-hidden relative">
+                {/* Page Identity */}
+                <div className="flex flex-col mb-2 shrink-0 text-left relative z-10">
+                    <h1 className="text-3xl font-semibold text-slate-300 uppercase tracking-widest leading-none">AI AGENTS</h1>
+                    <p className="text-[13px] font-mono text-slate-500 mt-2">Autonomous Swarm Observation & Intelligence Node</p>
+                </div>
+
+                {/* Ambient Animated Grid */}
+                <div className="fixed inset-0 pointer-events-none opacity-[0.03] z-0 overflow-hidden">
+                    <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
+                                <path d="M 60 0 L 0 0 0 60" fill="none" stroke="currentColor" strokeWidth="1" />
+                            </pattern>
+                        </defs>
+                        <rect width="100%" height="100%" fill="url(#grid)" />
+                    </svg>
+                </div>
+
+                {/* Neural Signal Interface (Visual Overlays) */}
+                <div className="fixed inset-0 pointer-events-none z-30">
+                    <AnimatePresence>
+                        {signals.map(s => (
+                            <motion.div
+                                key={s.id}
+                                initial={{ scale: 0, opacity: 0 }}
+                                animate={{ scale: [1, 2], opacity: [0.5, 0] }}
+                                exit={{ opacity: 0 }}
+                                className="absolute bg-indigo-500/20 rounded-full blur-xl w-32 h-32"
+                                style={{
+                                    left: `${30 + Math.random() * 40}%`,
+                                    top: `${30 + Math.random() * 40}%`
+                                }}
+                            />
+                        ))}
+                    </AnimatePresence>
+                </div>
+
+                {/* Agent Matrix */}
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8 relative z-10">
+                    {agents.map((agent) => (
+                        <AgentCard
+                            key={agent.id}
+                            agent={agent}
+                            isHighAlert={isHighAlert}
+                            onClick={() => handleCardClick(agent.id)}
                         />
                     ))}
-                </AnimatePresence>
-            </div>
+                </div>
 
-            {/* Agent Matrix */}
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8 relative z-10">
-                {agents.map((agent) => (
-                    <AgentCard
-                        key={agent.id}
-                        agent={agent}
-                        isHighAlert={isHighAlert}
-                        onClick={() => handleCardClick(agent.id)}
-                    />
-                ))}
-            </div>
-
-            {/* System Health Trace HUD */}
-            <div className="relative z-10 flex flex-wrap items-center justify-between gap-10 px-16 py-10 bg-white/40 backdrop-blur-3xl border border-white shadow-[0_30px_100px_-20px_rgba(0,0,0,0.08)] rounded-[4rem]">
-                <div className="flex items-center gap-16">
-                    <div className="space-y-4">
-                        <div className="flex items-center gap-3">
-                            <div className={`p-2 rounded-xl ${stabilityIndex > 80 ? 'bg-emerald-50 text-emerald-500' : 'bg-rose-50 text-rose-500'}`}>
-                                <Activity size={20} className={globalScanning ? 'animate-pulse' : ''} />
+                {/* System Health Trace HUD */}
+                <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-8 px-10 py-8 bg-[#1E293B]/60 backdrop-blur-3xl border border-slate-800 shadow-2xl rounded-[3rem] mt-auto">
+                    <div className="flex items-center gap-12 w-full lg:w-auto">
+                        <div className="space-y-4">
+                            <div className="flex items-center gap-3">
+                                <div className={`p-2.5 rounded-2xl ${stabilityIndex > 80 ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20' : 'bg-rose-500/10 text-rose-500 border border-rose-500/20'}`}>
+                                    <Activity size={20} className={globalScanning ? 'animate-pulse' : ''} />
+                                </div>
+                                <div className="flex flex-col">
+                                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Swarm Stability Index</span>
+                                    <span className={`text-xl font-black ${stabilityIndex === null ? 'text-slate-400' : stabilityIndex > 80 ? 'text-emerald-500' : 'text-rose-500'}`}>
+                                        {globalScanning ? 'Synchronizing Swarm...' : (stabilityIndex !== null ? `${stabilityIndex}%` : 'Standby')}
+                                    </span>
+                                </div>
                             </div>
-                            <div className="flex flex-col">
-                                <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Swarm Stability Index</span>
-                                <span className={`text-xl font-black ${stabilityIndex === null ? 'text-slate-400' : stabilityIndex > 80 ? 'text-emerald-500' : 'text-rose-500'}`}>
-                                    {globalScanning ? 'Synchronizing Swarm...' : (stabilityIndex !== null ? `${stabilityIndex}%` : 'Standby')}
-                                </span>
+                            <div className="w-[180px] h-2 bg-[#0F172A] rounded-full overflow-hidden p-0.5 border border-slate-800">
+                                <motion.div
+                                    animate={{
+                                        width: globalScanning ? '100%' : `${stabilityIndex || 0}%`,
+                                        opacity: globalScanning ? [0.4, 1, 0.4] : 1
+                                    }}
+                                    transition={globalScanning ? { duration: 1.5, repeat: Infinity } : { duration: 0.8, ease: "circOut" }}
+                                    className={`h-full rounded-full shadow-lg ${globalScanning ? 'bg-indigo-400' :
+                                        stabilityIndex > 80 ? 'bg-emerald-500' : stabilityIndex > 50 ? 'bg-amber-500' : 'bg-rose-500'
+                                        }`}
+                                />
                             </div>
                         </div>
-                        <div className="w-[200px] h-3 bg-slate-100 rounded-full overflow-hidden p-0.5 border border-slate-50">
-                            <motion.div
-                                animate={{
-                                    width: globalScanning ? '100%' : `${stabilityIndex || 0}%`,
-                                    opacity: globalScanning ? [0.4, 1, 0.4] : 1
-                                }}
-                                transition={globalScanning ? { duration: 1.5, repeat: Infinity } : { duration: 0.8, ease: "circOut" }}
-                                className={`h-full rounded-full shadow-lg ${globalScanning ? 'bg-indigo-400' :
-                                    stabilityIndex > 80 ? 'bg-emerald-500' : stabilityIndex > 50 ? 'bg-amber-500' : 'bg-rose-500'
-                                    }`}
-                            />
+
+                        <div className="w-px h-12 bg-slate-800 hidden lg:block" />
+
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-12">
+                            <div className="space-y-1">
+                                <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Active Nodes</p>
+                                <p className="text-2xl font-black text-slate-300 tracking-tighter tabular-nums">
+                                    {agents.filter(a => a.status === 'Online').length}<span className="text-slate-500 text-lg font-medium">/04</span>
+                                </p>
+                            </div>
+                            <div className="space-y-1">
+                                <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Signal Flux</p>
+                                <p className="text-2xl font-black text-indigo-500 tracking-tighter tabular-nums">{totalSigsToday}</p>
+                            </div>
+                            <div className="space-y-1 hidden sm:block">
+                                <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Mem Pressure</p>
+                                <p className="text-2xl font-black text-slate-300 tracking-tighter tabular-nums">1.2<span className="text-slate-500 text-lg font-medium">GB</span></p>
+                            </div>
+                            <div className="space-y-1">
+                                <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">System Intent</p>
+                                <p className={`text-sm font-black uppercase tracking-widest ${isHighAlert ? 'text-rose-500' : 'text-emerald-500'}`}>
+                                    {isHighAlert ? 'Active Defense' : 'Passive Observation'}
+                                </p>
+                            </div>
                         </div>
                     </div>
 
-                    <div className="w-px h-16 bg-slate-100/60 hidden lg:block" />
-
-                    <div className="grid grid-cols-3 gap-16">
-                        <div className="space-y-1">
-                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest opacity-60">Active Nodes</p>
-                            <p className="text-3xl font-black text-slate-900 tracking-tighter tabular-nums">
-                                {agents.filter(a => a.status === 'Online').length}<span className="text-slate-300 text-xl font-medium">/04</span>
-                            </p>
+                    <div className="w-full lg:w-auto flex items-center gap-6 text-[10px] font-mono text-slate-500 uppercase tracking-widest border-t lg:border-t-0 lg:border-l border-slate-800 pt-6 lg:pt-0 lg:pl-10">
+                        <div className="flex flex-col gap-1">
+                            <span>Kernel: <span className="text-slate-300">v4.0.2</span></span>
+                            <span>Latency: <span className="text-slate-300">14ms</span></span>
                         </div>
-                        <div className="space-y-1">
-                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest opacity-60">Signal Flux</p>
-                            <p className="text-3xl font-black text-indigo-600 tracking-tighter tabular-nums">{totalSigsToday}</p>
-                        </div>
-                        <div className="space-y-1">
-                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest opacity-60">System Intent</p>
-                            <p className={`text-xl font-black uppercase tracking-tight ${isHighAlert ? 'text-rose-600' : 'text-emerald-600'}`}>
-                                {isHighAlert ? 'Active Defense' : 'Passive Discovery'}
-                            </p>
+                        <div className="flex flex-col gap-1">
+                            <span>Synapse: <span className="text-slate-300">Active</span></span>
+                            <span>Uptime: <span className="text-slate-300">99.9%</span></span>
                         </div>
                     </div>
                 </div>
 
-            </div>
-
-            {/* Deep Trace Log Overlay (Sub-Footer) */}
-            <div className="py-16 text-center flex flex-col items-center gap-6">
-                <div className="flex items-center gap-3 bg-slate-50 px-6 py-2 rounded-full border border-slate-100 shadow-sm opacity-60">
-                    <Database size={14} className="text-slate-400" />
-                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-[0.4em]">Neural Core v3.4.0-Stable</span>
+                {/* VERSION TRACE FOOTER */}
+                <div className="pt-6 border-t border-slate-800 flex items-center justify-between text-[10px] font-mono text-slate-600 uppercase tracking-widest shrink-0">
+                    <span>Inspectra Swarm Platform</span>
+                    <div className="flex gap-6">
+                        <span>Engine v2.1</span>
+                        <span>Heuristic v1.8</span>
+                        <span>Logic Layer v3.2</span>
+                    </div>
                 </div>
-                <p className="text-[10px] font-bold text-slate-300 uppercase tracking-[0.8em] max-w-lg leading-relaxed">
-                    Autonomous Swarm Observability Layer • Real-time Forensic Synthesis
-                </p>
             </div>
 
             <style dangerouslySetInnerHTML={{
                 __html: `
                 .custom-scrollbar::-webkit-scrollbar { width: 5px; }
                 .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-                .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.05); border-radius: 10px; }
-                .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.1); }
+                .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.05); border-radius: 10px; }
+                .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.1); }
                 @keyframes orbit { from { transform: rotate(0deg) translateX(20px) rotate(0deg); } to { transform: rotate(360deg) translateX(20px) rotate(-360deg); } }
                 .animate-orbit { animation: orbit 10s linear infinite; }
             ` }} />
         </div>
+
     );
 };
 

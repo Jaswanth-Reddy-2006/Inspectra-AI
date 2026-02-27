@@ -89,16 +89,8 @@ const Home = () => {
             </nav>
 
             {/* Main Content */}
-            <main className="flex-1 pt-28 sm:pt-40 pb-16 sm:pb-24 px-5 sm:px-8 flex flex-col items-center relative z-10">
-                <div className="text-center mb-10 sm:mb-14 space-y-3 sm:space-y-4 px-2">
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        className="inline-flex items-center gap-2 px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-[10px] font-black uppercase tracking-widest mb-2"
-                    >
-                        <Zap size={12} className="fill-current" />
-                        Next-Gen Automation
-                    </motion.div>
+            <main className="flex-1 pt-24 sm:pt-32 pb-16 sm:pb-24 px-5 sm:px-8 flex flex-col items-center relative z-10">
+                <div className="text-center mb-6 sm:mb-10 space-y-3 sm:space-y-4 px-2">
                     <motion.h1
                         initial={{ opacity: 0, y: 15 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -221,23 +213,11 @@ const Home = () => {
                                 {isScanning ? (
                                     <p className="text-[10px] text-slate-400 font-bold animate-pulse">Scanning application nodes & assets…</p>
                                 ) : (
-                                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest opacity-60">Autonomous Engine Ready</p>
+                                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest opacity-60"></p>
                                 )}
                             </div>
                         </div>
                     </form>
-
-                    <div className="mt-8 flex items-center justify-center gap-8 sm:gap-12 text-[10px] font-black text-slate-300 uppercase tracking-[0.15em] pt-8 border-t border-slate-50">
-                        <div className="flex items-center gap-2">
-                            <Shield size={14} className="text-blue-600/50" /> Security
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <Zap size={14} className="text-blue-600/50" /> Fast
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <FileText size={14} className="text-blue-600/50" /> Reports
-                        </div>
-                    </div>
                 </motion.div>
 
                 {/* Audit Cards Grid */}
@@ -245,7 +225,7 @@ const Home = () => {
                     {[
                         {
                             icon: <Search className="text-blue-600" size={24} />,
-                            title: "Autonomous Discovery",
+                            title: "Behavioral Discovery",
                             text: "Agent automatically crawls your entire application identifying every interactive element with high fidelity."
                         },
                         {

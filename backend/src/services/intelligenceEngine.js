@@ -3,7 +3,7 @@
  * Maps raw telemetry and signals to 7 Architectural Dimensions.
  */
 
-function extractIntelligence(pages, globalSignals) {
+function extractIntelligence(pages, globalSignals = {}) {
     const dimensions = {
         security: { score: 100, signals: [], maturity: 'ENT' },
         performance: { score: 100, signals: [], maturity: 'ENT' },
@@ -17,11 +17,15 @@ function extractIntelligence(pages, globalSignals) {
     if (!pages || pages.length === 0) return dimensions;
 
     const mainPage = pages[0];
-    const headers = globalSignals.securityHeaders || {};
+    const headers = globalSignals?.securityHeaders || {};
+    const networkStats = globalSignals?.networkStats || { totalRequests: 0, failedRequests: 0 };
+    const consoleLogs = globalSignals?.consoleLogLevels || { error: 0, warning: 0 };
+    const stressTest = globalSignals?.stressTest || { successRate: 100 };
+    const fuzzing = globalSignals?.fuzzing || { handled404: true };
 
     // 1. Security Dimension
     const sec = dimensions.security;
-    if (!mainPage.url.startsWith('https')) {
+    if (mainPage.url && !mainPage.url.startsWith('https')) {
         sec.score -= 50;
         sec.signals.push({ severity: 'CRITICAL', msg: 'Non-HTTPS protocol detected.', impact: 'Data in transit is unencrypted and vulnerable to interception.' });
     }
@@ -45,7 +49,7 @@ function extractIntelligence(pages, globalSignals) {
         perf.score -= 20;
         perf.signals.push({ severity: 'MEDIUM', msg: 'High average load time (>3s).', impact: 'Increased bounce rates and poor user retention.' });
     }
-    if (globalSignals.networkStats.totalRequests > 100) {
+    if (networkStats.totalRequests > 100) {
         perf.score -= 10;
         perf.signals.push({ severity: 'LOW', msg: 'High request count (>100).', impact: 'Payload overhead impacting mobile performance.' });
     }
@@ -57,7 +61,7 @@ function extractIntelligence(pages, globalSignals) {
         code.score -= 15;
         code.signals.push({ severity: 'MEDIUM', msg: 'Excessive DOM nesting depth.', impact: 'Complex style recalculations and layout thrashing.' });
     }
-    if (globalSignals.consoleLogLevels.error > 5) {
+    if (consoleLogs.error > 5) {
         code.score -= 20;
         code.signals.push({ severity: 'HIGH', msg: 'High volume of unhandled console errors.', impact: 'Potentially broken user flows and logical instability.' });
     }
@@ -69,13 +73,11 @@ function extractIntelligence(pages, globalSignals) {
         test.score -= 10;
         test.signals.push({ severity: 'MEDIUM', msg: 'Production source maps exposed.', impact: 'Reveals internal logic and architecture to competitors.' });
     }
-    // Inferring maturity via endpoint consistency (handled in ScoringLogic usually, but adding placeholders here)
     test.signals.push({ severity: 'LOW', msg: 'Searching for Jest/Mocha runner signatures...', impact: 'Infrastructure mapping.' });
 
     // 5. Accessibility Dimension
     const a11y = dimensions.accessibility;
-    // We already have accessibility audits, but we can augment with signal-based heuristic
-    const formsWithLabels = pages.every(p => Array.isArray(p.signals?.forms) && p.signals.forms.every(f => f.hasSubmit)); // simplistic check
+    const formsWithLabels = pages.every(p => Array.isArray(p.signals?.forms) && p.signals.forms.every(f => f.hasSubmit));
     if (!formsWithLabels) {
         a11y.score -= 10;
         a11y.signals.push({ severity: 'LOW', msg: 'Implicit form labeling detected.', impact: 'Screen reader navigation friction.' });
@@ -88,7 +90,7 @@ function extractIntelligence(pages, globalSignals) {
         dev.score -= 30;
         dev.signals.push({ severity: 'CRITICAL', msg: 'Development environment leakage.', impact: 'Internal server metadata exposed in production.' });
     }
-    if (globalSignals.fuzzing.handled404) {
+    if (fuzzing.handled404) {
         dev.signals.push({ severity: 'PASS', msg: 'Graceful 404 error handling verified.', impact: 'Robust routing configuration.' });
     } else {
         dev.score -= 10;
@@ -97,14 +99,14 @@ function extractIntelligence(pages, globalSignals) {
 
     // 7. Reliability
     const rel = dimensions.reliability;
-    if (globalSignals.networkStats.failedRequests > 0) {
-        const failureRate = (globalSignals.networkStats.failedRequests / globalSignals.networkStats.totalRequests) * 100;
+    if (networkStats.failedRequests > 0) {
+        const failureRate = (networkStats.failedRequests / (networkStats.totalRequests || 1)) * 100;
         if (failureRate > 5) {
             rel.score -= 25;
             rel.signals.push({ severity: 'HIGH', msg: `Network stability issues (${failureRate.toFixed(1)}% failure).`, impact: 'Intermittent resource loading failures.' });
         }
     }
-    if (globalSignals.stressTest.successRate < 100) {
+    if (stressTest.successRate < 100) {
         rel.score -= 20;
         rel.signals.push({ severity: 'HIGH', msg: 'Concurrency stress test failure.', impact: 'Risk of downtime under high traffic or bot activity.' });
     }

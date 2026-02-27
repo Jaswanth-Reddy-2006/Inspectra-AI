@@ -120,13 +120,36 @@ function scoreNetwork(data) {
 
 // ── Main ──────────────────────────────────────────────────────────────────────
 
-function computeHygieneScore() {
-    const funcData = readJSON(DATA.functional);
-    const perfData = readJSON(DATA.perf);
-    const netData = readJSON(DATA.network);
-    const visualData = readJSON(DATA.visual);
+function computeHygieneScore(targetUrl) {
+    let funcData = readJSON(DATA.functional) || [];
+    let perfData = readJSON(DATA.perf) || {};
+    let netData = readJSON(DATA.network) || {};
+    let visualData = readJSON(DATA.visual) || [];
 
-    // Perf data contains both perf + accessibility scores
+    // Filter by targetUrl if provided
+    if (targetUrl) {
+        // Normalize URL (strip trailing slash for better comparison match)
+        const norm = (u) => u.replace(/\/$/, '');
+        const targetNorm = norm(targetUrl);
+
+        // Functional: Find the most recent run for this URL
+        const funcRuns = funcData
+            .filter(r => norm(r.url) === targetNorm)
+            .sort((a, b) => new Date(b.runAt) - new Date(a.runAt));
+        funcData = funcRuns.length > 0 ? [funcRuns[0]] : [];
+
+        // Performance & Accessibility: Direct lookup
+        const perfMatch = Object.entries(perfData).find(([u]) => norm(u) === targetNorm);
+        perfData = perfMatch ? { [perfMatch[0]]: perfMatch[1] } : {};
+
+        // Network: Direct lookup
+        const netMatch = Object.entries(netData).find(([u]) => norm(u) === targetNorm);
+        netData = netMatch ? { [netMatch[0]]: netMatch[1] } : {};
+
+        // Visual: Filter comparisons for this URL
+        visualData = visualData.filter(r => norm(r.url) === targetNorm);
+    }
+
     const dimensions = {
         functional: scoreFunctional(funcData),
         performance: scorePerformance(perfData),
@@ -151,11 +174,11 @@ function computeHygieneScore() {
     const overallScore = weightUsed > 0 ? Math.round(weightedSum / weightUsed) : 0;
 
     const grade =
-        overallScore >= 90 ? 'A+' :
-            overallScore >= 80 ? 'A' :
-                overallScore >= 70 ? 'B' :
-                    overallScore >= 60 ? 'C' :
-                        overallScore >= 50 ? 'D' : 'F';
+        overallScore >= 90 ? 'ELITE' :
+            overallScore >= 80 ? 'STABLE' :
+                overallScore >= 70 ? 'FAIR' :
+                    overallScore >= 60 ? 'DEGRADED' :
+                        overallScore >= 50 ? 'UNSTABLE' : 'CRITICAL';
 
     const label =
         overallScore >= 90 ? 'Excellent' :
@@ -165,7 +188,7 @@ function computeHygieneScore() {
 
     // Weakest dimension
     const sorted = Object.entries(dimensionScores).sort((a, b) => a[1] - b[1]);
-    const weakest = sorted[0];
+    const weakest = sorted[0] || ['N/A', 0];
 
     // Trend (simple: which dimensions are below 70)
     const warnings = Object.entries(dimensionScores)
@@ -183,6 +206,7 @@ function computeHygieneScore() {
         warnings,
         hasSufficientData: Object.values(dimensions).some(d => d.score !== null),
         computedAt: new Date().toISOString(),
+        targetUrl: targetUrl || 'Global Aggregate'
     };
 }
 

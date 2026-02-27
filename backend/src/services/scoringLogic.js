@@ -11,8 +11,8 @@ function calculateProductionReadiness(intelligence) {
     const overrides = [];
 
     // 1. Critical Failure: Privacy/Security (No HTTPS)
-    const security = intelligence.security;
-    const httpsSignal = security.signals.find(s => s.msg.includes('HTTPS'));
+    const security = intelligence.security || { score: 100, signals: [] };
+    const httpsSignal = (security.signals || []).find(s => s && s.msg && s.msg.includes('HTTPS'));
     if (httpsSignal) {
         if (overallScore > 40) {
             overallScore = 40;
@@ -21,8 +21,8 @@ function calculateProductionReadiness(intelligence) {
     }
 
     // 2. Critical Failure: Vulnerability (No CSP + High Risk)
-    const noCSP = security.signals.find(s => s.msg.includes('Missing Content Security Policy'));
-    const code = intelligence.codeQuality;
+    const noCSP = (security.signals || []).find(s => s && s.msg && s.msg.includes('Missing Content Security Policy'));
+    const code = intelligence.codeQuality || { score: 100, signals: [] };
     if (noCSP && code.score < 70) {
         if (security.score > 50) {
             security.score = 50;
@@ -31,8 +31,8 @@ function calculateProductionReadiness(intelligence) {
     }
 
     // 3. Reliability Override: Concurrency Failures
-    const reliability = intelligence.reliability;
-    const stressFail = reliability.signals.find(s => s.msg.includes('stress test failure'));
+    const reliability = intelligence.reliability || { score: 100, signals: [] };
+    const stressFail = (reliability.signals || []).find(s => s && s.msg && s.msg.includes('stress test failure'));
     if (stressFail && overallScore > 60) {
         overallScore = 60;
         overrides.push('Readiness lowered to Growth stage due to reliability stress failures.');

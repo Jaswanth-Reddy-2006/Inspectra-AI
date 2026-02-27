@@ -1,4 +1,5 @@
 import React, { useMemo, useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { useScanContext } from '../context/ScanContext';
 import {
     ShieldCheck,
@@ -63,7 +64,11 @@ const DimensionCard = ({ title, score, signals, icon: Icon, isCritical, isAvaila
     }
 
     return (
-        <div
+        <motion.div
+            layout
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            whileHover={{ y: -4, transition: { duration: 0.2 } }}
             onClick={onClick}
             className={`bg-[#1E293B] border rounded flex flex-col h-full relative overflow-hidden group cursor-pointer transition-all ${isCritical ? 'border-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.1)] bg-red-950/10' : 'border-slate-700/50 hover:border-slate-600'
                 }`}
@@ -91,8 +96,8 @@ const DimensionCard = ({ title, score, signals, icon: Icon, isCritical, isAvaila
                 {signals && Array.isArray(signals) && signals.length > 0 ? (
                     signals.slice(0, 3).map((s, idx) => (
                         <div key={idx} className="flex gap-2 items-start">
-                            <div className={`mt-1.5 w-1.5 h-1.5 shrink-0 rounded-full ${getSeverityColor(s.severity)}`} />
-                            <p className="text-[13px] text-slate-300 leading-snug truncate" title={s.msg}>{s?.msg || "Unknown Signal"}</p>
+                            <div className={`mt-1.5 w-1.5 h-1.5 shrink-0 rounded-full ${getSeverityColor(s?.severity)}`} />
+                            <p className="text-[13px] text-slate-300 leading-snug truncate" title={s?.msg}>{s?.msg || "Unknown Signal"}</p>
                         </div>
                     ))
                 ) : (
@@ -102,11 +107,10 @@ const DimensionCard = ({ title, score, signals, icon: Icon, isCritical, isAvaila
                 )}
             </div>
 
-            {/* Bottom: Action Trigger */}
             <div className={`w-full p-2 border-t text-[11px] font-bold flex items-center justify-center gap-1 uppercase tracking-widest ${isCritical ? 'border-red-900/30 text-red-500 bg-red-950/20' : 'border-slate-700/50 text-slate-400 bg-[#0F172A]/50'}`}>
                 View Diagnostics <ArrowRight size={12} />
             </div>
-        </div>
+        </motion.div>
     );
 };
 
@@ -458,30 +462,39 @@ const QualityEngineeringInner = () => {
         return 0;
     });
     return (
-        <div className="bg-[#0F172A] min-h-screen w-full text-slate-300 font-sans pb-10">
+        <div className="bg-[#0F172A] min-h-screen text-slate-300 font-sans selection:bg-blue-500/30 flex flex-col">
+            {/* Top Trace Strip */}
+            <div className="h-10 bg-[#1E293B] border-b border-slate-800 flex items-center justify-between px-6 text-[11px] font-mono text-slate-500 uppercase tracking-widest shrink-0">
+                <div className="flex items-center gap-4">
+                    <span>Path: /intelligence-hub/quality-engineering</span>
+                </div>
+                <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-indigo-500 shadow-[0_0_10px_rgba(99,102,241,0.5)]"></span>
+                    <span className="text-indigo-400">COMMAND CENTER ACTIVE</span>
+                </div>
+            </div>
+
             <DetailModal {...modalConfig} onClose={() => setModalConfig({ ...modalConfig, isOpen: false })} />
 
-            <div className="max-w-[1600px] mx-auto p-6 space-y-6">
-
+            <div className="max-w-[1600px] w-full mx-auto p-6 md:p-8 flex-1 flex flex-col gap-8 min-h-0 overflow-hidden relative">
                 {/* PAGE HEADER */}
-                <div className="flex items-center justify-between mb-2">
-                    <div>
-                        <h1 className="text-[24px] font-bold text-slate-100 tracking-wide">Quality Engineering</h1>
-                        <p className="text-[14px] text-slate-400 mt-1">Autonomous Architectural Evaluation Command Center</p>
-                    </div>
+                <div className="flex flex-col mb-2 shrink-0 text-left relative z-10">
+                    <h1 className="text-3xl font-semibold text-slate-300 uppercase tracking-widest leading-none">Quality Engineering</h1>
+                    <p className="text-[13px] font-mono text-slate-500 mt-2">Autonomous Architectural Evaluation Command Center</p>
                 </div>
 
                 {/* SECTION 1: Compact Intelligence Bar */}
-                <div className="h-[80px] bg-[#1E293B] border border-slate-700/50 rounded flex items-center justify-between px-6 shrink-0">
+                <div className="h-[100px] bg-[#1E293B]/60 backdrop-blur-3xl border border-slate-800 rounded-[2rem] flex items-center justify-between px-10 shrink-0 relative z-10 shadow-2xl">
                     <div className="flex flex-col flex-1">
-                        <span className="text-[12px] font-mono text-slate-500">TARGET URI</span>
-                        <div className="flex items-center gap-2">
-                            <span className="text-[14px] font-semibold text-slate-200 truncate">{scanResult?.url || 'system/standby'}</span>
-                            <span className="text-[11px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded border border-slate-700 font-mono">
+                        <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Target URI</span>
+                        <div className="flex items-center gap-3">
+                            <span className="text-[15px] font-bold text-slate-200 truncate max-w-[300px]">{scanResult?.url || 'system/standby'}</span>
+                            <span className="text-[10px] bg-[#0F172A] text-slate-400 px-2 py-0.5 rounded border border-slate-800 font-mono">
                                 ID: {scanResult?.id?.split('-')[0] || '----'}
                             </span>
                         </div>
                     </div>
+
 
                     <div className="flex items-center gap-4 flex-1 justify-center">
                         <div className="text-right">
@@ -646,7 +659,8 @@ const QualityEngineeringInner = () => {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {sortedInterventions.map((item, idx) => {
+                                            {sortedInterventions && sortedInterventions.length > 0 ? sortedInterventions.map((item, idx) => {
+                                                if (!item) return null;
                                                 const isP0 = item.priority === 'URGENT';
 
                                                 // Derived display stats for simulation UX pseudo-modeling
@@ -654,22 +668,25 @@ const QualityEngineeringInner = () => {
                                                 const effort = item.priority === 'URGENT' ? 'High' : (item.priority === 'HIGH' ? 'Medium' : 'Low');
 
                                                 return (
-                                                    <tr
+                                                    <motion.tr
                                                         key={idx}
+                                                        initial={{ opacity: 0, x: -10 }}
+                                                        animate={{ opacity: 1, x: 0 }}
+                                                        transition={{ delay: idx * 0.05 }}
                                                         className="border-b border-slate-700/50 hover:bg-slate-700/30 cursor-pointer transition-colors"
                                                         onClick={() => openModal(item.title, item, 'priority')}
                                                     >
                                                         <td className="p-3">
                                                             <span className={`px-2 py-0.5 rounded text-[10px] font-bold font-mono ${isP0 ? 'bg-red-500/20 text-red-400 border border-red-500/30' : 'bg-orange-500/20 text-orange-400 border border-orange-500/30'}`}>
-                                                                {item.priority}
+                                                                {item.priority || 'NORMAL'}
                                                             </span>
                                                         </td>
                                                         <td className="p-3 hidden lg:table-cell">
                                                             <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">{item.dimension || 'GLOBAL'}</span>
                                                         </td>
                                                         <td className="p-3">
-                                                            <p className={`text-[13px] font-semibold ${isP0 ? 'text-slate-100' : 'text-slate-300'}`}>{item.title}</p>
-                                                            <p className="text-[11px] text-slate-500 line-clamp-1 mt-0.5">{item.impact}</p>
+                                                            <p className={`text-[13px] font-semibold ${isP0 ? 'text-slate-100' : 'text-slate-300'}`}>{item.title || 'Unknown Issue'}</p>
+                                                            <p className="text-[11px] text-slate-500 line-clamp-1 mt-0.5">{item.impact || 'Analyzing impact...'}</p>
                                                         </td>
                                                         <td className="p-3 hidden md:table-cell text-center">
                                                             <span className="text-[12px] font-mono text-emerald-400 border border-emerald-500/20 bg-emerald-500/10 px-2 py-0.5 rounded">-{riskReduction}%</span>
@@ -677,9 +694,15 @@ const QualityEngineeringInner = () => {
                                                         <td className="p-3 hidden md:table-cell text-center">
                                                             <span className="text-[12px] text-slate-300 font-medium">{effort}</span>
                                                         </td>
-                                                    </tr>
+                                                    </motion.tr>
                                                 );
-                                            })}
+                                            }) : (
+                                                <tr>
+                                                    <td colSpan="5" className="p-8 text-center text-slate-500 italic text-[13px]">
+                                                        No critical interventions required for current telemetry baseline.
+                                                    </td>
+                                                </tr>
+                                            )}
                                         </tbody>
                                     </table>
                                 </div>

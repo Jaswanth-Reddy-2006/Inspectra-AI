@@ -98,16 +98,6 @@ const LoadingSpinner = ({ isProcessing, scanStartTime }) => {
                     </div>
                 </div>
 
-                {/* Bottom Footer Info */}
-                <div className="absolute bottom-10 left-0 w-full px-6 flex justify-center">
-                    <div className="flex items-center gap-6 text-[10px] font-black text-slate-300 uppercase tracking-[0.2em]">
-                        <span>Secure Scan</span>
-                        <div className="w-1.5 h-1.5 rounded-full bg-slate-200" />
-                        <span>Playwright Engine</span>
-                        <div className="w-1.5 h-1.5 rounded-full bg-slate-200" />
-                        <span>v2.4.0</span>
-                    </div>
-                </div>
             </motion.div>
         </AnimatePresence>
     );

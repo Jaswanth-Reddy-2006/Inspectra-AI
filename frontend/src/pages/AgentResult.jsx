@@ -207,216 +207,234 @@ const AgentDetail = () => {
     );
 
     return (
-        <div className="min-h-screen bg-[#f8fafc] p-6 lg:p-12 space-y-12">
-            {/* Navigation Header */}
-            <div className="flex items-center justify-between">
-                <button
-                    onClick={() => navigate('/agents')}
-                    className="flex items-center gap-2 text-slate-400 hover:text-slate-900 transition-colors group"
-                >
-                    <div className="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center group-hover:bg-white group-hover:shadow-md transition-all">
-                        <ArrowLeft size={18} />
-                    </div>
-                    <span className="text-xs font-black uppercase tracking-widest">Back to Swarm</span>
-                </button>
-                <div className="flex items-center gap-3 px-4 py-2 bg-white border border-slate-100 rounded-full shadow-sm text-[10px] font-bold text-slate-400">
-                    <Clock size={14} className="text-indigo-500" />
-                    Last Active: {new Date(agent.lastActive).toLocaleTimeString()}
+        <div className="min-h-screen bg-[#0F172A] text-slate-300 font-sans selection:bg-blue-500/30 flex flex-col">
+            {/* Top Trace Strip */}
+            <div className="h-10 bg-[#1E293B] border-b border-slate-800 flex items-center justify-between px-6 text-[11px] font-mono text-slate-500 uppercase tracking-widest shrink-0">
+                <div className="flex items-center gap-4">
+                    <span>Path: /intelligence-hub/agent-trace/{agent?.id || 'null'}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]"></span>
+                    <span className="text-emerald-400">SESSION LIVE</span>
                 </div>
             </div>
 
-            {/* Hero Section */}
-            <div className="flex flex-col lg:flex-row gap-12 items-start">
-                <div className="flex-1 space-y-8">
-                    <div className="space-y-4">
-                        <div className="flex items-center gap-4">
-                            <div className={`w-20 h-20 rounded-[2rem] flex items-center justify-center shadow-2xl shadow-indigo-100 bg-white border border-slate-50 text-indigo-600`}>
-                                <ShieldCheck size={40} />
+            <div className="max-w-[1600px] w-full mx-auto p-6 md:p-8 flex-1 flex flex-col gap-8 min-h-0 overflow-hidden relative">
+                {/* Navigation Header */}
+                <div className="flex items-center justify-between relative z-10 shrink-0">
+                    <button
+                        onClick={() => navigate('/agents')}
+                        className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors group"
+                    >
+                        <div className="w-10 h-10 rounded-full border border-slate-800 flex items-center justify-center group-hover:bg-slate-800 transition-all">
+                            <ArrowLeft size={18} />
+                        </div>
+                        <span className="text-xs font-black uppercase tracking-widest underline-offset-4 group-hover:underline">Back to Swarm</span>
+                    </button>
+                    <div className="flex items-center gap-3 px-4 py-2 bg-[#1E293B] border border-slate-800 rounded-full shadow-lg text-[10px] font-bold text-slate-400">
+                        <Clock size={14} className="text-indigo-400" />
+                        Last Active: {new Date(agent.lastActive).toLocaleTimeString()}
+                    </div>
+                </div>
+
+                {/* Hero Section */}
+                <div className="flex flex-col lg:flex-row gap-12 items-start relative z-10">
+                    <div className="flex-1 space-y-10 w-full">
+                        <div className="space-y-4">
+                            <div className="flex items-center gap-6">
+                                <div className="w-20 h-20 rounded-[2.5rem] flex items-center justify-center bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 shadow-2xl">
+                                    <ShieldCheck size={40} />
+                                </div>
+                                <div className="space-y-2">
+                                    <div className="flex items-center gap-4">
+                                        <h1 className="text-5xl font-black text-slate-100 tracking-tighter italic">{agent.name}</h1>
+                                        <div className="px-3 py-1 bg-indigo-500/10 text-indigo-400 text-[10px] font-black uppercase tracking-widest rounded-lg border border-indigo-500/20">
+                                            {agent.id}
+                                        </div>
+                                    </div>
+                                    <p className="text-slate-500 font-medium text-lg leading-relaxed">{agent.desc}</p>
+                                </div>
                             </div>
-                            <div className="space-y-1">
-                                <div className="flex items-center gap-3">
-                                    <h1 className="text-5xl font-black text-slate-900 tracking-tighter italic">{agent.name}</h1>
-                                    <div className="px-3 py-1 bg-indigo-50 text-indigo-600 text-[10px] font-black uppercase tracking-widest rounded-lg border border-indigo-100">
-                                        {agent.id}
+                        </div>
+
+                        {/* Stats Grid */}
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div className="p-8 bg-[#1E293B] border border-slate-800 rounded-[3rem] text-white space-y-4 relative overflow-hidden shadow-xl">
+                                <div className="absolute top-0 right-0 p-8 opacity-5">
+                                    <Zap size={80} />
+                                </div>
+                                <p className="text-[10px] font-black text-indigo-400 uppercase tracking-widest">Current Task</p>
+                                <h3 className="text-xl font-bold leading-relaxed text-slate-200">"{agent.task}"</h3>
+                            </div>
+
+                            <div className="p-8 bg-[#1E293B]/40 backdrop-blur-xl border border-slate-800 rounded-[3rem] shadow-xl space-y-4">
+                                <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Impact Velocity</p>
+                                <div className="space-y-3">
+                                    <p className="text-4xl font-black text-slate-200">{agent.cpu}%</p>
+                                    <div className="h-2 w-full bg-[#0F172A] rounded-full overflow-hidden p-[2px] border border-slate-800">
+                                        <div className="h-full bg-indigo-500 rounded-full shadow-[0_0_10px_rgba(99,102,241,0.5)]" style={{ width: `${agent.cpu}%` }} />
                                     </div>
                                 </div>
-                                <p className="text-slate-400 font-medium text-lg">{agent.desc}</p>
                             </div>
-                        </div>
-                    </div>
 
-                    {/* Stats Grid */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div className="p-8 bg-slate-900 rounded-[3rem] text-white space-y-4 relative overflow-hidden">
-                            <div className="absolute top-0 right-0 p-8 opacity-10">
-                                <Zap size={80} />
-                            </div>
-                            <p className="text-[10px] font-black text-indigo-400 uppercase tracking-widest">Current Task</p>
-                            <h3 className="text-xl font-bold leading-relaxed">"{agent.task}"</h3>
-                        </div>
-
-                        <div className="p-8 bg-white border border-slate-100 rounded-[3rem] shadow-sm space-y-4">
-                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Impact Velocity</p>
-                            <div className="space-y-3">
-                                <p className="text-4xl font-black text-slate-900">{agent.cpu}%</p>
-                                <div className="h-1.5 w-full bg-slate-50 rounded-full overflow-hidden">
-                                    <div className="h-full bg-indigo-500 rounded-full" style={{ width: `${agent.cpu}%` }} />
+                            <div className="p-8 bg-[#1E293B]/40 backdrop-blur-xl border border-slate-800 rounded-[3rem] shadow-xl space-y-4">
+                                <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Signal Latency</p>
+                                <div className="space-y-3">
+                                    <p className={`text-4xl font-black ${agent.latency > 400 ? 'text-rose-500' : 'text-slate-200'}`}>
+                                        {agent.latency}ms
+                                    </p>
+                                    <p className="text-[10px] font-bold text-slate-500 uppercase tracking-tight">
+                                        {agent.latency > 400 ? 'Threshold Violation' : 'Nominal Response'}
+                                    </p>
                                 </div>
-                            </div>
-                        </div>
-
-                        <div className="p-8 bg-white border border-slate-100 rounded-[3rem] shadow-sm space-y-4">
-                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Signal Latency</p>
-                            <div className="space-y-3">
-                                <p className={`text-4xl font-black ${agent.latency > 400 ? 'text-amber-500' : 'text-slate-900'}`}>
-                                    {agent.latency}ms
-                                </p>
-                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tight">
-                                    {agent.latency > 400 ? 'Threshold Violation' : 'Nominal Response'}
-                                </p>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-                {/* Left Column: Narrative & Insights */}
-                <div className="lg:col-span-4 space-y-12">
-                    <section className="space-y-6">
-                        <div className="flex items-center gap-2 px-2">
-                            <Cpu size={18} className="text-indigo-600" />
-                            <h4 className="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em]">Strategy & Narrative</h4>
-                        </div>
-                        <div className="space-y-4">
-                            {strategyAnalysis.map((item, i) => (
-                                <div key={i} className="p-6 bg-white border border-slate-50 rounded-[2.5rem] shadow-sm space-y-1 hover:border-indigo-100 transition-colors">
-                                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">{item.label}</p>
-                                    <p className={`text-[13px] font-bold leading-relaxed ${item.color || 'text-slate-700'}`}>{item.val}</p>
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 relative z-10">
+                    {/* Left Column: Narrative & Insights */}
+                    <div className="lg:col-span-4 space-y-12">
+                        <section className="space-y-6">
+                            <div className="flex items-center gap-2 px-2">
+                                <Cpu size={18} className="text-indigo-400" />
+                                <h4 className="text-[11px] font-black text-slate-500 uppercase tracking-[0.2em]">Strategy & Narrative</h4>
+                            </div>
+                            <div className="space-y-4">
+                                {strategyAnalysis.map((item, i) => (
+                                    <div key={i} className="p-6 bg-[#1E293B]/40 backdrop-blur-3xl border border-slate-800 rounded-[2.5rem] shadow-xl space-y-1 hover:border-indigo-500/30 transition-colors">
+                                        <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest">{item.label}</p>
+                                        <p className={`text-[13px] font-bold leading-relaxed ${item.color || 'text-slate-300'}`}>{item.val}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+
+                        <section className="space-y-6">
+                            <div className="flex items-center gap-2 px-2">
+                                <Search size={18} className="text-indigo-400" />
+                                <h4 className="text-[11px] font-black text-slate-500 uppercase tracking-[0.2em]">Discovery Findings</h4>
+                            </div>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="p-8 bg-[#1E293B]/40 backdrop-blur-3xl border border-slate-800 rounded-[2.5rem] shadow-xl flex flex-col items-center justify-center text-center space-y-2">
+                                    <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Entities Mapped</p>
+                                    <p className="text-3xl font-black text-slate-200 tabular-nums">{agent.completed}</p>
+                                    <CheckCircle2 size={16} className="text-emerald-500" />
                                 </div>
-                            ))}
-                        </div>
-                    </section>
-
-                    <section className="space-y-6">
-                        <div className="flex items-center gap-2 px-2">
-                            <Search size={18} className="text-indigo-600" />
-                            <h4 className="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em]">Discovery Findings</h4>
-                        </div>
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="p-8 bg-white border border-slate-50 rounded-[2.5rem] shadow-sm flex flex-col items-center justify-center text-center space-y-2">
-                                <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Entities Mapped</p>
-                                <p className="text-3xl font-black text-slate-900">{agent.completed}</p>
-                                <CheckCircle2 size={16} className="text-emerald-500" />
+                                <div className="p-8 bg-[#1E293B]/40 backdrop-blur-3xl border border-slate-800 rounded-[2.5rem] shadow-xl flex flex-col items-center justify-center text-center space-y-2">
+                                    <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Discovery Depth</p>
+                                    <p className="text-3xl font-black text-slate-200">{agent.cpu > 50 ? 'Deep' : 'Standard'}</p>
+                                    <Layers size={16} className="text-indigo-400" />
+                                </div>
                             </div>
-                            <div className="p-8 bg-white border border-slate-50 rounded-[2.5rem] shadow-sm flex flex-col items-center justify-center text-center space-y-2">
-                                <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Discovery Depth</p>
-                                <p className="text-3xl font-black text-slate-900">{agent.cpu > 50 ? 'Deep' : 'Standard'}</p>
-                                <Layers size={16} className="text-indigo-500" />
-                            </div>
-                        </div>
-                    </section>
-                </div>
-
-                {/* Right Column: Logs */}
-                <div className="lg:col-span-8 space-y-6">
-                    <div className="flex items-center justify-between px-2">
-                        <div className="flex items-center gap-2">
-                            <Terminal size={18} className="text-indigo-600" />
-                            <h4 className="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em]">Autonomous Trace Logs</h4>
-                        </div>
-                        <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">{logs.length} Signals Captured</span>
+                        </section>
                     </div>
 
-                    <div className="bg-white border border-slate-100 rounded-[3.5rem] overflow-hidden shadow-sm">
-                        <div className="max-h-[800px] overflow-y-auto p-10 space-y-12 custom-scrollbar">
-                            <AnimatePresence initial={false}>
-                                {logs.length > 0 ? (
-                                    logs.slice(0, 20).map((log, i) => {
-                                        const explanation = LOG_EXPLANATIONS[log.message] || { exp: 'Routine system activity and telemetry synchronization.', status: 'Normal' };
-                                        return (
-                                            <motion.div
-                                                key={log.id || i}
-                                                initial={{ opacity: 0, x: -20 }}
-                                                animate={{ opacity: 1, x: 0 }}
-                                                className="space-y-6"
-                                            >
-                                                <div className="flex items-center gap-4 text-slate-100 tracking-tighter text-[9px] font-bold">
-                                                    <span className="text-slate-300 bg-slate-50 px-3 py-1 rounded-full border border-slate-100">{log.timestamp}</span>
-                                                    <div className="flex-1 h-px bg-slate-50" />
-                                                </div>
+                    {/* Right Column: Logs */}
+                    <div className="lg:col-span-8 space-y-6 min-h-0">
+                        <div className="flex items-center justify-between px-2">
+                            <div className="flex items-center gap-2">
+                                <Terminal size={18} className="text-indigo-400" />
+                                <h4 className="text-[11px] font-black text-slate-500 uppercase tracking-[0.2em]">Autonomous Trace Logs</h4>
+                            </div>
+                            <span className="text-[10px] font-black text-slate-600 uppercase tracking-widest">{logs.length} Signals Captured</span>
+                        </div>
 
-                                                <div className="space-y-4">
-                                                    <div className="text-slate-400/30 px-2 tracking-widest text-[10px]">--------------------------------------------------------------------------------</div>
-
-                                                    <div className="bg-slate-50/50 p-8 rounded-[2.5rem] border border-slate-50 space-y-8 group hover:bg-white hover:border-indigo-100 hover:shadow-xl transition-all duration-500">
-                                                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                                                            {/* Signal Row */}
-                                                            <div className="space-y-3">
-                                                                <div className="flex items-center gap-2">
-                                                                    <Terminal size={12} className="text-slate-400" />
-                                                                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">🔹 RAW LOG:</p>
-                                                                </div>
-                                                                <div className="bg-slate-900 text-indigo-300 p-4 rounded-2xl font-mono text-[11px] font-bold border border-slate-800 shadow-inner">
-                                                                    {log.message}
-                                                                </div>
-                                                            </div>
-                                                            <div className="space-y-3">
-                                                                <div className="flex items-center gap-2">
-                                                                    <Cpu size={12} className="text-indigo-500" />
-                                                                    <p className="text-[9px] font-black text-indigo-500 uppercase tracking-widest leading-none">🧠 EXPLANATION:</p>
-                                                                </div>
-                                                                <p className="text-[12px] text-slate-600 font-medium leading-relaxed italic border-l-2 border-indigo-50 pl-4 py-1">
-                                                                    "{explanation.exp}"
-                                                                </p>
-                                                            </div>
-
-                                                            {/* Context Row (NEW: Exact Location) */}
-                                                            <div className="space-y-3">
-                                                                <div className="flex items-center gap-2">
-                                                                    <Layers size={12} className="text-slate-400" />
-                                                                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">🌐 SOURCE ORIGIN:</p>
-                                                                </div>
-                                                                <p className="text-[11px] text-indigo-600 font-bold font-mono truncate px-4 border-l-2 border-indigo-50">
-                                                                    {log.url || 'N/A (Global Swarm context)'}
-                                                                </p>
-                                                            </div>
-
-                                                        </div>
-
-                                                        <div className="flex items-center justify-between pt-6 border-t border-slate-100">
-                                                            <div className="flex items-center gap-3">
-                                                                <div className={`w-2 h-2 rounded-full ${explanation.status === 'Critical' ? 'bg-rose-500 animate-pulse' :
-                                                                    explanation.status === 'Warning' ? 'bg-amber-500' : 'bg-emerald-500'
-                                                                    }`} />
-                                                                <span className={`text-[11px] font-black uppercase tracking-widest ${explanation.status === 'Critical' ? 'text-rose-600' :
-                                                                    explanation.status === 'Warning' ? 'text-amber-600' : 'text-emerald-600'
-                                                                    }`}>
-                                                                    STATUS: ({explanation.status})
-                                                                </span>
-                                                            </div>
-                                                            <button
-                                                                onClick={() => setSelectedLog(log)}
-                                                                className="text-[9px] font-black text-indigo-400 uppercase tracking-widest hover:text-indigo-600 transition-colors"
-                                                            >
-                                                                Full Forensic Breakdown →
-                                                            </button>
-                                                        </div>
+                        <div className="bg-[#1E293B]/20 backdrop-blur-3xl border border-slate-800 rounded-[3.5rem] overflow-hidden shadow-2xl flex-1 flex flex-col">
+                            <div className="overflow-y-auto p-8 space-y-10 custom-scrollbar flex-1">
+                                <AnimatePresence initial={false}>
+                                    {logs.length > 0 ? (
+                                        logs.slice(0, 20).map((log, i) => {
+                                            const explanation = LOG_EXPLANATIONS[log.message] || { exp: 'Routine system activity and telemetry synchronization.', status: 'Normal' };
+                                            return (
+                                                <motion.div
+                                                    key={log.id || i}
+                                                    initial={{ opacity: 0, x: -20 }}
+                                                    animate={{ opacity: 1, x: 0 }}
+                                                    className="space-y-6"
+                                                >
+                                                    <div className="flex items-center gap-4 text-slate-100 tracking-tighter text-[9px] font-bold">
+                                                        <span className="text-slate-500 bg-[#0F172A] px-3 py-1 rounded-full border border-slate-800">{log.timestamp}</span>
+                                                        <div className="flex-1 h-px bg-slate-800/50" />
                                                     </div>
 
-                                                    <div className="text-slate-400/30 px-2 tracking-widest text-[10px]">--------------------------------------------------------------------------------</div>
-                                                </div>
-                                            </motion.div>
-                                        );
-                                    })
-                                ) : (
-                                    <div className="py-20 text-center space-y-4">
-                                        <Activity size={48} className="text-slate-100 mx-auto" />
-                                        <p className="text-slate-300 font-black uppercase tracking-[0.3em] text-[11px]">Monitoring decentralised flux...</p>
-                                    </div>
-                                )}
-                            </AnimatePresence>
+                                                    <div className="space-y-4">
+                                                        <div className="bg-[#1E293B]/40 p-8 rounded-[3rem] border border-slate-800/50 space-y-8 group hover:bg-[#1E293B]/60 hover:border-indigo-500/40 hover:shadow-2xl transition-all duration-500">
+                                                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                                                                {/* Signal Row */}
+                                                                <div className="space-y-3">
+                                                                    <div className="flex items-center gap-2">
+                                                                        <Terminal size={12} className="text-slate-500" />
+                                                                        <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest leading-none">🔹 RAW LOG:</p>
+                                                                    </div>
+                                                                    <div className="bg-[#0F172A] text-indigo-300 p-4 rounded-2xl font-mono text-[11px] font-bold border border-slate-800 shadow-inner">
+                                                                        {log.message}
+                                                                    </div>
+                                                                </div>
+                                                                <div className="space-y-3">
+                                                                    <div className="flex items-center gap-2">
+                                                                        <Cpu size={12} className="text-indigo-400" />
+                                                                        <p className="text-[9px] font-black text-indigo-400 uppercase tracking-widest leading-none">🧠 EXPLANATION:</p>
+                                                                    </div>
+                                                                    <p className="text-[12px] text-slate-400 font-medium leading-relaxed italic border-l-2 border-indigo-500/20 pl-4 py-1">
+                                                                        "{explanation.exp}"
+                                                                    </p>
+                                                                </div>
+
+                                                                {/* Context Row */}
+                                                                <div className="space-y-3">
+                                                                    <div className="flex items-center gap-2">
+                                                                        <Layers size={12} className="text-slate-500" />
+                                                                        <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest leading-none">🌐 SOURCE ORIGIN:</p>
+                                                                    </div>
+                                                                    <p className="text-[11px] text-indigo-400 font-bold font-mono truncate px-4 border-l-2 border-indigo-500/20">
+                                                                        {log.url || 'N/A (Global Swarm context)'}
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+
+                                                            <div className="flex items-center justify-between pt-6 border-t border-slate-800/50">
+                                                                <div className="flex items-center gap-3">
+                                                                    <div className={`w-2 h-2 rounded-full ${explanation.status === 'Critical' ? 'bg-rose-500 animate-pulse' :
+                                                                        explanation.status === 'Warning' ? 'bg-amber-500' : 'bg-emerald-500'
+                                                                        }`} />
+                                                                    <span className={`text-[11px] font-black uppercase tracking-widest ${explanation.status === 'Critical' ? 'text-rose-500' :
+                                                                        explanation.status === 'Warning' ? 'text-amber-500' : 'text-emerald-500'
+                                                                        }`}>
+                                                                        STATUS: {explanation.status}
+                                                                    </span>
+                                                                </div>
+                                                                <button
+                                                                    onClick={() => setSelectedLog(log)}
+                                                                    className="text-[9px] font-black text-indigo-400 uppercase tracking-widest hover:text-white transition-colors flex items-center gap-2"
+                                                                >
+                                                                    Full Forensic Breakdown <ArrowUpRight size={12} />
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </motion.div>
+                                            );
+                                        })
+                                    ) : (
+                                        <div className="py-20 text-center space-y-4">
+                                            <Activity size={48} className="text-slate-800 mx-auto" />
+                                            <p className="text-slate-600 font-black uppercase tracking-[0.3em] text-[11px]">Monitoring decentralised flux...</p>
+                                        </div>
+                                    )}
+                                </AnimatePresence>
+                            </div>
                         </div>
+                    </div>
+                </div>
+
+                {/* VERSION TRACE FOOTER */}
+                <div className="pt-6 border-t border-slate-800 flex items-center justify-between text-[10px] font-mono text-slate-600 uppercase tracking-widest shrink-0">
+                    <span>Inspectra Swarm Trace</span>
+                    <div className="flex gap-6">
+                        <span>Node Kernel v4.2</span>
+                        <span>Trace Decoder v1.1</span>
+                        <span>Forensic Layer v2.0</span>
                     </div>
                 </div>
             </div>
@@ -430,79 +448,78 @@ const AgentDetail = () => {
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             onClick={() => setSelectedLog(null)}
-                            className="absolute inset-0 bg-slate-900/40 backdrop-blur-md"
+                            className="absolute inset-0 bg-[#0F172A]/90 backdrop-blur-md"
                         />
                         <motion.div
                             initial={{ opacity: 0, scale: 0.9, y: 20 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                            className="bg-white rounded-[3.5rem] w-full max-w-2xl shadow-2xl relative overflow-hidden z-20 border border-slate-100"
+                            className="bg-[#1E293B] rounded-[3.5rem] w-full max-w-2xl shadow-2xl relative overflow-hidden z-20 border border-slate-800"
                         >
                             <div className="p-12 space-y-10">
                                 <div className="flex items-start justify-between">
                                     <div className="space-y-3">
-                                        <div className="flex items-center gap-3">
-                                            <div className="p-3 bg-indigo-50 text-indigo-600 rounded-2xl">
+                                        <div className="flex items-center gap-4">
+                                            <div className="p-3 bg-indigo-500/10 text-indigo-400 rounded-2xl border border-indigo-500/20">
                                                 <ShieldAlert size={24} />
                                             </div>
                                             <div>
-                                                <h2 className="text-2xl font-black text-slate-900 tracking-tight">Full Forensic Breakdown</h2>
-                                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{selectedLog.timestamp} // Trace ID: {Math.random().toString(16).slice(2, 10).toUpperCase()}</p>
+                                                <h2 className="text-2xl font-black text-slate-100 tracking-tight">Full Forensic Breakdown</h2>
+                                                <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">{selectedLog.timestamp} // Trace ID: {Math.random().toString(16).slice(2, 10).toUpperCase()}</p>
                                             </div>
                                         </div>
                                     </div>
                                     <button
                                         onClick={() => setSelectedLog(null)}
-                                        className="p-3 bg-slate-50 hover:bg-rose-50 text-slate-400 hover:text-rose-500 rounded-full transition-all"
+                                        className="p-3 bg-slate-800 text-slate-400 hover:text-white rounded-full transition-all border border-slate-700"
                                     >
-                                        <Info size={18} />
+                                        <X size={18} />
                                     </button>
                                 </div>
 
                                 <div className="space-y-8">
-                                    <div className="p-8 bg-slate-900 rounded-[2.5rem] space-y-4">
+                                    <div className="p-8 bg-[#0F172A] rounded-[2.5rem] space-y-4 border border-slate-800">
                                         <div className="flex items-center gap-2">
                                             <Terminal size={14} className="text-indigo-400" />
                                             <p className="text-[10px] font-black text-indigo-400 uppercase tracking-[0.2em]">Initial Signal Captured</p>
                                         </div>
-                                        <p className="text-xl font-bold text-white leading-relaxed font-mono">"{selectedLog.message}"</p>
+                                        <p className="text-xl font-bold text-slate-200 leading-relaxed font-mono">"{selectedLog.message}"</p>
                                     </div>
 
                                     <div className="space-y-3 px-2">
                                         <div className="flex items-center gap-2">
-                                            <Cpu size={14} className="text-indigo-500" />
-                                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">🧠 Strategic Interpretation</p>
+                                            <Cpu size={14} className="text-indigo-400" />
+                                            <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">🧠 Strategic Interpretation</p>
                                         </div>
-                                        <p className="text-[15px] text-slate-600 font-medium leading-relaxed italic border-l-4 border-indigo-100 pl-6 py-2">
+                                        <p className="text-[14px] text-slate-400 font-medium leading-relaxed italic border-l-4 border-indigo-500/30 pl-6 py-2">
                                             "{LOG_EXPLANATIONS[selectedLog.message]?.exp || 'Deep behavioral analysis confirms routine telemetry synchronization without residual anomalies.'}"
                                         </p>
                                     </div>
 
-                                    <div className="space-y-3">
+                                    <div className="space-y-3 px-2">
                                         <div className="flex items-center gap-2">
                                             <Layers size={14} className="text-indigo-400" />
-                                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">🌐 SOURCE ORIGIN</p>
+                                            <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">🌐 SOURCE ORIGIN</p>
                                         </div>
-                                        <p className="text-sm text-indigo-600 font-black font-mono px-6 border-l-4 border-indigo-50">
+                                        <p className="text-sm text-indigo-400 font-black font-mono px-6 border-l-4 border-indigo-500/30">
                                             {selectedLog.url || 'N/A (Global Context)'}
                                         </p>
                                     </div>
 
-
-                                    <div className="flex items-center justify-between p-6 bg-slate-50 rounded-[2rem] border border-slate-100">
+                                    <div className="flex items-center justify-between p-8 bg-[#0F172A] rounded-[2.5rem] border border-slate-800">
                                         <div className="flex items-center gap-4">
                                             <div className="flex flex-col">
-                                                <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Risk Impact</p>
-                                                <p className={`text-[11px] font-black uppercase ${LOG_EXPLANATIONS[selectedLog.message]?.status === 'Critical' ? 'text-rose-600' :
-                                                    LOG_EXPLANATIONS[selectedLog.message]?.status === 'Warning' ? 'text-amber-600' : 'text-emerald-600'
+                                                <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Risk Impact</p>
+                                                <p className={`text-[11px] font-black uppercase ${LOG_EXPLANATIONS[selectedLog.message]?.status === 'Critical' ? 'text-rose-500' :
+                                                    LOG_EXPLANATIONS[selectedLog.message]?.status === 'Warning' ? 'text-amber-500' : 'text-emerald-500'
                                                     }`}>
                                                     {LOG_EXPLANATIONS[selectedLog.message]?.impact || 'Negligible'}
                                                 </p>
                                             </div>
                                         </div>
-                                        <div className="flex items-center gap-3">
-                                            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Confidence Score: 99.4%</span>
-                                            <div className="w-16 h-1 bg-slate-200 rounded-full overflow-hidden">
+                                        <div className="flex items-center gap-4">
+                                            <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Confidence Score: 99.4%</span>
+                                            <div className="w-20 h-1.5 bg-slate-800 rounded-full overflow-hidden">
                                                 <div className="h-full bg-indigo-500 w-[99%]" />
                                             </div>
                                         </div>
@@ -511,7 +528,7 @@ const AgentDetail = () => {
 
                                 <button
                                     onClick={() => setSelectedLog(null)}
-                                    className="w-full py-6 bg-indigo-600 hover:bg-indigo-700 text-white rounded-[2rem] font-black text-xs uppercase tracking-[0.3em] shadow-xl shadow-indigo-100 transition-all active:scale-[0.98]"
+                                    className="w-full py-6 bg-indigo-600 hover:bg-indigo-500 text-white rounded-[2rem] font-black text-xs uppercase tracking-[0.3em] shadow-2xl transition-all active:scale-[0.98]"
                                 >
                                     Acknowledge Forensic Report
                                 </button>
@@ -525,11 +542,12 @@ const AgentDetail = () => {
                 __html: `
                 .custom-scrollbar::-webkit-scrollbar { width: 6px; }
                 .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-                .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
-                .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #cbd5e1; }
+                .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.05); border-radius: 10px; }
+                .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.1); }
             `}} />
         </div>
     );
 };
 
 export default AgentDetail;
+
