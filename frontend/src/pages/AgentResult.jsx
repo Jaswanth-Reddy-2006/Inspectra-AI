@@ -5,7 +5,7 @@ import {
     Cpu, Activity, Search, Terminal,
     ArrowLeft, ShieldCheck, ChevronRight, CheckCircle2,
     ShieldCheck as ShieldIcon, AlertTriangle, Info, Clock, BarChart2,
-    Layers, Zap, ShieldAlert
+    Layers, Zap, ShieldAlert, X, ArrowUpRight
 } from 'lucide-react';
 
 const AGENT_TYPES = {

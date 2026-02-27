@@ -51,6 +51,20 @@ app.use('/api/risk', riskRoutes);
 // Health check
 app.get('/health', (_req, res) => res.json({ status: 'OK', ts: new Date().toISOString() }));
 
+const { launchBrowser } = require('./utils/browser');
+app.get('/api/diag', async (req, res) => {
+    try {
+        console.log('[DIAG] Testing browser launch...');
+        const browser = await launchBrowser();
+        const version = browser.version();
+        await browser.close();
+        res.json({ success: true, browser: 'Playwright/Chromium', version });
+    } catch (err) {
+        console.error('[DIAG] Browser launch failed:', err);
+        res.status(500).json({ success: false, error: err.message, stack: err.stack });
+    }
+});
+
 app.listen(PORT, () => {
     console.log(`Inspectra AI Backend — port ${PORT}`);
 });
