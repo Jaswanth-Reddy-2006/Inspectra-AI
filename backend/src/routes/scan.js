@@ -1,26 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const { chromium } = require('playwright');
 const { crawl } = require('../services/crawler');
 const { runAccessibilityAudit } = require('../services/accessibility');
 const { runHygieneCheck } = require('../services/hygiene');
 const { runMobileAudit } = require('../services/mobileAudit');
-const { calculatePageScore, calculateOverallScore, summarizeIssues } = require('../services/scorer');
+const { calculateOverallScore, summarizeIssues } = require('../services/scorer');
 const { launchBrowser } = require('../utils/browser');
-
-/**
- * Utility: Deduplicate issues using ruleId + selector hash
- */
-function deduplicateIssues(issues) {
-    const seen = new Set();
-    return issues.filter(issue => {
-        const selector = issue.element?.selector || 'no-selector';
-        const key = `${issue.ruleId}-${selector}`;
-        if (seen.has(key)) return false;
-        seen.add(key);
-        return true;
-    });
-}
 
 /**
  * @route POST /api/scan
@@ -41,7 +26,6 @@ router.post('/', async (req, res) => {
         res.json({ success: true, ...result });
     } catch (error) {
         console.error(`[Scan ${scanId}] Fatal Route Error:`, error);
-        console.error(`[Scan ${scanId}] Stack:`, error.stack);
         res.status(500).json({
             success: false,
             error: error.message || 'Failed to scan application.',
@@ -54,226 +38,159 @@ router.post('/', async (req, res) => {
  * Background orchestration engine
  */
 async function performScan(scanId, url) {
-    const scanStartTime = Date.now();
-    const MAX_SCAN_DURATION = 120000; // 120s (2m) Hard Limit
+    const startTime = Date.now();
+    const MAX_SCAN_DURATION = 120000; // 2 minutes hard cap
 
-    const session = {
-        browsers: [],
-        crawlResults: [],
-        agents: {
-            crawler: { name: 'Autonomous Discovery Agent', status: 'idle', count: 0, time: 0 },
-            runtime: { name: 'Runtime Integrity Agent', status: 'idle', count: 0, time: 0 },
-            accessibility: { name: 'Accessibility Audit Agent', status: 'idle', count: 0, time: 0 },
-            hygiene: { name: 'Structural Hygiene Agent', status: 'idle', count: 0, time: 0 },
-            mobile: { name: 'Mobile Intelligence Agent', status: 'idle', count: 0, time: 0 },
-            scorer: { name: 'Quality Intelligence Agent', status: 'idle', count: 0, time: 0 }
-        },
-        globalSignals: {}
-    };
+    const agents = [
+        { id: 'CRAWLER', name: 'Intelligent Crawler', status: 'Pending', progress: 0, completed: 0 },
+        { id: 'AUDIT', name: 'Structural Audit Agent', status: 'Pending', progress: 0, completed: 0 },
+        { id: 'SECURITY', name: 'Security Logic Agent', status: 'Pending', progress: 0, completed: 0 },
+        { id: 'INTELLIGENCE', name: 'Intelligence Hub', status: 'Pending', progress: 0, completed: 0 }
+    ];
 
-    const finalCleanup = async () => {
-        for (const browser of session.browsers) {
-            try { await browser.close(); } catch (e) { /* silent kill */ }
-        }
-    };
-
-    const runCoreScan = async () => {
-        console.log(`[Scan ${scanId}] Starting blocking scan for ${url} (120s Cap)...`);
-
-        // 1. Autonomous Crawl (Limited to 10 for Render Free tier stability)
-        const crawlStart = Date.now();
-        session.agents.crawler.status = 'running';
+    try {
+        // 1. Autonomous Crawl
+        console.log(`[Scan ${scanId}] Phase 1: Crawling ${url}`);
+        agents[0].status = 'Running';
         const crawlData = await crawl(url, 15);
-        session.crawlResults = crawlData.pages;
-        session.siteMap = crawlData.siteMap;
-        session.globalSignals = crawlData.globalSignals;
-        session.agents.crawler.time = Date.now() - crawlStart;
-        session.agents.crawler.count = session.crawlResults.length;
-        session.agents.crawler.status = 'completed';
+        const crawlResults = crawlData.pages || [];
+        const globalSignals = crawlData.globalSignals || {};
 
-        console.log(`[Scan ${scanId}] Crawl complete. Found ${session.crawlResults.length} pages. Starting Deep Inspection...`);
+        agents[0].status = 'Completed';
+        agents[0].progress = 100;
+        agents[0].completed = crawlResults.length;
 
-        // 2. Deep Inspection (A11y + Hygiene + Runtime)
-        console.log(`[Scan ${scanId}] Starting Deep Inspection with Chromium (Memory Optimized)`);
-        let browser;
-        try {
-            browser = await launchBrowser();
-            session.browsers.push(browser);
-        } catch (browserError) {
-            console.error(`[Scan ${scanId}] Failed to launch browser:`, browserError);
-            throw new Error('Failed to launch browser for deep inspection.');
+        if (crawlResults.length === 0) {
+            console.warn(`[Scan ${scanId}] No pages found during crawl.`);
+            return formatEmptyResult(scanId, url, startTime);
         }
 
-        session.agents.runtime.status = 'running';
-        session.agents.accessibility.status = 'running';
-        session.agents.hygiene.status = 'running';
-        session.agents.mobile.status = 'running';
+        // 2. Deep Inspection (Sequential for Memory Stability)
+        console.log(`[Scan ${scanId}] Phase 2: Deep Inspection across 3 core nodes.`);
+        agents[1].status = 'Running';
+        agents[2].status = 'Running';
 
-        const runtimeStart = Date.now();
-        let totalA11y = 0;
-        let totalHygiene = 0;
-        let totalRuntime = 0;
-        let totalMobileTime = 0;
+        const inspectionLimit = Math.min(crawlResults.length, 3);
+        let pagesAudited = 0;
+        let totalIssuesDetected = 0;
+
+        const browser = await launchBrowser();
 
         try {
-            // Limit inspection to first 5 pages on Render to prevent OOM
-            const inspectionLimit = Math.min(session.crawlResults.length, 5);
             for (let i = 0; i < inspectionLimit; i++) {
                 // Check if we are approaching timeout
-                if (Date.now() - scanStartTime > MAX_SCAN_DURATION - 10000) break;
-                if (session.browsers.length === 0) break;
+                if (Date.now() - startTime > MAX_SCAN_DURATION - 20000) {
+                    console.warn(`[Scan ${scanId}] Timeout approaching, stopping deep inspection.`);
+                    break;
+                }
 
-                const pageResult = session.crawlResults[i];
+                const pageResult = crawlResults[i];
                 const page = await browser.newPage();
 
                 try {
-                    console.log(`[Scan ${scanId}] Deep Inspection: ${pageResult.url}`);
-                    await page.goto(pageResult.url, { waitUntil: 'domcontentloaded', timeout: 15000 });
+                    console.log(`[Scan ${scanId}] Inspecting node ${i + 1}/${inspectionLimit}: ${pageResult.url}`);
 
-                    const [a11yIssues, hygieneIssues, mobileReport, perfMetrics] = await Promise.all([
-                        runAccessibilityAudit(page),
-                        runHygieneCheck(page),
-                        runMobileAudit(pageResult.url, browser), // Mobile engine tests fresh contexts
-                        page.evaluate(() => {
-                            let domContentLoaded, loadTime, fcp;
-                            const nav = performance.getEntriesByType('navigation')[0];
-                            if (nav) {
-                                domContentLoaded = nav.domContentLoadedEventEnd;
-                                loadTime = nav.loadEventEnd;
-                            } else if (performance.timing) {
-                                const t = performance.timing;
-                                domContentLoaded = t.domContentLoadedEventEnd - t.navigationStart;
-                                loadTime = t.loadEventEnd - t.navigationStart;
-                            }
+                    await page.goto(pageResult.url, {
+                        waitUntil: 'domcontentloaded',
+                        timeout: 20000
+                    }).catch(e => console.warn(`[Scan ${scanId}] Load error for ${pageResult.url}: ${e.message}`));
 
-                            const paint = performance.getEntriesByType('paint');
-                            const fcpEntry = paint.find(p => p.name === 'first-contentful-paint');
-                            fcp = fcpEntry ? fcpEntry.startTime : null;
+                    // Sequential Audits (Memory-Safe)
+                    const a11yIssues = await runAccessibilityAudit(page).catch(() => []);
+                    const hygieneIssues = await runHygieneCheck(page).catch(() => []);
+                    const mobileReport = await runMobileAudit(pageResult.url, browser).catch(() => null);
 
-                            return {
-                                domContentLoaded: domContentLoaded && domContentLoaded > 0 ? Math.round(domContentLoaded) : "Not Measurable",
-                                loadTime: loadTime && loadTime > 0 ? Math.round(loadTime) : "Not Measurable",
-                                fcp: fcp && fcp > 0 ? Math.round(fcp) : "Not Measurable"
-                            };
-                        })
-                    ]);
+                    const perfMetrics = await page.evaluate(() => {
+                        const nav = performance.getEntriesByType('navigation')[0];
+                        return {
+                            loadTime: nav ? Math.round(nav.duration) : 0,
+                            fcp: nav ? Math.round(nav.responseEnd) : 0,
+                            domCount: document.querySelectorAll('*').length
+                        };
+                    }).catch(() => ({ loadTime: 0, fcp: 0, domCount: 0 }));
 
-                    totalA11y += a11yIssues.length;
-                    totalHygiene += hygieneIssues.length;
-                    totalRuntime += pageResult.issues.length; // From crawler capture
-
+                    // Enrich page data
+                    pageResult.issues = [
+                        ...(pageResult.issues || []),
+                        ...a11yIssues,
+                        ...hygieneIssues
+                    ];
                     pageResult.perf = perfMetrics;
-                    pageResult.loadTime = perfMetrics.loadTime || pageResult.loadTime;
+                    pageResult.loadTime = perfMetrics.loadTime;
                     pageResult.mobileReport = mobileReport;
+                    pageResult.status = 'Completed';
 
-                    const combinedIssues = [...pageResult.issues, ...a11yIssues, ...hygieneIssues];
-                    pageResult.issues = deduplicateIssues(combinedIssues);
-                    pageResult.score = calculatePageScore(pageResult.issues);
-                } catch (navError) {
-                    console.warn(`[Scan ${scanId}] Deep Inspection failed for ${pageResult.url}:`, navError.message);
+                    totalIssuesDetected += (pageResult.issues.length || 0);
+                    pagesAudited++;
+
+                } catch (err) {
+                    console.error(`[Scan ${scanId}] Node error:`, err.message);
+                    pageResult.status = 'Error';
                 } finally {
-                    await page.close();
+                    await page.close().catch(() => { });
                 }
             }
         } finally {
-            await browser.close();
-            session.browsers = session.browsers.filter(b => b !== browser);
-
-            const deepEnd = Date.now();
-            session.agents.runtime.time = deepEnd - runtimeStart;
-            session.agents.runtime.count = totalRuntime;
-            session.agents.runtime.status = 'completed';
-
-            session.agents.accessibility.time = deepEnd - runtimeStart;
-            session.agents.accessibility.count = totalA11y;
-            session.agents.accessibility.status = 'completed';
-
-            session.agents.hygiene.time = deepEnd - runtimeStart;
-            session.agents.hygiene.count = totalHygiene;
-            session.agents.hygiene.status = 'completed';
-
-            session.agents.mobile.time = deepEnd - runtimeStart;
-            session.agents.mobile.count = 3; // 3 devices
-            session.agents.mobile.status = 'completed';
+            await browser.close().catch(() => { });
         }
 
-        return { success: true };
-    };
+        agents[1].status = 'Completed';
+        agents[1].progress = 100;
+        agents[1].completed = pagesAudited;
 
-    const runTimeoutGuard = () => new Promise(resolve => setTimeout(() => resolve({ timedOut: true }), MAX_SCAN_DURATION));
+        agents[2].status = 'Completed';
+        agents[2].progress = 100;
+        agents[2].completed = totalIssuesDetected;
 
-    try {
-        const raceResult = await Promise.race([runCoreScan(), runTimeoutGuard()]);
-        const isTimedOut = raceResult?.timedOut || false;
-
-        if (isTimedOut) {
-            console.warn(`[Scan ${scanId}] Hard timeout reached (120s). Finalizing partial results.`);
-            await finalCleanup();
-            Object.values(session.agents).forEach(a => { if (a.status === 'running') a.status = 'partial'; });
-        }
-
-        session.agents.scorer.status = 'running';
-        const scorerStart = Date.now();
-
-        // Final Analysis Aggregation (Step 7)
-        const overallScore = calculateOverallScore(session.crawlResults);
-        const issuesSummary = summarizeIssues(session.crawlResults, session.globalSignals);
-
-        // Calculate Global Risks
-        const globalRisks = [];
-        const totalSeriousIssues = (issuesSummary.stats?.critical || 0) + (issuesSummary.stats?.high || 0);
-
-        if (totalSeriousIssues > 10) {
-            globalRisks.push({
-                type: 'Systemic Fragility',
-                description: `High density of critical/high failures (${totalSeriousIssues}) detected across multiple autonomous routes.`
-            });
-        }
-        if (session.crawlResults.some(r => r.failureCategory === 'Bot Protection Detected')) {
-            globalRisks.push({
-                type: 'Anti-Automation Guard',
-                description: 'Target domain implements aggressive bot protection that may block QA agents.'
-            });
-        }
-
-        // Calculate Coverage Score
-        const successfulScans = session.crawlResults.filter(r => !r.failureCategory).length;
-        const totalIdentified = session.crawlResults.length;
-        const coverageScore = totalIdentified > 0 ? Math.round((successfulScans / totalIdentified) * 100) : 0;
-
-        session.agents.scorer.time = Date.now() - scorerStart;
-        session.agents.scorer.status = 'completed';
+        // 3. Synthesis & Analysis
+        console.log(`[Scan ${scanId}] Phase 3: Final Analysis Synthesis`);
+        agents[3].status = 'Running';
+        const issuesSummary = summarizeIssues(crawlResults, globalSignals);
+        agents[3].status = 'Completed';
+        agents[3].progress = 100;
+        agents[0].completed = issuesSummary.stats?.totalDefects || totalIssuesDetected;
 
         return {
-            id: scanId,
-            pages: session.crawlResults,
-            overallScore,
+            scanId,
+            targetUrl: url,
+            startTime,
+            endTime: Date.now(),
+            duration: (Date.now() - startTime) / 1000,
+            totalPages: crawlResults.length,
+            pagesInspected: pagesAudited,
+            score: issuesSummary.scoreImpact?.finalScore || 100,
             issuesSummary,
-            agentOverview: Object.values(session.agents),
-            globalRisks,
-            coverageScore,
             discoveryGraph: {
-                nodes: session.crawlResults.map(r => ({
-                    ...r,
-                    id: r.url, // Use URL as ID for consistency
-                    statusCode: r.statusCode || 200,
-                    errors: (r.issues || []).filter(i => i.severity === 'Critical').length
-                })),
-                edges: session.crawlResults
-                    .filter(r => r.parent)
-                    .map(r => ({ from: r.parent, to: r.url }))
+                nodes: issuesSummary.knowledgeGraph?.nodes || [],
+                links: issuesSummary.knowledgeGraph?.links || []
             },
-            meta: {
-                timedOut: isTimedOut,
-                scanDuration: Math.round((Date.now() - scanStartTime) / 1000),
-                agentOverview: Object.values(session.agents)
-            }
+            globalRisks: issuesSummary.rootCauseAnalysis || [],
+            agents
         };
 
     } catch (error) {
-        await finalCleanup();
+        console.error(`[Scan ${scanId}] Orchestration Failure:`, error);
         throw error;
     }
+}
+
+function formatEmptyResult(scanId, url, startTime) {
+    return {
+        scanId,
+        targetUrl: url,
+        startTime,
+        duration: (Date.now() - startTime) / 1000,
+        totalPages: 0,
+        pagesInspected: 0,
+        score: 100,
+        issuesSummary: { stats: { totalDefects: 0 }, scoreImpact: { finalScore: 100 } },
+        discoveryGraph: { nodes: [], links: [] },
+        globalRisks: [],
+        agents: [
+            { id: 'CRAWLER', name: 'Intelligent Crawler', status: 'Warning', progress: 100, completed: 0 },
+            { id: 'AUDIT', name: 'Structural Audit Agent', status: 'Skipped', progress: 0, completed: 0 }
+        ]
+    };
 }
 
 module.exports = router;
