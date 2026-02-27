@@ -1,4 +1,5 @@
 const { chromium } = require('playwright');
+const { launchBrowser } = require('../utils/browser');
 const crypto = require('crypto');
 const { SEVERITY } = require('../utils/severity');
 
@@ -26,7 +27,7 @@ class CrawlSession {
             fuzzing: { handled404: false, customErrorPage: false }
         };
         this.activeWorkers = 0;
-        this.concurrency = 4;
+        this.concurrency = 1; // Optimized for low-memory environments
     }
 
     normalizeUrl(urlStr) {
@@ -57,10 +58,7 @@ class CrawlSession {
 
 async function runIntelligentCrawl(startUrl, maxPages = 50, onProgress) {
     const session = new CrawlSession(startUrl, { maxPages });
-    const browser = await chromium.launch({
-        headless: true,
-        args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
-    });
+    const browser = await launchBrowser();
     const context = await browser.newContext({
         userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Inspectra-Enterprise-Agent/2.0'
     });
@@ -69,17 +67,21 @@ async function runIntelligentCrawl(startUrl, maxPages = 50, onProgress) {
 
     // 1. Stress Test Layer (Active Probe)
     const stressStart = Date.now();
-    const stressURLs = Array(5).fill(startUrl);
-    const stressResults = await Promise.allSettled(stressURLs.map(url => context.newPage().then(async p => {
-        const res = await p.goto(url, { waitUntil: 'domcontentloaded', timeout: 15000 });
-        const status = res.status();
-        await p.close();
-        return status;
-    })));
+    const stressResults = [];
+    for (let i = 0; i < 3; i++) { // Reduced to 3 probes
+        try {
+            const p = await context.newPage();
+            const res = await p.goto(startUrl, { waitUntil: 'domcontentloaded', timeout: 15000 });
+            stressResults.push({ status: 'fulfilled', value: res.status() });
+            await p.close();
+        } catch (e) {
+            stressResults.push({ status: 'rejected', reason: e });
+        }
+    }
     const successfulStress = stressResults.filter(r => r.status === 'fulfilled' && r.value < 400).length;
     session.globalSignals.stressTest = {
-        successRate: (successfulStress / 5) * 100,
-        avgResponseTime: (Date.now() - stressStart) / 5
+        successRate: (successfulStress / 3) * 100,
+        avgResponseTime: (Date.now() - stressStart) / 3
     };
 
     // 2. Main Parallel Crawl Loop

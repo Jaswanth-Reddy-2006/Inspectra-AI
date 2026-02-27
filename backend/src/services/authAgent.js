@@ -6,6 +6,7 @@
  */
 
 const { chromium } = require('playwright');
+const { launchBrowser } = require('../utils/browser');
 const path = require('path');
 const fs = require('fs');
 
@@ -164,7 +165,7 @@ function generateScript(url, form, credentialKey) {
 // ── Main: Detect login forms ──────────────────────────────────────────────────
 
 async function detectAuthForms(url) {
-    const browser = await chromium.launch({ headless: true });
+    const browser = await launchBrowser();
     const context = await browser.newContext({
         userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/122 Safari/537.36 InspectraAuth/1.0',
         ignoreHTTPSErrors: true,
@@ -285,7 +286,7 @@ async function detectAuthForms(url) {
 // ── Main: Replay auth (actually perform login) ────────────────────────────────
 
 async function replayAuth(url, form, credentials) {
-    const browser = await chromium.launch({ headless: true });
+    const browser = await launchBrowser();
     const context = await browser.newContext({ ignoreHTTPSErrors: true });
     const page = await context.newPage();
     const log = [];

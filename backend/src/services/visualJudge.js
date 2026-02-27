@@ -12,6 +12,7 @@
  */
 
 const { chromium } = require('playwright');
+const { launchBrowser } = require('../utils/browser');
 const { PNG } = require('pngjs');
 const pixelmatch = require('pixelmatch');
 
@@ -179,8 +180,7 @@ async function compareScreenshots(baselineUrl, currentUrl, viewportKey = 'deskto
     const { width, height } = viewport;
 
     if (onProgress) onProgress({ phase: 'launching', pct: 5 });
-
-    const browser = await chromium.launch({ headless: true, args: ['--no-sandbox'] });
+    const browser = await launchBrowser();
 
     let baselineShot, currentShot, baselineIssues, currentIssues;
 

@@ -6,6 +6,7 @@ const { runAccessibilityAudit } = require('../services/accessibility');
 const { runHygieneCheck } = require('../services/hygiene');
 const { runMobileAudit } = require('../services/mobileAudit');
 const { calculatePageScore, calculateOverallScore, summarizeIssues } = require('../services/scorer');
+const { launchBrowser } = require('../utils/browser');
 
 /**
  * Utility: Deduplicate issues using ruleId + selector hash
@@ -35,11 +36,17 @@ router.post('/', async (req, res) => {
     const scanId = Math.random().toString(36).substring(2, 11);
 
     try {
+        console.log(`[ROUTE] POST /api/scan for URL: ${url}`);
         const result = await performScan(scanId, url);
         res.json({ success: true, ...result });
     } catch (error) {
         console.error(`[Scan ${scanId}] Fatal Route Error:`, error);
-        res.status(500).json({ success: false, error: error.message || 'Failed to scan application.' });
+        console.error(`[Scan ${scanId}] Stack:`, error.stack);
+        res.status(500).json({
+            success: false,
+            error: error.message || 'Failed to scan application.',
+            details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+        });
     }
 });
 
@@ -73,10 +80,10 @@ async function performScan(scanId, url) {
     const runCoreScan = async () => {
         console.log(`[Scan ${scanId}] Starting blocking scan for ${url} (120s Cap)...`);
 
-        // 1. Autonomous Crawl
+        // 1. Autonomous Crawl (Limited to 10 for Render Free tier stability)
         const crawlStart = Date.now();
         session.agents.crawler.status = 'running';
-        const crawlData = await crawl(url, 50);
+        const crawlData = await crawl(url, 15);
         session.crawlResults = crawlData.pages;
         session.siteMap = crawlData.siteMap;
         session.globalSignals = crawlData.globalSignals;
@@ -87,11 +94,15 @@ async function performScan(scanId, url) {
         console.log(`[Scan ${scanId}] Crawl complete. Found ${session.crawlResults.length} pages. Starting Deep Inspection...`);
 
         // 2. Deep Inspection (A11y + Hygiene + Runtime)
-        const browser = await chromium.launch({
-            headless: true,
-            args: ['--no-sandbox', '--disable-setuid-sandbox']
-        });
-        session.browsers.push(browser);
+        console.log(`[Scan ${scanId}] Starting Deep Inspection with Chromium (Memory Optimized)`);
+        let browser;
+        try {
+            browser = await launchBrowser();
+            session.browsers.push(browser);
+        } catch (browserError) {
+            console.error(`[Scan ${scanId}] Failed to launch browser:`, browserError);
+            throw new Error('Failed to launch browser for deep inspection.');
+        }
 
         session.agents.runtime.status = 'running';
         session.agents.accessibility.status = 'running';
@@ -105,9 +116,11 @@ async function performScan(scanId, url) {
         let totalMobileTime = 0;
 
         try {
-            for (let i = 0; i < session.crawlResults.length; i++) {
-                // Check if we are approaching timeout or if browsers were already closed
-                if (Date.now() - scanStartTime > MAX_SCAN_DURATION - 5000) break;
+            // Limit inspection to first 5 pages on Render to prevent OOM
+            const inspectionLimit = Math.min(session.crawlResults.length, 5);
+            for (let i = 0; i < inspectionLimit; i++) {
+                // Check if we are approaching timeout
+                if (Date.now() - scanStartTime > MAX_SCAN_DURATION - 10000) break;
                 if (session.browsers.length === 0) break;
 
                 const pageResult = session.crawlResults[i];

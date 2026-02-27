@@ -1,5 +1,6 @@
 const { chromium } = require('playwright');
-const { calculateOverallScore } = require('./scorer'); // Assuming we want some global scoring integration eventually
+const { launchBrowser } = require('../utils/browser');
+const { calculateOverallScore } = require('./scorer');
 
 /**
  * Mobile Audit Engine using Playwright (since the project uses Playwright in scan.js, not Puppeteer).
@@ -18,10 +19,7 @@ async function runMobileAudit(url, parentBrowser = null) {
 
     if (!browser) {
         keepBrowserAlive = false;
-        browser = await chromium.launch({
-            headless: true,
-            args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
-        });
+        browser = await launchBrowser();
     }
 
     const report = {

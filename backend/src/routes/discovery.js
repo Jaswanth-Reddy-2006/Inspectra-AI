@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { chromium } = require('playwright');
+const { launchBrowser } = require('../utils/browser');
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -101,10 +102,7 @@ router.post('/start', async (req, res) => {
 
     let browser;
     try {
-        browser = await chromium.launch({
-            headless: true,
-            args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
-        });
+        browser = await launchBrowser();
         const context = await browser.newContext({
             viewport: profile.viewport,
             userAgent: profile.userAgent,
